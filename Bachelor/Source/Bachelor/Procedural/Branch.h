@@ -4,7 +4,7 @@
 #include "Branch.generated.h"
 
 USTRUCT()
-struct FBranch
+struct BACHELOR_API FBranch
 {
 	GENERATED_USTRUCT_BODY()
 public:

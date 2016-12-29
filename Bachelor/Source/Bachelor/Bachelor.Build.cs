@@ -6,12 +6,14 @@ public class Bachelor : ModuleRules
 {
 	public Bachelor(TargetInfo Target)
 	{
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "ProceduralMeshComponent" });
-
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		
 
         MinFilesUsingPrecompiledHeaderOverride = 1;
         bFasterWithoutUnity = true;
+
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "ProceduralMeshComponent" });
+
+        PrivateDependencyModuleNames.AddRange(new string[] { });
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

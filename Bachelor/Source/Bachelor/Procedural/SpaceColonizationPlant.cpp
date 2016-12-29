@@ -8,6 +8,7 @@
 
 #include "ColonizationSpace.h"
 #include "Branch.h"
+#include "Utility/MeshConstructor.h"
 
 
 // Sets default values
@@ -137,11 +138,7 @@ void ASpaceColonizationPlant::GrowthIteration() {
 }
 
 void ASpaceColonizationPlant::GenerateTreeMesh() {
-	TArray<FVector> boxVertices;
-	TArray<int32> boxTriangles;
-	TArray<FVector> boxNormals;
-	TArray<FVector2D> boxUVs;
-	TArray<FProcMeshTangent> boxTangents;
+
 
 	FVector rootStartToEnd = (RootBranch->End) - (RootBranch->Start);
 	FVector notRootStartToEnd = FVector(-rootStartToEnd.X, rootStartToEnd.Y, rootStartToEnd.Z);
@@ -154,22 +151,16 @@ void ASpaceColonizationPlant::GenerateTreeMesh() {
 	FVector orthoToRootStartToEnd2 = FVector::CrossProduct(rootStartToEnd, orthoToRootStartToEnd2);
 	orthoToRootStartToEnd2 = orthoToRootStartToEnd2.GetSafeNormal();
 	UE_LOG(LogTemp, Warning, TEXT("ortho2: %s"), *orthoToRootStartToEnd2.ToString());
-	
-	FVector diagonalStart = (RootBranch->Start) + 5.0f  * orthoToRootStartToEnd1 +5.0f * orthoToRootStartToEnd2;
-	FVector diagonalEnd = (RootBranch->End) - 5.0f * orthoToRootStartToEnd1 - 5.0f * orthoToRootStartToEnd2;
-
-	FVector boxDiagonal = diagonalEnd - diagonalStart;
-
-	UE_LOG(LogTemp, Warning, TEXT("BoxDiagonal: %s"), *boxDiagonal.ToString());
-
-	UKismetProceduralMeshLibrary::GenerateBoxMesh(boxDiagonal / 2.0f, boxVertices, boxTriangles, boxNormals, boxUVs, boxTangents);
 
 	if (Mesh->GetNumSections() > 1) {
 		Mesh->ClearAllMeshSections();
 	}
 
-	Mesh->CreateMeshSection(0, boxVertices, boxTriangles, boxNormals, boxUVs, TArray<FColor>(), boxTangents, false);
-	Mesh->SetRelativeLocation(boxDiagonal / 2.0f);
+	FMeshData meshData;
+
+	UMeshConstructor::GenerateCylinder(meshData, RootBranch->Start, 20.0f, RootBranch->End, 10.0f, 20);
+	Mesh->CreateMeshSection(0, meshData.Vertices, meshData.Triangles, meshData.Normals, meshData.UVs, TArray<FColor>(), meshData.Tangents, false);
+
 
 }
 
