@@ -18,6 +18,7 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	PrimaryActorTick.bCanEverTick = true;
 
 	USphereComponent* Root = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
+	Root->InitSphereRadius(1.0f);
 	RootComponent = Root;
 
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
@@ -140,25 +141,13 @@ void ASpaceColonizationPlant::GrowthIteration() {
 void ASpaceColonizationPlant::GenerateTreeMesh() {
 
 
-	FVector rootStartToEnd = (RootBranch->End) - (RootBranch->Start);
-	FVector notRootStartToEnd = FVector(-rootStartToEnd.X, rootStartToEnd.Y, rootStartToEnd.Z);
-	while (notRootStartToEnd == rootStartToEnd) {
-		notRootStartToEnd.X -= 1.0f;
-	}
-	FVector orthoToRootStartToEnd1 = FVector::CrossProduct(rootStartToEnd, notRootStartToEnd);
-	orthoToRootStartToEnd1 = orthoToRootStartToEnd1.GetSafeNormal();
-	UE_LOG(LogTemp, Warning, TEXT("ortho1: %s"), *orthoToRootStartToEnd1.ToString());
-	FVector orthoToRootStartToEnd2 = FVector::CrossProduct(rootStartToEnd, orthoToRootStartToEnd2);
-	orthoToRootStartToEnd2 = orthoToRootStartToEnd2.GetSafeNormal();
-	UE_LOG(LogTemp, Warning, TEXT("ortho2: %s"), *orthoToRootStartToEnd2.ToString());
-
 	if (Mesh->GetNumSections() > 1) {
 		Mesh->ClearAllMeshSections();
 	}
 
 	FMeshData meshData;
 
-	UMeshConstructor::GenerateCylinder(meshData, RootBranch->Start, 20.0f, RootBranch->End, 10.0f, 20);
+	UMeshConstructor::GenerateCylinder(meshData, RootBranch->Start, 20.0f, RootBranch->End, 0.0f, 16);
 	Mesh->CreateMeshSection(0, meshData.Vertices, meshData.Triangles, meshData.Normals, meshData.UVs, TArray<FColor>(), meshData.Tangents, false);
 
 

@@ -19,7 +19,7 @@ private:
 	static void GenerateCircle(FMeshData& MeshData, FVector Center, float Radius, float TexCoordV, int NumSegments);
 
 	// Calculates TriangleIndices for a Cylinder. MeshData needs to have at least enough Data for two Rings with NumSegments!
-	static void GenerateCylinderSectionTriangles(FMeshData& MeshData, int NumSegments);
+	static void GenerateCylinderSectionTriangles(FMeshData& MeshData, FVector BottomCenter, FVector TopCenter, int NumSegments);
 
 };
 
