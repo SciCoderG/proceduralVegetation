@@ -11,6 +11,11 @@ public:
 	FBranch() {
 		ParentBranch = NULL;
 
+		Start = FVector(0);
+		End = FVector(0);
+
+		GrowDirection = FVector(0);
+
 		GrowCount = 0;
 	}
 

@@ -102,6 +102,12 @@ AColonizationSpace* ASpaceColonizationPlant::GetNearestColonizationSpace() {
 
 	FVector plantPosition = this->GetActorLocation();
 	nearestColonizationSpace = GrowthSpaces[0];
+
+	if ( NULL == nearestColonizationSpace) {
+		UE_LOG(LogTemp, Warning, TEXT("First GrowthSpace is NULL"));
+		return nearestColonizationSpace;
+	}
+
 	float minSquaredDistance = FVector::DistSquared(nearestColonizationSpace->GetActorLocation(), plantPosition);
 	for (AColonizationSpace* currentSpace : GrowthSpaces) {
 		float sqrDistancePlantToSpace = FVector::DistSquared(currentSpace->GetActorLocation(), plantPosition);
@@ -118,7 +124,9 @@ void ASpaceColonizationPlant::GrowthIteration() {
 	TSet<FVector> allColonizationPoints;
 
 	for (AColonizationSpace* currentSpace : GrowthSpaces) {
-		allColonizationPoints.Append(*(currentSpace->GetColonizationPoints()));
+		if (NULL != currentSpace) {
+			allColonizationPoints.Append(*(currentSpace->GetColonizationPoints()));
+		}
 	}
 
 	
@@ -154,11 +162,12 @@ void ASpaceColonizationPlant::GenerateTreeMesh() {
 
 	UE_LOG(LogTemp, Warning, TEXT("BoxDiagonal: %s"), *boxDiagonal.ToString());
 
-	UKismetProceduralMeshLibrary::GenerateBoxMesh(-boxDiagonal / 2.0f, boxVertices, boxTriangles, boxNormals, boxUVs, boxTangents);
+	UKismetProceduralMeshLibrary::GenerateBoxMesh(boxDiagonal / 2.0f, boxVertices, boxTriangles, boxNormals, boxUVs, boxTangents);
 
 	if (Mesh->GetNumSections() > 1) {
 		Mesh->ClearAllMeshSections();
 	}
+
 	Mesh->CreateMeshSection(0, boxVertices, boxTriangles, boxNormals, boxUVs, TArray<FColor>(), boxTangents, false);
 	Mesh->SetRelativeLocation(boxDiagonal / 2.0f);
 
