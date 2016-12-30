@@ -17,8 +17,8 @@ AColonizationSpace::AColonizationSpace()
 	ColonizationSphere->SetupAttachment(RootComponent);
 	
 	// initial values
-	ColonizationRadius = 100.0f;
-	NumberOfGenerationPoints = 100.0f;
+	ColonizationRadius = 150.0f;
+	NumberOfGenerationPoints = 2000.0f;
 	DrawDebugPoints = false;
 	DebugPointColor = FColor(0, 0, 0);
 	DebugPointSize = 5.0f;

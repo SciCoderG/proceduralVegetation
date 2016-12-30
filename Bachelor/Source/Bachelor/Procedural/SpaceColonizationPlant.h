@@ -31,10 +31,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Material)
 		UMaterialInterface* GeneratedTreeMaterial;
 
-	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
 		UProceduralMeshComponent* Mesh;
 
-	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
 		TArray<AColonizationSpace* > GrowthSpaces;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
@@ -48,6 +48,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
 		float MaxNumGrowthIterations;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Test)
+		int MeshSectionToChange;
 
 private:
 	void InitUtilityValues();
@@ -67,6 +70,8 @@ private:
 	void GrowBranch(FBranch* ToGrow);
 
 	void GenerateTreeMesh();
+
+	void GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection);
 
 	TSet<FBranch*> RecursiveGetAllBranches(FBranch* Parent);
 

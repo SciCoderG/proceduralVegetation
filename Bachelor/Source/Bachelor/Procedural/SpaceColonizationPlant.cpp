@@ -26,15 +26,17 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 
 	RootBranch = new FBranch();
 	
-	KillDistance = 10.0f;
+	KillDistance = 100.0f;
 
-	RadiusOfInfluence = 100.f;
+	RadiusOfInfluence = 500.0f;
 
-	GrowthPerIteration = 10.f;
+	GrowthPerIteration = 10.0f;
 
-	MaxNumGrowthIterations = 200.f;
+	MaxNumGrowthIterations = 20.0f;
 
 	InitUtilityValues();
+
+	MeshSectionToChange = 0;
 }
 
 ASpaceColonizationPlant::~ASpaceColonizationPlant() {
@@ -49,6 +51,8 @@ void ASpaceColonizationPlant::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 	ColonizeGivenSpaces();
 	GenerateTreeMesh();
+
+	
 }
 
 // Called every frame
@@ -58,14 +62,15 @@ void ASpaceColonizationPlant::Tick( float DeltaTime )
 }
 
 void ASpaceColonizationPlant::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
-	if (GeneratedTreeMaterial) {
-		for (int i = 0; i < Mesh->GetNumSections(); ++i) {
-			Mesh->SetMaterial(i, GeneratedTreeMaterial);
-		}
-	}
 
 	InitUtilityValues();
+	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
 
+	if ((PropertyName == GET_MEMBER_NAME_CHECKED(ASpaceColonizationPlant, MaxNumGrowthIterations))) {
+		ColonizeGivenSpaces();
+		GenerateTreeMesh();
+	}
+	
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 
@@ -211,9 +216,10 @@ void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
 			ToGrow->ChildBranches.Add(newBranch);
 			newBranch->ParentBranch = ToGrow;
 			if (ToGrow->ChildBranches.Num() > 1) {
-				for (FBranch* childBranch : ToGrow->ChildBranches) {
-					childBranch->BranchDepth = ToGrow->BranchDepth + 1;
-				}
+				newBranch->BranchDepth = ToGrow->BranchDepth + 1;
+			}
+			else {
+				newBranch->BranchDepth = ToGrow->BranchDepth;
 			}
 			newBranch->Start = ToGrow->End;
 			newBranch->End = newBranch->Start + normalizedGrowthDirection * GrowthPerIteration;
@@ -223,39 +229,62 @@ void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
 	ToGrow->ResetForNextGrowthIteration();
 }
 
-
-
 void ASpaceColonizationPlant::GenerateTreeMesh() {
-
-
 	if (Mesh->GetNumSections() > 1) {
 		Mesh->ClearAllMeshSections();
 	}
 
 	TSet<FBranch*> allBranches = RecursiveGetAllBranches(RootBranch);
-
 	
 	int i = 0;
 	for (FBranch* currentBranch : allBranches) {
-		FMeshData& meshData = currentBranch->MeshData;
-
-		FVector branchStart;
-
-
-		UMeshConstructor::GenerateCylinder(meshData, currentBranch->Start, 1.0f, currentBranch->End, 1.0f, 8);
-		Mesh->CreateMeshSection(i, meshData.Vertices, meshData.Triangles, meshData.Normals, meshData.UVs, TArray<FColor>(), meshData.Tangents, false);
-		Mesh->SetMaterial(i, GeneratedTreeMaterial);
+		GenerateBranchMesh(currentBranch, allBranches, i);
 		++i;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), i);
-	
-	/*FMeshData meshData;
-	UMeshConstructor::GenerateCylinder(meshData, FVector(0,0,0), 5.0f, FVector(0,0,20), 5.0f, 16);
-	Mesh->CreateMeshSection(0, meshData.Vertices, meshData.Triangles, meshData.Normals, meshData.UVs, TArray<FColor>(), meshData.Tangents, false);
-	Mesh->SetMaterial(0, GeneratedTreeMaterial);*/
-	
+
+	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), Mesh->GetNumSections());
 }
 
+TArray<FBranch*> RecursiveGetAllBranchesOnSameDepth(FBranch* Parent) {
+	TArray<FBranch*> BranchesOnSameDepth;
+	for (FBranch* childBranch : Parent->ChildBranches) {
+		if (childBranch->BranchDepth == Parent->BranchDepth) {
+			BranchesOnSameDepth.Add(childBranch);
+			BranchesOnSameDepth.Append(RecursiveGetAllBranchesOnSameDepth(childBranch));
+			break;
+		}
+	}
+	return BranchesOnSameDepth;
+}
+
+void ASpaceColonizationPlant::GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection) {
+	TArray<FBranch*> BranchesOnSameDepth = RecursiveGetAllBranchesOnSameDepth(Origin);
+	for (FBranch* currentBranch : BranchesOnSameDepth) {
+		AllBranches.Remove(currentBranch);
+	}
+	
+	float MaxRingRadius = 5.0f;
+	MaxRingRadius /= (Origin->BranchDepth + 1);
+
+	TArray<FVector> RingCenters;
+	RingCenters.Add(Origin->Start);
+	RingCenters.Add(Origin->End);
+
+	TArray<float> RingRadii;
+	RingRadii.Add(MaxRingRadius );
+	RingRadii.Add(MaxRingRadius );
+	for (FBranch* currentBranch : BranchesOnSameDepth) {
+		RingCenters.Add(currentBranch->End);
+		RingRadii.Add(MaxRingRadius);
+	}
+	
+	FMeshData branchData;
+	UMeshConstructor::GenerateMultiLevelCylinder(branchData, RingCenters, RingRadii, 8);
+
+	Mesh->CreateMeshSection(MeshSection, branchData.Vertices, branchData.Triangles, branchData.Normals, 
+		branchData.UVs, TArray<FColor>(), branchData.Tangents, false);
+	Mesh->SetMaterial(MeshSection, GeneratedTreeMaterial);
+}
 
 TSet<FBranch*> ASpaceColonizationPlant::RecursiveGetAllBranches(FBranch* Parent) {
 	TSet<FBranch*> parentAndChildren;
