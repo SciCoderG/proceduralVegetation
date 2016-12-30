@@ -46,6 +46,7 @@ void ASpaceColonizationPlant::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 	ColonizeGivenSpaces();
 	GenerateTreeMesh();
 }
@@ -84,6 +85,7 @@ void ASpaceColonizationPlant::ColonizeGivenSpaces() {
 			break;
 		}
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Finished max number of growth iterations with %d growing Branches left"), GrowingBranches.Num());
 }
 
 void ASpaceColonizationPlant::InitialRootGrowth() {
@@ -197,28 +199,31 @@ void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
 	if (ToGrow->GrowCount == 0) {
 		GrowingBranches.Remove(ToGrow);
 	}
-	else if (ToGrow->GrowCount > 0) {
-		FBranch* newBranch = new FBranch();
-
-		ToGrow->ChildBranches.Add(newBranch);
-		newBranch->ParentBranch = ToGrow;
-		if (ToGrow->ChildBranches.Num() > 1) {
-			for (FBranch* childBranch : ToGrow->ChildBranches) {
-				childBranch->BranchDepth = ToGrow->BranchDepth + 1;
-			}
-		}
-
-		newBranch->Start = ToGrow->End;
-
+	else {
 		FVector normalizedGrowthDirection = ToGrow->GrowDirection / ToGrow->GrowCount;
 		normalizedGrowthDirection = normalizedGrowthDirection.GetSafeNormal();
-		newBranch->End = newBranch->Start + normalizedGrowthDirection * GrowthPerIteration;
 
-		GrowingBranches.Add(newBranch);
+		if (ToGrow->GrowCount == 1 && ToGrow->ChildBranches.Num() < 1) {
+			ToGrow->End = ToGrow->End + normalizedGrowthDirection * GrowthPerIteration;
+		}
+		else if (ToGrow->GrowCount > 0) {
+			FBranch* newBranch = new FBranch();
+			ToGrow->ChildBranches.Add(newBranch);
+			newBranch->ParentBranch = ToGrow;
+			if (ToGrow->ChildBranches.Num() > 1) {
+				for (FBranch* childBranch : ToGrow->ChildBranches) {
+					childBranch->BranchDepth = ToGrow->BranchDepth + 1;
+				}
+			}
+			newBranch->Start = ToGrow->End;
+			newBranch->End = newBranch->Start + normalizedGrowthDirection * GrowthPerIteration;
+			GrowingBranches.Add(newBranch);
+		}
 	}
-
 	ToGrow->ResetForNextGrowthIteration();
 }
+
+
 
 void ASpaceColonizationPlant::GenerateTreeMesh() {
 
@@ -234,7 +239,10 @@ void ASpaceColonizationPlant::GenerateTreeMesh() {
 	for (FBranch* currentBranch : allBranches) {
 		FMeshData& meshData = currentBranch->MeshData;
 
-		UMeshConstructor::GenerateCylinder(meshData, currentBranch->Start, 1.0f, currentBranch->End, 1.0f, 16);
+		FVector branchStart;
+
+
+		UMeshConstructor::GenerateCylinder(meshData, currentBranch->Start, 1.0f, currentBranch->End, 1.0f, 8);
 		Mesh->CreateMeshSection(i, meshData.Vertices, meshData.Triangles, meshData.Normals, meshData.UVs, TArray<FColor>(), meshData.Tangents, false);
 		Mesh->SetMaterial(i, GeneratedTreeMaterial);
 		++i;
