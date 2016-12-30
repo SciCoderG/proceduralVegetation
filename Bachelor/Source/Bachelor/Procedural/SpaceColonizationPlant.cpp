@@ -26,17 +26,19 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 
 	RootBranch = new FBranch();
 	
-	KillDistance = 0.5f;
+	KillDistance = 10.0f;
 
-	RadiusOfInfluence = 10.f;
+	RadiusOfInfluence = 100.f;
 
-	GrowthPerIteration = 1.f;
+	GrowthPerIteration = 10.f;
 
 	MaxNumGrowthIterations = 200.f;
+
+	InitUtilityValues();
 }
 
 ASpaceColonizationPlant::~ASpaceColonizationPlant() {
-	delete RootBranch;
+
 }
 
 // Called when the game starts or when spawned
@@ -54,22 +56,27 @@ void ASpaceColonizationPlant::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 }
 
-#if WITH_EDITOR
 void ASpaceColonizationPlant::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
 	if (GeneratedTreeMaterial) {
-		Mesh->SetMaterial(0, GeneratedTreeMaterial);
+		for (int i = 0; i < Mesh->GetNumSections(); ++i) {
+			Mesh->SetMaterial(i, GeneratedTreeMaterial);
+		}
 	}
 
-	ColonizeGivenSpaces();
-	GenerateTreeMesh();
+	InitUtilityValues();
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
-#endif
+
+void ASpaceColonizationPlant::InitUtilityValues() {
+	KillDistanceSquared = KillDistance * KillDistance;
+	RadiusOfInfluenceSquared = RadiusOfInfluence * RadiusOfInfluence;
+}
 
 void ASpaceColonizationPlant::ColonizeGivenSpaces() {
 
 	InitialRootGrowth();
+	GrowingBranches.Add(RootBranch);
 	for (int i = 0; i < MaxNumGrowthIterations; ++i) {
 		GrowthIteration();
 		if (GrowingBranches.Num() < 1) {
@@ -90,9 +97,8 @@ void ASpaceColonizationPlant::InitialRootGrowth() {
 
 		FVector normalPlantToNearestCSpace = plantToNearestCSpace.GetSafeNormal();
 		float maxDistanceToCSpaceCenter = nearestCSpace->GetMaxDistanceFromCenter();
-		RootBranch->End = (distPlantToNearestCSpace - RadiusOfInfluence / 2.0f - maxDistanceToCSpaceCenter) * normalPlantToNearestCSpace;
+		RootBranch->End = (distPlantToNearestCSpace - maxDistanceToCSpaceCenter) * normalPlantToNearestCSpace;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("RootBranch End after initial Growth: %s"), *(RootBranch->End).ToString());
 }
 
 AColonizationSpace* ASpaceColonizationPlant::GetNearestColonizationSpace() {
@@ -131,11 +137,87 @@ void ASpaceColonizationPlant::GrowthIteration() {
 		}
 	}
 
-	
 	for (FVector currentPoint : allColonizationPoints) {
-
+		CheckColonizationPoint(currentPoint);
 	}
 	
+	for (FBranch* currentBranch : GrowingBranches) {
+		GrowBranch(currentBranch);
+	}
+}
+
+void ASpaceColonizationPlant::CheckColonizationPoint(FVector ColonizationPoint) {
+	// i don't want to copy this array around, so this function will be kinda big
+	TArray<FBranch*> branchesInInfluenceRadius;
+	for (FBranch* currentBranch : GrowingBranches) {
+		FVector branchEndToPoint = ColonizationPoint - (currentBranch->End + this->GetActorLocation());
+		float distancePointToBranchSquared = branchEndToPoint.SizeSquared();
+
+		if (distancePointToBranchSquared > RadiusOfInfluenceSquared) {
+			break;
+		}
+		else if (distancePointToBranchSquared < KillDistanceSquared) {
+			RemoveFromGrowthSpaces(ColonizationPoint);
+			break;
+		}
+		else {
+			branchesInInfluenceRadius.Add(currentBranch);
+		}
+	}
+
+	if (branchesInInfluenceRadius.Num() < 1) {
+		return;
+	}
+
+	FBranch* nearestBranch = branchesInInfluenceRadius[0];
+	FVector minDistanceVector = ColonizationPoint - (nearestBranch->End + this->GetActorLocation());
+	float minDistanceSquared = minDistanceVector.SizeSquared();
+
+	for (FBranch* currentBranch : branchesInInfluenceRadius) {
+		FVector currentDistanceVector = ColonizationPoint - (currentBranch->End + this->GetActorLocation());
+		float currentDistanceSquared = currentDistanceVector.SizeSquared();
+		if (currentDistanceSquared < minDistanceSquared) {
+			nearestBranch = currentBranch;
+			minDistanceSquared = currentDistanceSquared;
+			minDistanceVector = currentDistanceVector;
+		}
+	}
+
+	nearestBranch->GrowCount++;
+	nearestBranch->GrowDirection += minDistanceVector.GetSafeNormal(); // TODO check if this is ok, or not!!! ( dividing by minDistanceSquared)
+}
+
+void ASpaceColonizationPlant::RemoveFromGrowthSpaces(FVector ToRemove) {
+	for (AColonizationSpace* currentSpace : GrowthSpaces) {
+		currentSpace->GetColonizationPoints()->Remove(ToRemove);
+	}
+}
+
+void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
+	if (ToGrow->GrowCount == 0) {
+		GrowingBranches.Remove(ToGrow);
+	}
+	else if (ToGrow->GrowCount > 0) {
+		FBranch* newBranch = new FBranch();
+
+		ToGrow->ChildBranches.Add(newBranch);
+		newBranch->ParentBranch = ToGrow;
+		if (ToGrow->ChildBranches.Num() > 1) {
+			for (FBranch* childBranch : ToGrow->ChildBranches) {
+				childBranch->BranchDepth = ToGrow->BranchDepth + 1;
+			}
+		}
+
+		newBranch->Start = ToGrow->End;
+
+		FVector normalizedGrowthDirection = ToGrow->GrowDirection / ToGrow->GrowCount;
+		normalizedGrowthDirection = normalizedGrowthDirection.GetSafeNormal();
+		newBranch->End = newBranch->Start + normalizedGrowthDirection * GrowthPerIteration;
+
+		GrowingBranches.Add(newBranch);
+	}
+
+	ToGrow->ResetForNextGrowthIteration();
 }
 
 void ASpaceColonizationPlant::GenerateTreeMesh() {
@@ -145,13 +227,33 @@ void ASpaceColonizationPlant::GenerateTreeMesh() {
 		Mesh->ClearAllMeshSections();
 	}
 
-	FMeshData meshData;
+	TSet<FBranch*> allBranches = RecursiveGetAllBranches(RootBranch);
 
-	UMeshConstructor::GenerateCylinder(meshData, RootBranch->Start, 20.0f, RootBranch->End, 0.0f, 16);
+	
+	int i = 0;
+	for (FBranch* currentBranch : allBranches) {
+		FMeshData& meshData = currentBranch->MeshData;
+
+		UMeshConstructor::GenerateCylinder(meshData, currentBranch->Start, 1.0f, currentBranch->End, 1.0f, 16);
+		Mesh->CreateMeshSection(i, meshData.Vertices, meshData.Triangles, meshData.Normals, meshData.UVs, TArray<FColor>(), meshData.Tangents, false);
+		Mesh->SetMaterial(i, GeneratedTreeMaterial);
+		++i;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), i);
+	
+	/*FMeshData meshData;
+	UMeshConstructor::GenerateCylinder(meshData, FVector(0,0,0), 5.0f, FVector(0,0,20), 5.0f, 16);
 	Mesh->CreateMeshSection(0, meshData.Vertices, meshData.Triangles, meshData.Normals, meshData.UVs, TArray<FColor>(), meshData.Tangents, false);
-
-
+	Mesh->SetMaterial(0, GeneratedTreeMaterial);*/
+	
 }
 
 
-
+TSet<FBranch*> ASpaceColonizationPlant::RecursiveGetAllBranches(FBranch* Parent) {
+	TSet<FBranch*> parentAndChildren;
+	parentAndChildren.Add(Parent);
+	for (FBranch* childBranch : Parent->ChildBranches) {
+		parentAndChildren.Append(RecursiveGetAllBranches(childBranch));
+	}
+	return parentAndChildren;
+}

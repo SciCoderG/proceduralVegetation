@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UnrealMath.h"
+#include "Procedural/Data/MeshData.h"
 #include "Branch.generated.h"
 
 USTRUCT()
@@ -17,16 +18,22 @@ public:
 		GrowDirection = FVector(0);
 
 		GrowCount = 0;
+		BranchDepth = 0;
 	}
+
+	void ResetForNextGrowthIteration();
+
+	FBranch* ParentBranch;
+	TArray<FBranch*> ChildBranches;
+	int BranchDepth;
+
 
 	FVector Start;
 	FVector End;
 
+	FMeshData MeshData;
+
 	FVector GrowDirection;
 	int GrowCount;
-
-	FBranch* ParentBranch;
-	TArray<FBranch*> ChildBranches;
-	
 };
 

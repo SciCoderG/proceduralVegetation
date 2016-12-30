@@ -37,19 +37,21 @@ public:
 	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Procedural)
 		TArray<AColonizationSpace* > GrowthSpaces;
 
-	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
 		float KillDistance;
 
-	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
 		float RadiusOfInfluence;
 
-	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
 		float GrowthPerIteration;
 
-	UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
 		float MaxNumGrowthIterations;
 
 private:
+	void InitUtilityValues();
+
 	void ColonizeGivenSpaces();
 
 	void InitialRootGrowth();
@@ -58,10 +60,20 @@ private:
 
 	void GrowthIteration();
 
+	void CheckColonizationPoint(FVector ColonizationPoint);
+
+	void RemoveFromGrowthSpaces(FVector ToRemove);
+
+	void GrowBranch(FBranch* ToGrow);
+
 	void GenerateTreeMesh();
+
+	TSet<FBranch*> RecursiveGetAllBranches(FBranch* Parent);
 
 	FBranch* RootBranch;
 
 	TSet<FBranch*> GrowingBranches;
 	
+	float KillDistanceSquared;
+	float RadiusOfInfluenceSquared;
 };

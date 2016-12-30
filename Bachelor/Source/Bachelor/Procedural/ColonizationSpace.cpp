@@ -54,6 +54,7 @@ void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 	{
 		InitValues();
 		GenerateRandomColonizationPoints();
+		
 	}
 	else if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, DrawDebugPoints))) {
 		ColonizationSphere->SetHiddenInGame(!DrawDebugPoints);
@@ -72,7 +73,7 @@ void AColonizationSpace::GenerateRandomColonizationPoints() {
 	ColonizationPoints.Reset();
 	float scaledSphereRadius = ColonizationSphere->GetScaledSphereRadius();
 	for (uint32 i = 0; i < NumberOfGenerationPoints; ++i) {
-		FVector RandomPoint = FMath::RandRange(-scaledSphereRadius, scaledSphereRadius) * FMath::VRand();
+		FVector RandomPoint = this->GetActorLocation() + FMath::RandRange(-scaledSphereRadius, scaledSphereRadius) * FMath::VRand();
 		ColonizationPoints.Add(RandomPoint);
 	}
 }
@@ -81,7 +82,7 @@ void AColonizationSpace::DrawDebugColonizationPoints() {
 	for (FVector Point : ColonizationPoints) {
 		DrawDebugPoint(
 			GetWorld(),
-			GetActorLocation() + Point,
+			Point,
 			DebugPointSize,
 			DebugPointColor
 		);
