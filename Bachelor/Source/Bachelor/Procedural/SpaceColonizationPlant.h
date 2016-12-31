@@ -50,7 +50,10 @@ public:
 		float MaxNumGrowthIterations;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Test)
-		int MeshSectionToChange;
+		int MaxNumberOfBranchingTwigs;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+		float RootBranchRadius;
 
 private:
 	void InitUtilityValues();
