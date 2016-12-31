@@ -19,6 +19,8 @@ AColonizationSpace::AColonizationSpace()
 	// initial values
 	ColonizationRadius = 150.0f;
 	NumberOfGenerationPoints = 2000.0f;
+	RandomSeed = -1;
+
 	DrawDebugPoints = false;
 	DebugPointColor = FColor(0, 0, 0);
 	DebugPointSize = 5.0f;
@@ -45,12 +47,12 @@ void AColonizationSpace::Tick( float DeltaTime )
 	}
 }
 
-#if WITH_EDITOR
 void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
 	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
 
 	if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, ColonizationRadius)) || 
-		(PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, NumberOfGenerationPoints)))
+		(PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, NumberOfGenerationPoints)) ||
+		(PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, RandomSeed)))
 	{
 		InitValues();
 		GenerateRandomColonizationPoints();
@@ -63,7 +65,7 @@ void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 		InitValues();
 	}
 }
-#endif
+
 
 TSet<FVector>* AColonizationSpace::GetColonizationPoints() {
 	return &ColonizationPoints;
@@ -72,8 +74,18 @@ TSet<FVector>* AColonizationSpace::GetColonizationPoints() {
 void AColonizationSpace::GenerateRandomColonizationPoints() {
 	ColonizationPoints.Reset();
 	float scaledSphereRadius = ColonizationSphere->GetScaledSphereRadius();
+	
+	if (RandomSeed > 0) {
+		RandomStream.Initialize(RandomSeed);
+	}
+	else {
+		RandomStream.GenerateNewSeed();
+	}
+
 	for (uint32 i = 0; i < NumberOfGenerationPoints; ++i) {
-		FVector RandomPoint = this->GetActorLocation() + FMath::RandRange(-scaledSphereRadius, scaledSphereRadius) * FMath::VRand();
+		
+
+		FVector RandomPoint = this->GetActorLocation() + RandomStream.RandRange(-scaledSphereRadius, scaledSphereRadius) * RandomStream.VRand();
 		ColonizationPoints.Add(RandomPoint);
 	}
 }

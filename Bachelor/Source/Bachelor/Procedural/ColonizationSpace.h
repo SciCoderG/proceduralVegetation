@@ -36,6 +36,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
 		float NumberOfGenerationPoints;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+		int RandomSeed;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Debug)
 		bool DrawDebugPoints;
 
@@ -53,4 +56,6 @@ private:
 	void InitValues();
 
 	TSet<FVector> ColonizationPoints;
+
+	FRandomStream RandomStream;
 };
