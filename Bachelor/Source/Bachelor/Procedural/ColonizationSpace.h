@@ -27,25 +27,25 @@ public:
 
 	float GetMaxDistanceFromCenter();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Procedural)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Procedural")
 		class USphereComponent* ColonizationSphere;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 		float ColonizationRadius;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 		float NumberOfGenerationPoints;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 		int RandomSeed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Debug)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Debug")
 		bool DrawDebugPoints;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Debug)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Debug")
 		FColor DebugPointColor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Debug)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Debug")
 		float DebugPointSize;
 private:
 

@@ -28,31 +28,37 @@ public:
 
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Material)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procdeural|Visual")
 		UMaterialInterface* GeneratedTreeMaterial;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		UProceduralMeshComponent* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
+		int MaxNumberOfVerticesPerCylinderRing;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthSpaces")
 		TArray<AColonizationSpace* > GrowthSpaces;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		float KillDistance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		float RadiusOfInfluence;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		float GrowthPerIteration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
-		float MaxNumGrowthIterations;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
+		int MaxNumGrowthIterations;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Test)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		int MaxNumberOfBranchingTwigs;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Procedural)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
+		int MaxGrowthDepth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		float RootBranchRadius;
 
 private:
@@ -66,22 +72,31 @@ private:
 
 	void GrowthIteration();
 
+	TSet<FVector>& GetAllColonizationPoints();
+
+	void CheckAllColonizationPoints();
+
 	void CheckColonizationPoint(FVector ColonizationPoint);
 
 	void RemoveFromGrowthSpaces(FVector ToRemove);
+
+	void GrowAllBranches();
 
 	void GrowBranch(FBranch* ToGrow);
 
 	void GenerateTreeMesh();
 
-	void GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection);
+	void GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfVerticesPerCylinderRing);
 
 	TSet<FBranch*> RecursiveGetAllBranches(FBranch* Parent);
+
+
 
 	FBranch* RootBranch;
 
 	TSet<FBranch*> GrowingBranches;
-	
+	TSet<FVector> AllColonizationPoints;
+
 	float KillDistanceSquared;
 	float RadiusOfInfluenceSquared;
 };
