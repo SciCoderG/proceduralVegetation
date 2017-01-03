@@ -74,8 +74,7 @@ void ASpaceColonizationPlant::PostEditChangeProperty(struct FPropertyChangedEven
 	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
 
 	if ((PropertyName == GET_MEMBER_NAME_CHECKED(ASpaceColonizationPlant, MaxNumGrowthIterations))) {
-		ColonizeGivenSpaces();
-		GenerateTreeMesh();
+		// Potential place to regenerate tree
 	}
 	
 	Super::PostEditChangeProperty(PropertyChangedEvent);

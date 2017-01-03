@@ -5,6 +5,9 @@
 #include "GameFramework/Actor.h"
 #include "SpaceAndPlantSpawner.generated.h"
 
+class ASpaceColonizationPlant;
+class AColonizationSpace;
+
 UCLASS()
 class BACHELOR_API ASpaceAndPlantSpawner : public AActor
 {
@@ -21,7 +24,19 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	//UFUNCTION(BlueprintCallable, Category = "Procedural|Plant")
-		
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
+		int NumberOfSpacesAndPlantsToSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
+		int MaxNumberOfVerticesPerMeshSection;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
+		FVector ColonizationSpaceOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
+		bool ShouldGenerateContinuousNumberOfGrowthIterations;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
 		float KillDistance;
@@ -47,6 +62,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
 		int MaxNumberOfSectionsPerBranch;
 
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace")
 		float ColonizationRadius;
 
@@ -54,7 +71,7 @@ public:
 		float NumberOfGenerationPoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace")
-		int RandomSeed;
+		int RandomSeedForAllSpaces;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace|Debug")
 		bool DrawDebugPoints;
@@ -64,5 +81,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace|Debug")
 		float DebugPointSize;
+
+private:
+
+	AColonizationSpace* SpawnColonizationSpace(FVector Location);
+
+	ASpaceColonizationPlant* SpawnColonizationPlant(FVector Location, AColonizationSpace* ColonizationSpace);
+
+	UWorld* World;
 	
 };
