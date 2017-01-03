@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Data/MeshData.h"
 #include "GameFramework/Actor.h"
 #include "SpaceColonizationPlant.generated.h"
 
@@ -35,7 +36,10 @@ public:
 		UProceduralMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		int MaxNumberOfVerticesPerCylinderRing;
+		int MaxNumberOfSectionsPerBranch;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
+		int MaxNumberOfVerticesPerMeshSection;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthSpaces")
 		TArray<AColonizationSpace* > GrowthSpaces;
@@ -86,11 +90,11 @@ private:
 
 	void GenerateTreeMesh();
 
-	void GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfVerticesPerCylinderRing);
+	void GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfSectionsPerBranch);
 
 	TSet<FBranch*> RecursiveGetAllBranches(FBranch* Parent);
 
-
+	FMeshData AllMeshData;
 
 	FBranch* RootBranch;
 

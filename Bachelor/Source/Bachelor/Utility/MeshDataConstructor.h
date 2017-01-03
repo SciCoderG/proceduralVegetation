@@ -2,11 +2,11 @@
 
 #include "UnrealMath.h"
 #include "Procedural/Data/MeshData.h"
-#include "MeshConstructor.generated.h"
+#include "MeshDataConstructor.generated.h"
 
 
 UCLASS()
-class BACHELOR_API UMeshConstructor : public UBlueprintFunctionLibrary
+class BACHELOR_API UMeshDataConstructor : public UBlueprintFunctionLibrary
 {
 	GENERATED_UCLASS_BODY()
 public:

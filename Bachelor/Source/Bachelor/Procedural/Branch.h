@@ -27,11 +27,8 @@ public:
 	TArray<FBranch*> ChildBranches;
 	int BranchDepth;
 
-
 	FVector Start;
 	FVector End;
-
-	FMeshData MeshData;
 
 	FVector GrowDirection;
 	int GrowCount;

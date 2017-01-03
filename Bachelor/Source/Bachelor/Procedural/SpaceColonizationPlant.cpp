@@ -8,7 +8,7 @@
 
 #include "ColonizationSpace.h"
 #include "Branch.h"
-#include "Utility/MeshConstructor.h"
+#include "Utility/MeshDataConstructor.h"
 
 
 // Sets default values
@@ -25,7 +25,7 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	Mesh->SetupAttachment(RootComponent);
 	Mesh->SetComponentTickEnabled(false);
 
-	MaxNumberOfVerticesPerCylinderRing = 12;
+	MaxNumberOfSectionsPerBranch = 12;
 	
 	KillDistance = 100.0f;
 
@@ -40,6 +40,8 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	MaxGrowthDepth = 6;
 
 	RootBranchRadius = 5.0f;
+
+	MaxNumberOfVerticesPerMeshSection = 400;
 
 	RootBranch = new FBranch();
 
@@ -268,12 +270,20 @@ void ASpaceColonizationPlant::GenerateTreeMesh() {
 
 	TSet<FBranch*> allBranches = RecursiveGetAllBranches(RootBranch);
 	
+	AllMeshData.Reset();
+	int meshSectionCount = 0;
 	int i = 0;
 	for (FBranch* currentBranch : allBranches) {
-		GenerateBranchMesh(currentBranch, allBranches, i, MaxNumberOfVerticesPerCylinderRing);
+		GenerateBranchMesh(currentBranch, allBranches, i, MaxNumberOfSectionsPerBranch);
+
+		if (AllMeshData.Vertices.Num() > MaxNumberOfVerticesPerMeshSection) {
+			Mesh->CreateMeshSection(meshSectionCount, AllMeshData.Vertices, AllMeshData.Triangles, AllMeshData.Normals,
+				AllMeshData.UVs, TArray<FColor>(), AllMeshData.Tangents, false);
+			meshSectionCount++;
+			AllMeshData.Reset();
+		}
 		++i;
 	}
-
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), Mesh->GetNumSections());
 }
 
@@ -283,13 +293,12 @@ TArray<FBranch*> RecursiveGetAllBranchesOnSameDepth(FBranch* Parent) {
 		if (childBranch->BranchDepth == Parent->BranchDepth) {
 			BranchesOnSameDepth.Add(childBranch);
 			BranchesOnSameDepth.Append(RecursiveGetAllBranchesOnSameDepth(childBranch));
-			
 		}
 	}
 	return BranchesOnSameDepth;
 }
 
-void ASpaceColonizationPlant::GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfVerticesPerCylinderRing) {
+void ASpaceColonizationPlant::GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfSectionsPerBranch) {
 	TArray<FBranch*> BranchesOnSameDepth = RecursiveGetAllBranchesOnSameDepth(Origin);
 	for (FBranch* currentBranch : BranchesOnSameDepth) {
 		AllBranches.Remove(currentBranch);
@@ -313,14 +322,7 @@ void ASpaceColonizationPlant::GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>
 		RingRadii.Add(ringRadius);
 	}
 	
-	FMeshData branchData;
-	UMeshConstructor::GenerateMultiLevelCylinder(branchData, RingCenters, RingRadii, NumberOfVerticesPerCylinderRing);
-
-	Mesh->CreateMeshSection(MeshSection, branchData.Vertices, branchData.Triangles, branchData.Normals, 
-		branchData.UVs, TArray<FColor>(), branchData.Tangents, false);
-	
-	Mesh->SetMaterial(MeshSection, GeneratedTreeMaterial);
-	
+	UMeshDataConstructor::GenerateMultiLevelCylinder(AllMeshData, RingCenters, RingRadii, NumberOfSectionsPerBranch);
 }
 
 TSet<FBranch*> ASpaceColonizationPlant::RecursiveGetAllBranches(FBranch* Parent) {

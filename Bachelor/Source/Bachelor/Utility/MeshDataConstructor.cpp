@@ -1,13 +1,13 @@
 #include "Bachelor.h"
-#include "MeshConstructor.h"
+#include "MeshDataConstructor.h"
 #include "KismetProceduralMeshLibrary.h"
 
-UMeshConstructor::UMeshConstructor(const FObjectInitializer& ObjectInitializer)
+UMeshDataConstructor::UMeshDataConstructor(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	
 }
-void UMeshConstructor::GenerateCylinder(FMeshData& MeshData, FVector BottomCenter,
+void UMeshDataConstructor::GenerateCylinder(FMeshData& MeshData, FVector BottomCenter,
 	float BottomRadius, FVector TopCenter, float TopRadius, int NumSegments) {
 	GenerateCircle(MeshData, BottomCenter, BottomRadius, 0.f, NumSegments);
 	GenerateCircle(MeshData, TopCenter, TopRadius, 1.f, NumSegments);
@@ -16,20 +16,24 @@ void UMeshConstructor::GenerateCylinder(FMeshData& MeshData, FVector BottomCente
 		MeshData.UVs, MeshData.Normals, MeshData.Tangents);
 }
 
-void UMeshConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, TArray<FVector> RingCenters,
+void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, TArray<FVector> RingCenters,
 	TArray<float> RingRadii, int NumSegmentsPerCircle) {
+	int StartingIndex = MeshData.Vertices.Num();
+
 	float TexCoordVIncrement = 1.0f / (RingCenters.Num() - 1);
 	GenerateCircle(MeshData, RingCenters[0], RingRadii[0], 0.f, NumSegmentsPerCircle);
 	for (int i = 1; i < RingCenters.Num(); ++i) {
+		int TriangleIndexOffset = (i - 1) * (NumSegmentsPerCircle + 1) + StartingIndex;
+
 		GenerateCircle(MeshData, RingCenters[i], RingRadii[i], i * TexCoordVIncrement, NumSegmentsPerCircle);
 		GenerateCylinderSectionTriangles(MeshData, RingCenters[i - 1], RingCenters[i],
-			NumSegmentsPerCircle, (i - 1) * (NumSegmentsPerCircle + 1));
+			NumSegmentsPerCircle, TriangleIndexOffset);
 	}
 	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(MeshData.Vertices, MeshData.Triangles, 
 		MeshData.UVs, MeshData.Normals, MeshData.Tangents);
 }
 
-void UMeshConstructor::GenerateCircle(FMeshData& MeshData, 
+void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
 	FVector Center, float Radius, float TexCoordV, int NumSegments) {
 
 	float anglePerSection = (PI * 2.0f) / NumSegments;
@@ -52,16 +56,10 @@ void UMeshConstructor::GenerateCircle(FMeshData& MeshData,
 	}
 }
 
-void UMeshConstructor::GenerateCylinderSectionTriangles(FMeshData& MeshData, FVector BottomCenter, 
+void UMeshDataConstructor::GenerateCylinderSectionTriangles(FMeshData& MeshData, FVector BottomCenter,
 	FVector TopCenter, int NumSegments, int TriangleIndexOffset) {
 	int verticesPerCircle = NumSegments + 1;
 
-	/*
-	if (MeshData.Vertices.Num() != TriangleIndexOffset + (verticesPerCircle * 2)) {
-		UE_LOG(LogTemp, Warning, TEXT("Number of vertices in MeshData does not fit Cylinderconstruction in UMeshConstructor::GenerateCylinderSectionTriangles. Aborting."));
-		return;
-	}
-	*/
 	FVector bottomToCenter = TopCenter - BottomCenter;
 	bool bSwapTriangles = bottomToCenter.Z < 0.f;
 

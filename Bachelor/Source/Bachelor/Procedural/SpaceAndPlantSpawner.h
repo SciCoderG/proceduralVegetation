@@ -20,6 +20,9 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	//UFUNCTION(BlueprintCallable, Category = "Procedural|Plant")
+		
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
 		float KillDistance;
 
@@ -42,7 +45,7 @@ public:
 		float RootBranchRadius;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
-		int MaxNumberOfVerticesPerCylinderRing;
+		int MaxNumberOfSectionsPerBranch;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace")
 		float ColonizationRadius;
