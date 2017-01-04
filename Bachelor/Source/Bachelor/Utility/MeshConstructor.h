@@ -21,6 +21,4 @@ public:
 	static void GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin,
 		TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfSectionsPerBranch);
 	
-	static TSet<FBranch*> RecursiveGetAllBranches(FBranch* Parent);
-
 };

@@ -5,6 +5,7 @@
 #include "Procedural/Data/MeshData.h"
 #include "Procedural/Branch.h"
 #include "MeshDataConstructor.h"
+#include "BranchUtility.h"
 
 #include "ProceduralMeshComponent.h"
 #include "KismetProceduralMeshLibrary.h"
@@ -16,7 +17,7 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 		Mesh->ClearAllMeshSections();
 	}
 
-	TSet<FBranch*> allBranches = RecursiveGetAllBranches(RootBranch);
+	TSet<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranches(RootBranch);
 
 	AllMeshData.Reset();
 	int meshSectionCount = 0;
@@ -35,20 +36,11 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), Mesh->GetNumSections());
 }
 
-TArray<FBranch*> RecursiveGetAllBranchesOnSameDepth(FBranch* Parent) {
-	TArray<FBranch*> BranchesOnSameDepth;
-	for (FBranch* childBranch : Parent->ChildBranches) {
-		if (childBranch->BranchDepth == Parent->BranchDepth) {
-			BranchesOnSameDepth.Add(childBranch);
-			BranchesOnSameDepth.Append(RecursiveGetAllBranchesOnSameDepth(childBranch));
-		}
-	}
-	return BranchesOnSameDepth;
-}
+
 
 void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, 
 	int NumberOfSectionsPerBranch) {
-	TArray<FBranch*> BranchesOnSameDepth = RecursiveGetAllBranchesOnSameDepth(Origin);
+	TArray<FBranch*> BranchesOnSameDepth = UBranchUtility::RecursiveGetAllBranchesOnSameDepth(Origin);
 	for (FBranch* currentBranch : BranchesOnSameDepth) {
 		AllBranches.Remove(currentBranch);
 	}
@@ -75,12 +67,5 @@ void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origi
 	UMeshDataConstructor::GenerateMultiLevelCylinder(AllMeshData, RingCenters, RingRadii, NumberOfSectionsPerBranch);
 }
 
-TSet<FBranch*> UMeshConstructor::RecursiveGetAllBranches(FBranch* Parent) {
-	TSet<FBranch*> parentAndChildren;
-	parentAndChildren.Add(Parent);
-	for (FBranch* childBranch : Parent->ChildBranches) {
-		parentAndChildren.Append(RecursiveGetAllBranches(childBranch));
-	}
-	return parentAndChildren;
-}
+
 

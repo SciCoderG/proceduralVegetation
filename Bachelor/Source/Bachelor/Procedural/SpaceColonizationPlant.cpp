@@ -10,6 +10,7 @@
 #include "Branch.h"
 #include "Utility/MeshDataConstructor.h"
 #include "Utility/MeshConstructor.h"
+#include "Utility/BranchUtility.h"
 
 
 // Sets default values
@@ -77,7 +78,10 @@ void ASpaceColonizationPlant::InitUtilityValues() {
 }
 
 void ASpaceColonizationPlant::ColonizeGivenSpaces() {
-
+	if (RootBranch != NULL) {
+		UBranchUtility::RecursiveDeleteAllBranches(RootBranch);
+	}
+	RootBranch = new FBranch();
 	InitialRootGrowth();
 	GrowingBranches.Add(RootBranch);
 	for (int i = 0; i < MaxNumGrowthIterations; ++i) {
