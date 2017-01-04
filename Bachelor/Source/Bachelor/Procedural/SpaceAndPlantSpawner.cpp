@@ -96,9 +96,7 @@ AColonizationSpace* ASpaceAndPlantSpawner::SpawnColonizationSpace(FVector Locati
 
 ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector Location, AColonizationSpace* ColonizationSpace) {
 	ASpaceColonizationPlant* spawnedColonizationPlant = NULL;
-	UE_LOG(LogTemp, Warning, TEXT("Try Spawning Plant"));
 	if (World) {
-		UE_LOG(LogTemp, Warning, TEXT("Spawned Plant"));
 		UClass* colonizationPlantClass = ASpaceColonizationPlant::StaticClass();
 		spawnedColonizationPlant = World->SpawnActor<ASpaceColonizationPlant>(colonizationPlantClass, Location, FRotator(0.f), FActorSpawnParameters());
 

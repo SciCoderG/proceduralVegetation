@@ -86,8 +86,12 @@ void ASpaceColonizationPlant::ColonizeGivenSpaces() {
 			UE_LOG(LogTemp, Warning, TEXT("No Growing Branches left, interrupting Colonization"));
 			break;
 		}
+		if (AllColonizationPoints.Num() < 1) {
+			UE_LOG(LogTemp, Warning, TEXT("No Colonization Points left, interrupting Colonization"));
+			break;
+		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Finished max number of growth iterations with %d growing Branches left"), GrowingBranches.Num());
+	UE_LOG(LogTemp, Warning, TEXT("Finished Space Colonization with %d growing Branches left"), GrowingBranches.Num());
 }
 
 void ASpaceColonizationPlant::InitialRootGrowth() {
@@ -217,8 +221,7 @@ void ASpaceColonizationPlant::GrowAllBranches() {
 }
 
 void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
-	if (ToGrow->GrowCount == 0 
-		|| ToGrow->ChildBranches.Num() >= MaxNumberOfBranchingTwigs) {
+	if (ToGrow->ChildBranches.Num() >= MaxNumberOfBranchingTwigs) {
 		GrowingBranches.Remove(ToGrow);
 	}
 	else {
@@ -226,7 +229,7 @@ void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
 		normalizedGrowthDirection = normalizedGrowthDirection.GetSafeNormal();
 
 		if (ToGrow->GrowCount == 1 && ToGrow->ChildBranches.Num() < 1) {
-			// Grow current branch farther
+			// Grow current branch farther out
 			ToGrow->End = ToGrow->End + normalizedGrowthDirection * GrowthPerIteration;
 		}
 		else if (ToGrow->GrowCount > 0) {
@@ -234,22 +237,19 @@ void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
 			FBranch* newBranch = new FBranch();
 			if (ToGrow->ChildBranches.Num() > 0) {
 				newBranch->BranchDepth = ToGrow->BranchDepth + 1;
-				if (newBranch->BranchDepth > MaxGrowthDepth) {
-					ToGrow->ResetForNextGrowthIteration();
-					return;
-				}
+				
 			}
 			else {
 				newBranch->BranchDepth = ToGrow->BranchDepth;
 			}
-			ToGrow->ChildBranches.Add(newBranch);
-			newBranch->ParentBranch = ToGrow;
-			newBranch->Start = ToGrow->End;
-			newBranch->End = newBranch->Start + normalizedGrowthDirection * GrowthPerIteration;
-			GrowingBranches.Add(newBranch);
+			if (newBranch->BranchDepth <= MaxGrowthDepth) {
+				ToGrow->ChildBranches.Add(newBranch);
+				newBranch->ParentBranch = ToGrow;
+				newBranch->Start = ToGrow->End;
+				newBranch->End = newBranch->Start + normalizedGrowthDirection * GrowthPerIteration;
+				GrowingBranches.Add(newBranch);
+			}
 		}
 	}
 	ToGrow->ResetForNextGrowthIteration();
 }
-
-

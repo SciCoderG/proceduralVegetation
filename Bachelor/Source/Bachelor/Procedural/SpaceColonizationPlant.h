@@ -88,11 +88,6 @@ private:
 
 	void GrowBranch(FBranch* ToGrow);
 
-	void GenerateTreeMesh();
-
-	void GenerateBranchMesh(FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfSectionsPerBranch);
-
-	TSet<FBranch*> RecursiveGetAllBranches(FBranch* Parent);
 
 	FMeshData AllMeshData;
 
