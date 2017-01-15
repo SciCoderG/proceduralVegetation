@@ -41,6 +41,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		int MaxNumberOfVerticesPerMeshSection;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
+		float BranchRadiusZero;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
+		float BranchRadiusGrowthParameter;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthSpaces")
 		TArray<AColonizationSpace* > GrowthSpaces;
 

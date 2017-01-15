@@ -12,7 +12,7 @@
 
 
 void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshData& AllMeshData, 
-	FBranch* RootBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection) {
+	FBranch* RootBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection, float BranchRadiusZero, float BranchRadiusGrowthParameter) {
 	if (Mesh->GetNumSections() > 1) {
 		Mesh->ClearAllMeshSections();
 	}
@@ -20,6 +20,9 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 	TSet<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranches(RootBranch);
 
 	AllMeshData.Reset();
+
+	UBranchUtility::RecursiveCalculateAllBranchRadii(RootBranch, BranchRadiusZero, BranchRadiusGrowthParameter);
+
 	int meshSectionCount = 0;
 	int i = 0;
 	for (FBranch* currentBranch : allBranches) {
@@ -38,6 +41,7 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 
 
 
+
 void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, 
 	int NumberOfSectionsPerBranch) {
 	TArray<FBranch*> BranchesOnSameDepth = UBranchUtility::RecursiveGetAllBranchesOnSameDepth(Origin);
@@ -49,19 +53,16 @@ void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origi
 		childrenAdjustment = Origin->ParentBranch->ChildBranches.Num();
 	}
 
-	// TODO - get Radii from branches
-	float ringRadius = 5.0f / (Origin->BranchDepth + 1 + childrenAdjustment);
-
 	TArray<FVector> RingCenters;
 	RingCenters.Add(Origin->Start);
 	RingCenters.Add(Origin->End);
 
 	TArray<float> RingRadii;
-	RingRadii.Add(ringRadius);
-	RingRadii.Add(ringRadius);
+	RingRadii.Add(Origin->StartRadius);
+	RingRadii.Add(Origin->EndRadius);
 	for (FBranch* currentBranch : BranchesOnSameDepth) {
 		RingCenters.Add(currentBranch->End);
-		RingRadii.Add(ringRadius);
+		RingRadii.Add(currentBranch->EndRadius);
 	}
 
 	UMeshDataConstructor::GenerateMultiLevelCylinder(AllMeshData, RingCenters, RingRadii, NumberOfSectionsPerBranch);

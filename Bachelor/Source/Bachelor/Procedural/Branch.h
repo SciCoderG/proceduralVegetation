@@ -14,7 +14,8 @@ public:
 
 		Start = FVector(0);
 		End = FVector(0);
-		BranchRadius = 0;
+		StartRadius = 0.f;
+		EndRadius = 0.f;
 
 		GrowDirection = FVector(0);
 
@@ -30,7 +31,8 @@ public:
 
 	FVector Start;
 	FVector End;
-	float BranchRadius;
+	float StartRadius;
+	float EndRadius;
 
 	FVector GrowDirection;
 	int GrowCount;

@@ -50,6 +50,10 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 	RootBranchRadius = 7.5f;
 
 	MaxNumberOfSectionsPerBranch = 8;
+
+	BranchRadiusZero = 1.0f;
+
+	BranchRadiusGrowthParameter = 2.0f;
 }
 
 // Called when the game starts or when spawned
@@ -110,6 +114,8 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		spawnedColonizationPlant->MaxGrowthDepth = MaxGrowthDepth;
 		spawnedColonizationPlant->RootBranchRadius = RootBranchRadius;
 		spawnedColonizationPlant->MaxNumberOfSectionsPerBranch = MaxNumberOfSectionsPerBranch;
+		spawnedColonizationPlant->BranchRadiusZero = BranchRadiusZero;
+		spawnedColonizationPlant->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
 	}
 	return spawnedColonizationPlant;
 }

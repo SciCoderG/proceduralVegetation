@@ -35,6 +35,9 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	MaxGrowthDepth = 6;
 	RootBranchRadius = 5.0f;
 	MaxNumberOfVerticesPerMeshSection = 400;
+
+	BranchRadiusZero = 1.0f;
+	BranchRadiusGrowthParameter = 2.0f;
 	RootBranch = new FBranch();
 
 	InitUtilityValues();
@@ -51,7 +54,7 @@ void ASpaceColonizationPlant::BeginPlay()
 
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 	ColonizeGivenSpaces();
-	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, MaxNumberOfSectionsPerBranch, MaxNumberOfVerticesPerMeshSection);
+	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, MaxNumberOfSectionsPerBranch, MaxNumberOfVerticesPerMeshSection, BranchRadiusZero, BranchRadiusGrowthParameter);
 }
 
 // Called every frame

@@ -62,6 +62,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
 		int MaxNumberOfSectionsPerBranch;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
+		float BranchRadiusZero;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
+		float BranchRadiusGrowthParameter;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace")

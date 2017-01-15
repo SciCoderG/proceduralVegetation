@@ -16,8 +16,8 @@ class BACHELOR_API UMeshConstructor : public UBlueprintFunctionLibrary
 	
 public:
 	static void GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshData& AllMeshData, 
-		FBranch* RootBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection);
-	
+		FBranch* RootBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection, float BranchRadiusZero, float BranchRadiusGrowthParameter);
+
 	static void GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin,
 		TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfSectionsPerBranch);
 	

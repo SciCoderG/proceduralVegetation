@@ -82,8 +82,3 @@ void UMeshDataConstructor::GenerateCylinderSectionTriangles(FMeshData& MeshData,
 		}
 	}
 }
-
-
-
-
-
