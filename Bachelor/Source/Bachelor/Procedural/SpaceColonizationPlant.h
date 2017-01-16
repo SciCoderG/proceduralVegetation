@@ -60,6 +60,9 @@ public:
 		float GrowthPerIteration;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
+		FVector Tropism;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		int MaxNumGrowthIterations;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
@@ -67,9 +70,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		int MaxGrowthDepth;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
-		float RootBranchRadius;
 
 private:
 	void InitUtilityValues();
@@ -86,6 +86,8 @@ private:
 
 	void CheckAllColonizationPoints();
 
+	void CheckIfInKillZone(FVector ColonizationPoint);
+
 	void CheckColonizationPoint(FVector ColonizationPoint);
 
 	void RemoveFromGrowthSpaces(FVector ToRemove);
@@ -94,6 +96,7 @@ private:
 
 	void GrowBranch(FBranch* ToGrow);
 
+	void TryCreatingNewBranch(FBranch* Parent, FVector NormalizedGrowthDirection, float IndividualGrowthPerIteration);
 
 	FMeshData AllMeshData;
 

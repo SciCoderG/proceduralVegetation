@@ -17,7 +17,7 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 		Mesh->ClearAllMeshSections();
 	}
 
-	UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
+	//UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 
 	TSet<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranches(RootBranch);
 	UE_LOG(LogTemp, Warning, TEXT("Number of Branches: %d"), allBranches.Num());
@@ -39,6 +39,13 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 		}
 		++i;
 	}
+	Mesh->CreateMeshSection(meshSectionCount, AllMeshData.Vertices, AllMeshData.Triangles, AllMeshData.Normals,
+		AllMeshData.UVs, TArray<FColor>(), AllMeshData.Tangents, false);
+	meshSectionCount++;
+	vertexCounter += AllMeshData.Vertices.Num();
+	AllMeshData.Reset();
+
+
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d Vertices"), vertexCounter);
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), Mesh->GetNumSections());
 }
@@ -52,7 +59,7 @@ void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origi
 	for (FBranch* currentBranch : BranchesOnSameDepth) {
 		AllBranches.Remove(currentBranch);
 	}
-
+	//UE_LOG(LogTemp, Warning, TEXT("Num Of Branches as one cylinder: %d"), BranchesOnSameDepth.Num());
 	TArray<FVector> RingCenters;
 	RingCenters.Add(Origin->Start);
 	RingCenters.Add(Origin->End);

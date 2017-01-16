@@ -51,13 +51,13 @@ public:
 		int MaxNumGrowthIterations;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
+		FVector Tropism;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
 		int MaxNumberOfBranchingTwigs;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
 		int MaxGrowthDepth;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
-		float RootBranchRadius;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
 		int MaxNumberOfSectionsPerBranch;
