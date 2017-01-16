@@ -17,12 +17,14 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 		Mesh->ClearAllMeshSections();
 	}
 
-	TSet<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranches(RootBranch);
+	UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 
+	TSet<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranches(RootBranch);
+	UE_LOG(LogTemp, Warning, TEXT("Number of Branches: %d"), allBranches.Num());
 	AllMeshData.Reset();
 
 	UBranchUtility::RecursiveCalculateAllBranchRadii(RootBranch, BranchRadiusZero, BranchRadiusGrowthParameter);
-
+	int vertexCounter = 0;
 	int meshSectionCount = 0;
 	int i = 0;
 	for (FBranch* currentBranch : allBranches) {
@@ -32,10 +34,12 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 			Mesh->CreateMeshSection(meshSectionCount, AllMeshData.Vertices, AllMeshData.Triangles, AllMeshData.Normals,
 				AllMeshData.UVs, TArray<FColor>(), AllMeshData.Tangents, false);
 			meshSectionCount++;
+			vertexCounter += AllMeshData.Vertices.Num();
 			AllMeshData.Reset();
 		}
 		++i;
 	}
+	UE_LOG(LogTemp, Warning, TEXT("Generated %d Vertices"), vertexCounter);
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), Mesh->GetNumSections());
 }
 
@@ -47,10 +51,6 @@ void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origi
 	TArray<FBranch*> BranchesOnSameDepth = UBranchUtility::RecursiveGetAllBranchesOnSameDepth(Origin);
 	for (FBranch* currentBranch : BranchesOnSameDepth) {
 		AllBranches.Remove(currentBranch);
-	}
-	float childrenAdjustment = 0.0f;
-	if (NULL != Origin->ParentBranch) {
-		childrenAdjustment = Origin->ParentBranch->ChildBranches.Num();
 	}
 
 	TArray<FVector> RingCenters;

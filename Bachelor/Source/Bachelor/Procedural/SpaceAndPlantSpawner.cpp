@@ -69,7 +69,6 @@ void ASpaceAndPlantSpawner::BeginPlay()
 		FVector location = GetActorLocation();
 		location += (i % wrapValue) * xOffset;
 		location += (i / wrapValue) * yOffset;
-
 		AColonizationSpace* colonizationSpace = SpawnColonizationSpace(location + ColonizationSpaceOffset);
 		SpawnColonizationPlant(location, colonizationSpace);
 	}

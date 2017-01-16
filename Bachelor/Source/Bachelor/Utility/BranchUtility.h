@@ -20,7 +20,14 @@ public:
 	static TSet<FBranch*> RecursiveGetAllLeaves(FBranch* RootBranch);
 
 	static float RecursiveCalculateAllBranchRadii(FBranch* Parent, float RadiusZero, float BranchingRadiusParameter);
+
+	static void RecursiveReduceGrownBranches(FBranch* Parent);
 	
 	static void RecursiveDeleteAllBranches(FBranch* Parent);
 
+
+private:
+	static void ElongateGrownBranches(FBranch* Parent);
+
+	static void ReduceInnerLeafBranches(FBranch* Parent);
 };

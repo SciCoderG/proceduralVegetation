@@ -62,9 +62,46 @@ float UBranchUtility::RecursiveCalculateAllBranchRadii(FBranch* Parent, float Ra
 	}
 }
 
+void UBranchUtility::RecursiveReduceGrownBranches(FBranch* Parent) {
+	ElongateGrownBranches(Parent);
+
+}
+
 void UBranchUtility::RecursiveDeleteAllBranches(FBranch* Parent) {
 	for (FBranch* childBranch : Parent->ChildBranches) {
 		RecursiveDeleteAllBranches(childBranch);
 	}
 	delete Parent;
+}
+
+
+void UBranchUtility::ElongateGrownBranches(FBranch* Parent) {
+	if (Parent->ChildBranches.Num() < 1) {
+		return;
+	}
+
+	while (Parent->ChildBranches.Num() == 1) {
+		FBranch* singleChild = Parent->ChildBranches[0];
+
+		Parent->ChildBranches.Reset();
+		for (FBranch* newChildBranch : singleChild->ChildBranches) {
+			Parent->ChildBranches.Add(newChildBranch);
+			newChildBranch->ParentBranch = Parent;
+		}
+		Parent->End = singleChild->End;
+
+		delete singleChild;
+	}
+
+	for (FBranch* childBranch : Parent->ChildBranches) {
+		RecursiveReduceGrownBranches(childBranch);
+	}
+	return;
+}
+
+
+void ReduceInnerLeafBranches(FBranch* Parent) {
+	if (Parent->ChildBranches.Num() > 1) {
+
+	}
 }
