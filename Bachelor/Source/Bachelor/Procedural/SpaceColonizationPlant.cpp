@@ -38,7 +38,6 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 
 	BranchRadiusZero = 1.0f;
 	BranchRadiusGrowthParameter = 2.0f;
-	RootBranch = new FBranch();
 
 	InitUtilityValues();
 }
@@ -53,6 +52,7 @@ void ASpaceColonizationPlant::BeginPlay()
 	Super::BeginPlay();
 
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
+	InitUtilityValues();
 	ColonizeGivenSpaces();
 	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, MaxNumberOfSectionsPerBranch, MaxNumberOfVerticesPerMeshSection, BranchRadiusZero, BranchRadiusGrowthParameter);
 }
@@ -196,10 +196,7 @@ void ASpaceColonizationPlant::CheckColonizationPoint(FVector ColonizationPoint) 
 		FVector branchEndToPoint = ColonizationPoint - (currentBranch->End + this->GetActorLocation());
 		float distancePointToBranchSquared = branchEndToPoint.SizeSquared();
 
-		if (distancePointToBranchSquared > RadiusOfInfluenceSquared) {
-			break;
-		}
-		else {
+		if (distancePointToBranchSquared < RadiusOfInfluenceSquared) {
 			branchesInInfluenceRadius.Add(currentBranch);
 		}
 	}
@@ -233,6 +230,7 @@ void ASpaceColonizationPlant::RemoveFromGrowthSpaces(FVector ToRemove) {
 }
 
 void ASpaceColonizationPlant::GrowAllBranches() {
+	TSet<FBranch*> currentBranchesToGrow = GrowingBranches;
 	for (FBranch* currentBranch : GrowingBranches) {
 		GrowBranch(currentBranch);
 	}
@@ -251,12 +249,13 @@ void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
 		float depthWeight = ((MaxGrowthDepth+1) - ToGrow->BranchDepth) / (MaxGrowthDepth+1);
 
 		float individualGrowthPerIteration = GrowthPerIteration  + (depthWeight * GrowthPerIteration);
-
+		individualGrowthPerIteration = GrowthPerIteration;
 		if (ToGrow->GrowCount > 0) {
 			TryCreatingNewBranch(ToGrow, normalizedGrowthDirection, individualGrowthPerIteration);
 		}
 	}
-	ToGrow->ResetForNextGrowthIteration();
+	ToGrow-> GrowCount = 0;
+	ToGrow->GrowDirection = FVector(0.f);
 }
 
 void CheckBranchingAngles(FBranch* Parent, FVector NormalizedGrowthDirection) {

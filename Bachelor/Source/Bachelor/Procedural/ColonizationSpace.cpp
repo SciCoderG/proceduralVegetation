@@ -83,8 +83,6 @@ void AColonizationSpace::GenerateRandomColonizationPoints() {
 	}
 
 	for (uint32 i = 0; i < NumberOfGenerationPoints; ++i) {
-		
-
 		FVector RandomPoint = this->GetActorLocation() + RandomStream.RandRange(-scaledSphereRadius, scaledSphereRadius) * RandomStream.VRand();
 		ColonizationPoints.Add(RandomPoint);
 	}
