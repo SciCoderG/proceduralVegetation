@@ -34,10 +34,13 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	MaxNumGrowthIterations = 20;
 	MaxNumberOfBranchingTwigs = 4;
 	MaxGrowthDepth = 6;
-	MaxNumberOfVerticesPerMeshSection = 400;
+	WeightedGrowth = true;
 
+	MaxNumberOfVerticesPerMeshSection = 400;
 	BranchRadiusZero = 1.0f;
 	BranchRadiusGrowthParameter = 2.0f;
+	PolyReductionByCurveReduction = false;
+
 
 	InitUtilityValues();
 }
@@ -54,6 +57,10 @@ void ASpaceColonizationPlant::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 	InitUtilityValues();
 	ColonizeGivenSpaces();
+
+	if (PolyReductionByCurveReduction) {
+		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
+	}
 	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, MaxNumberOfSectionsPerBranch, MaxNumberOfVerticesPerMeshSection, BranchRadiusZero, BranchRadiusGrowthParameter);
 }
 
@@ -246,10 +253,12 @@ void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
 		normalizedGrowthDirection += Tropism;
 		normalizedGrowthDirection = normalizedGrowthDirection.GetSafeNormal();
 		
-		float depthWeight = ((MaxGrowthDepth+1) - ToGrow->BranchDepth) / (MaxGrowthDepth+1);
-
-		float individualGrowthPerIteration = GrowthPerIteration  + (depthWeight * GrowthPerIteration);
-		individualGrowthPerIteration = GrowthPerIteration;
+		float individualGrowthPerIteration = GrowthPerIteration;
+		if (WeightedGrowth) {
+			float depthWeight = ((MaxGrowthDepth + 1) - ToGrow->BranchDepth) / (MaxGrowthDepth + 1);
+			individualGrowthPerIteration = GrowthPerIteration + (depthWeight * GrowthPerIteration);
+		}
+	
 		if (ToGrow->GrowCount > 0) {
 			TryCreatingNewBranch(ToGrow, normalizedGrowthDirection, individualGrowthPerIteration);
 		}

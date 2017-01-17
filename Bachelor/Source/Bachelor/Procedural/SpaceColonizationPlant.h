@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		float BranchRadiusGrowthParameter;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
+		bool PolyReductionByCurveReduction;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthSpaces")
 		TArray<AColonizationSpace* > GrowthSpaces;
 
@@ -70,6 +73,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		int MaxGrowthDepth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
+		bool WeightedGrowth;
 
 private:
 	void InitUtilityValues();

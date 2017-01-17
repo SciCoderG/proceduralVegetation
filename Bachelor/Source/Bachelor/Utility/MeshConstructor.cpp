@@ -17,8 +17,6 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 		Mesh->ClearAllMeshSections();
 	}
 
-	//UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
-
 	TSet<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranches(RootBranch);
 	UE_LOG(LogTemp, Warning, TEXT("Number of Branches: %d"), allBranches.Num());
 	AllMeshData.Reset();

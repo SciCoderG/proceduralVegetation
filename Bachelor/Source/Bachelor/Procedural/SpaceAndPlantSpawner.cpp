@@ -49,11 +49,15 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 
 	MaxGrowthDepth = 5;
 
+	WeightedGrowth = true;
+
 	MaxNumberOfSectionsPerBranch = 8;
 
 	BranchRadiusZero = 1.0f;
 
 	BranchRadiusGrowthParameter = 2.0f;
+
+	PolyReductionByCurveReduction = false;
 }
 
 // Called when the game starts or when spawned
@@ -112,9 +116,11 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		spawnedColonizationPlant->Tropism = Tropism;
 		spawnedColonizationPlant->MaxNumberOfBranchingTwigs = MaxNumberOfBranchingTwigs;
 		spawnedColonizationPlant->MaxGrowthDepth = MaxGrowthDepth;
+		spawnedColonizationPlant->WeightedGrowth = WeightedGrowth;
 		spawnedColonizationPlant->MaxNumberOfSectionsPerBranch = MaxNumberOfSectionsPerBranch;
 		spawnedColonizationPlant->BranchRadiusZero = BranchRadiusZero;
 		spawnedColonizationPlant->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
+		spawnedColonizationPlant->PolyReductionByCurveReduction = PolyReductionByCurveReduction;
 	}
 	return spawnedColonizationPlant;
 }
