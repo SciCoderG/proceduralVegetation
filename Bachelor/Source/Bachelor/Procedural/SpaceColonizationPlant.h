@@ -90,11 +90,11 @@ private:
 
 	TSet<FVector>& GetAllColonizationPoints();
 
-	void CheckAllColonizationPoints();
+	bool CheckAllColonizationPoints();
 
 	void CheckIfInKillZone(FVector ColonizationPoint);
 
-	void CheckColonizationPoint(FVector ColonizationPoint);
+	bool CheckColonizationPoint(FVector ColonizationPoint);
 
 	void RemoveFromGrowthSpaces(FVector ToRemove);
 
@@ -113,4 +113,6 @@ private:
 
 	float KillDistanceSquared;
 	float RadiusOfInfluenceSquared;
+
+	bool IsStillGrowing;
 };

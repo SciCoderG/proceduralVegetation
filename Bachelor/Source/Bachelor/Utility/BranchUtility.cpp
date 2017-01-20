@@ -14,6 +14,15 @@ TSet<FBranch*> UBranchUtility::RecursiveGetAllBranches(FBranch* Parent) {
 	return parentAndChildren;
 }
 
+TArray<FBranch*> UBranchUtility::RecursiveGetAllBranchesAsArray(FBranch* Parent) {
+	TArray<FBranch*> parentAndChildren;
+	parentAndChildren.Add(Parent);
+	for (FBranch* childBranch : Parent->ChildBranches) {
+		parentAndChildren.Append(RecursiveGetAllBranchesAsArray(childBranch));
+	}
+	return parentAndChildren;
+}
+
 TArray<FBranch*> UBranchUtility::RecursiveGetAllBranchesOnSameDepth(FBranch* Parent) {
 	TArray<FBranch*> BranchesOnSameDepth;
 	BranchesOnSameDepth.Add(Parent);
@@ -101,7 +110,7 @@ void UBranchUtility::ElongateGrownBranches(FBranch* Parent) {
 }
 
 
-void ReduceInnerLeafBranches(FBranch* Parent) {
+void UBranchUtility::ReduceInnerLeafBranches(FBranch* Parent) {
 	if (Parent->ChildBranches.Num() > 1) {
 
 	}

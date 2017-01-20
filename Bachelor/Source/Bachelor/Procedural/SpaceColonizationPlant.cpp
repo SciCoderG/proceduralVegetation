@@ -41,7 +41,7 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	BranchRadiusGrowthParameter = 2.0f;
 	PolyReductionByCurveReduction = false;
 
-
+	IsStillGrowing = true;
 	InitUtilityValues();
 }
 
@@ -106,6 +106,10 @@ void ASpaceColonizationPlant::ColonizeGivenSpaces() {
 			UE_LOG(LogTemp, Warning, TEXT("No Colonization Points left, interrupting Colonization"));
 			break;
 		}
+		if (!IsStillGrowing) {
+			UE_LOG(LogTemp, Warning, TEXT("No Colonization Points reachable, interrupting Colonization"));
+			break;
+		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Finished Space Colonization after %d Iterations with %d growing Branches left"), iterations, GrowingBranches.Num());
 }
@@ -160,19 +164,24 @@ AColonizationSpace* ASpaceColonizationPlant::GetNearestColonizationSpace() {
 }
 
 void ASpaceColonizationPlant::GrowthIteration() {
-	CheckAllColonizationPoints();
+	IsStillGrowing = CheckAllColonizationPoints();
+	if (!IsStillGrowing) {
+		return;
+	}
 	GrowAllBranches();
 }
 
-void ASpaceColonizationPlant::CheckAllColonizationPoints() {
+bool ASpaceColonizationPlant::CheckAllColonizationPoints() {
 	TSet<FVector> allColonizationPoints = GetAllColonizationPoints();
 	for (FVector currentPoint : allColonizationPoints) {
 		CheckIfInKillZone(currentPoint);
 	}
 	allColonizationPoints = GetAllColonizationPoints();
+	bool IsInfluencingGrowth = false;
 	for (FVector currentPoint : allColonizationPoints) {
-		CheckColonizationPoint(currentPoint);
+		IsInfluencingGrowth|= CheckColonizationPoint(currentPoint);
 	}
+	return IsInfluencingGrowth;
 }
 
 TSet<FVector>& ASpaceColonizationPlant::GetAllColonizationPoints() {
@@ -196,7 +205,7 @@ void ASpaceColonizationPlant::CheckIfInKillZone(FVector ColonizationPoint) {
 	}
 }
 
-void ASpaceColonizationPlant::CheckColonizationPoint(FVector ColonizationPoint) {
+bool ASpaceColonizationPlant::CheckColonizationPoint(FVector ColonizationPoint) {
 	// i don't want to copy this array around, so this function will be kinda big
 	TArray<FBranch*> branchesInInfluenceRadius;
 	for (FBranch* currentBranch : GrowingBranches) {
@@ -208,8 +217,12 @@ void ASpaceColonizationPlant::CheckColonizationPoint(FVector ColonizationPoint) 
 		}
 	}
 
+	bool IsInfluencingGrowth = false;
 	if (branchesInInfluenceRadius.Num() < 1) {
-		return;
+		return IsInfluencingGrowth;
+	}
+	else {
+		IsInfluencingGrowth = true;
 	}
 
 	FBranch* nearestBranch = branchesInInfluenceRadius[0];
@@ -228,6 +241,8 @@ void ASpaceColonizationPlant::CheckColonizationPoint(FVector ColonizationPoint) 
 
 	nearestBranch->GrowCount++;
 	nearestBranch->GrowDirection += minDistanceVector.GetSafeNormal();
+
+	return IsInfluencingGrowth;
 }
 
 void ASpaceColonizationPlant::RemoveFromGrowthSpaces(FVector ToRemove) {

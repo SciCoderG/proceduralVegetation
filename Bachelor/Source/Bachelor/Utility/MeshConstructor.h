@@ -19,6 +19,6 @@ public:
 		FBranch* RootBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection, float BranchRadiusZero, float BranchRadiusGrowthParameter);
 
 	static void GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin,
-		TSet<FBranch*>& AllBranches, int MeshSection, int NumberOfSectionsPerBranch);
+		TArray<FBranch*>& AllBranches, int NumberOfSectionsPerBranch);
 	
 };

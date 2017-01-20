@@ -17,7 +17,8 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 		Mesh->ClearAllMeshSections();
 	}
 
-	TSet<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranches(RootBranch);
+	TArray<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranchesAsArray(RootBranch);
+
 	UE_LOG(LogTemp, Warning, TEXT("Number of Branches: %d"), allBranches.Num());
 	AllMeshData.Reset();
 
@@ -25,8 +26,9 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 	int vertexCounter = 0;
 	int meshSectionCount = 0;
 	int i = 0;
-	for (FBranch* currentBranch : allBranches) {
-		GenerateBranchMesh(AllMeshData, currentBranch, allBranches, i, MaxNumberOfSectionsPerBranch);
+	while(allBranches.Num() > 0){
+		FBranch* currentBranch = allBranches[0];
+		GenerateBranchMesh(AllMeshData, currentBranch, allBranches, MaxNumberOfSectionsPerBranch);
 
 		if (AllMeshData.Vertices.Num() > MaxNumberOfVerticesPerMeshSection) {
 			Mesh->CreateMeshSection(meshSectionCount, AllMeshData.Vertices, AllMeshData.Triangles, AllMeshData.Normals,
@@ -43,15 +45,12 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 	vertexCounter += AllMeshData.Vertices.Num();
 	AllMeshData.Reset();
 
-
+	//UE_LOG(LogTemp, Warning, TEXT("Called \"GenerateBranchMesh\" %d Times"), i);
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d Vertices"), vertexCounter);
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), Mesh->GetNumSections());
 }
 
-
-
-
-void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin, TSet<FBranch*>& AllBranches, int MeshSection, 
+void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin, TArray<FBranch*>& AllBranches,
 	int NumberOfSectionsPerBranch) {
 	TArray<FBranch*> BranchesOnSameDepth = UBranchUtility::RecursiveGetAllBranchesOnSameDepth(Origin);
 	for (FBranch* currentBranch : BranchesOnSameDepth) {
