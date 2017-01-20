@@ -51,6 +51,8 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 
 	WeightedGrowth = true;
 
+	MinNumberOfSectionsPerBranch = 2;
+
 	MaxNumberOfSectionsPerBranch = 8;
 
 	BranchRadiusZero = 1.0f;
@@ -117,6 +119,7 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		spawnedColonizationPlant->MaxNumberOfBranchingTwigs = MaxNumberOfBranchingTwigs;
 		spawnedColonizationPlant->MaxGrowthDepth = MaxGrowthDepth;
 		spawnedColonizationPlant->WeightedGrowth = WeightedGrowth;
+		spawnedColonizationPlant->MinNumberOfSectionsPerBranch = MinNumberOfSectionsPerBranch;
 		spawnedColonizationPlant->MaxNumberOfSectionsPerBranch = MaxNumberOfSectionsPerBranch;
 		spawnedColonizationPlant->BranchRadiusZero = BranchRadiusZero;
 		spawnedColonizationPlant->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;

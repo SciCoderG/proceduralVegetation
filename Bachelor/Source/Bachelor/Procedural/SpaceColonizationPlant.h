@@ -36,6 +36,9 @@ public:
 		UProceduralMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
+		int MinNumberOfSectionsPerBranch;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		int MaxNumberOfSectionsPerBranch;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")

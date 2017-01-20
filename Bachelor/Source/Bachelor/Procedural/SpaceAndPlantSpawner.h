@@ -63,6 +63,9 @@ public:
 		bool WeightedGrowth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
+		int MinNumberOfSectionsPerBranch;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
 		int MaxNumberOfSectionsPerBranch;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")

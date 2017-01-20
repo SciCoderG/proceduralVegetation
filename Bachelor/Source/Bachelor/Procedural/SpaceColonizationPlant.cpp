@@ -26,6 +26,7 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
 	Mesh->SetupAttachment(RootComponent);
 
+	MinNumberOfSectionsPerBranch = 2;
 	MaxNumberOfSectionsPerBranch = 12;
 	KillDistance = 100.0f;
 	RadiusOfInfluence = 500.0f;
@@ -61,7 +62,7 @@ void ASpaceColonizationPlant::BeginPlay()
 	if (PolyReductionByCurveReduction) {
 		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 	}
-	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, MaxNumberOfSectionsPerBranch, MaxNumberOfVerticesPerMeshSection, BranchRadiusZero, BranchRadiusGrowthParameter);
+	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch,  MaxNumberOfVerticesPerMeshSection, BranchRadiusZero, BranchRadiusGrowthParameter);
 }
 
 // Called every frame
