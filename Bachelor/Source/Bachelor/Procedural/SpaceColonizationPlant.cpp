@@ -41,6 +41,7 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	BranchRadiusZero = 1.0f;
 	BranchRadiusGrowthParameter = 2.0f;
 	PolyReductionByCurveReduction = false;
+	SmoothOutBranchingAngles = true;
 
 	IsStillGrowing = true;
 	InitUtilityValues();
@@ -59,6 +60,9 @@ void ASpaceColonizationPlant::BeginPlay()
 	InitUtilityValues();
 	ColonizeGivenSpaces();
 
+	if (SmoothOutBranchingAngles) {
+		UBranchUtility::SmoothOutBranchingAngles(RootBranch);
+	}
 	if (PolyReductionByCurveReduction) {
 		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 	}
@@ -283,13 +287,7 @@ void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
 	ToGrow->GrowDirection = FVector(0.f);
 }
 
-void CheckBranchingAngles(FBranch* Parent, FVector NormalizedGrowthDirection) {
-
-}
-
 void ASpaceColonizationPlant::TryCreatingNewBranch(FBranch* Parent, FVector NormalizedGrowthDirection, float IndividualGrowthPerIteration) {
-
-
 	FBranch* newBranch = new FBranch();
 	newBranch->BranchDepth = Parent->BranchDepth;
 	if (Parent->ChildBranches.Num() > 0) {

@@ -51,6 +51,9 @@ public:
 		float BranchRadiusGrowthParameter;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
+		bool SmoothOutBranchingAngles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		bool PolyReductionByCurveReduction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthSpaces")
@@ -106,8 +109,6 @@ private:
 	void GrowBranch(FBranch* ToGrow);
 
 	void TryCreatingNewBranch(FBranch* Parent, FVector NormalizedGrowthDirection, float IndividualGrowthPerIteration);
-
-
 
 	FMeshData AllMeshData;
 

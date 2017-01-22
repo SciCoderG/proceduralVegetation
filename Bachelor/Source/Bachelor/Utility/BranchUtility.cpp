@@ -139,9 +139,22 @@ void UBranchUtility::ElongateGrownBranches(FBranch* Parent) {
 	}
 }
 
-
-void UBranchUtility::ReduceInnerLeafBranches(FBranch* Parent) {
-	if (Parent->ChildBranches.Num() > 1) {
-
+void UBranchUtility::SmoothOutBranchingAngles(FBranch* Current) {
+	if (Current->ChildBranches.Num() > 1) {
+		FVector childBranchCenter = FVector(0);
+		for (FBranch* childBranch : Current->ChildBranches) {
+			childBranch->Start = Current->End;
+			childBranchCenter += childBranch->End - childBranch->Start;
+		}
+		childBranchCenter /= Current->ChildBranches.Num();
+		childBranchCenter += Current->End;
+		for (FBranch* childBranch : Current->ChildBranches) {
+			FVector branchEndToCenter = childBranchCenter - childBranch->End;
+			childBranch->End += branchEndToCenter / 2.0f;
+		}
+	}
+	for (FBranch* childBranch : Current->ChildBranches) {
+		childBranch->Start = Current->End;
+		SmoothOutBranchingAngles(childBranch);
 	}
 }

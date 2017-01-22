@@ -60,6 +60,7 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 	BranchRadiusGrowthParameter = 2.0f;
 
 	PolyReductionByCurveReduction = false;
+	SmoothOutBranchingAngles = true;
 }
 
 // Called when the game starts or when spawned
@@ -124,6 +125,7 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		spawnedColonizationPlant->BranchRadiusZero = BranchRadiusZero;
 		spawnedColonizationPlant->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
 		spawnedColonizationPlant->PolyReductionByCurveReduction = PolyReductionByCurveReduction;
+		spawnedColonizationPlant->SmoothOutBranchingAngles = SmoothOutBranchingAngles;
 	}
 	return spawnedColonizationPlant;
 }

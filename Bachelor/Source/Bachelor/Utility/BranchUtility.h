@@ -31,8 +31,9 @@ public:
 	
 	static void RecursiveDeleteAllBranches(FBranch* Parent);
 
+	static void SmoothOutBranchingAngles(FBranch* Current);
+
 private:
 	static void ElongateGrownBranches(FBranch* Parent);
 
-	static void ReduceInnerLeafBranches(FBranch* Parent);
 };
