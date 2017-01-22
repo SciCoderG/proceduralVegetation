@@ -54,6 +54,9 @@ public:
 		FVector Tropism;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
+		float TrunkRadiusMultiplier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
 		int MaxNumberOfBranchingTwigs;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")

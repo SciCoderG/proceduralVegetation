@@ -43,7 +43,9 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 
 	MaxNumGrowthIterations = 30;
 
-	Tropism = FVector(0.f, 0.f, 1.0f);
+	Tropism = FVector(0.f, 0.f, 0.8f);
+
+	TrunkRadiusMultiplier = 1.41f;
 
 	MaxNumberOfBranchingTwigs = 5;
 
@@ -117,6 +119,7 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		spawnedColonizationPlant->GrowthPerIteration = GrowthPerIteration;
 		spawnedColonizationPlant->MaxNumGrowthIterations = MaxNumGrowthIterations;
 		spawnedColonizationPlant->Tropism = Tropism;
+		spawnedColonizationPlant->TrunkRadiusMultiplier = TrunkRadiusMultiplier;
 		spawnedColonizationPlant->MaxNumberOfBranchingTwigs = MaxNumberOfBranchingTwigs;
 		spawnedColonizationPlant->MaxGrowthDepth = MaxGrowthDepth;
 		spawnedColonizationPlant->WeightedGrowth = WeightedGrowth;

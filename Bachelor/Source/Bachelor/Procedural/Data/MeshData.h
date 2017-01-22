@@ -26,8 +26,5 @@ public:
 	TArray<FVector> Normals;
 	TArray<FProcMeshTangent> Tangents;
 	TArray<FVector2D> UVs;
-
-	
-
 };
 

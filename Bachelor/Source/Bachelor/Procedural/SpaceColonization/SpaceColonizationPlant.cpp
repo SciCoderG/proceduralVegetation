@@ -7,10 +7,10 @@
 #include "KismetProceduralMeshLibrary.h"
 
 #include "ColonizationSpace.h"
-#include "Branch.h"
-#include "Utility/MeshDataConstructor.h"
-#include "Utility/MeshConstructor.h"
-#include "Utility/BranchUtility.h"
+#include "Bachelor/Procedural/Branch.h"
+#include "Bachelor/Utility/MeshDataConstructor.h"
+#include "Bachelor/Utility/MeshConstructor.h"
+#include "Bachelor/Utility/BranchUtility.h"
 
 
 // Sets default values
@@ -32,6 +32,7 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	RadiusOfInfluence = 500.0f;
 	GrowthPerIteration = 10.0f;
 	Tropism = FVector(0.0f, 0.0f, 1.0f);
+	TrunkRadiusMultiplier = 1.41;
 	MaxNumGrowthIterations = 20;
 	MaxNumberOfBranchingTwigs = 4;
 	MaxGrowthDepth = 6;
@@ -66,7 +67,9 @@ void ASpaceColonizationPlant::BeginPlay()
 	if (PolyReductionByCurveReduction) {
 		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 	}
-	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch,  MaxNumberOfVerticesPerMeshSection, BranchRadiusZero, BranchRadiusGrowthParameter);
+
+	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, TrunkRadiusMultiplier, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch,  
+		MaxNumberOfVerticesPerMeshSection, BranchRadiusZero, BranchRadiusGrowthParameter);
 }
 
 // Called every frame
@@ -98,7 +101,6 @@ void ASpaceColonizationPlant::ColonizeGivenSpaces() {
 	}
 	RootBranch = new FBranch();
 	InitialRootGrowth();
-	GrowingBranches.Add(RootBranch);
 	int iterations = 0;
 	for (int i = 0; i < MaxNumGrowthIterations; ++i) {
 		GrowthIteration();
@@ -123,20 +125,65 @@ void ASpaceColonizationPlant::InitialRootGrowth() {
 	AColonizationSpace* nearestCSpace = GetNearestColonizationSpace();
 
 	RootBranch->Start = FVector(0.f);
-
+	GrowingBranches.Add(RootBranch);
 	if (nearestCSpace) {
 		FVector plantToNearestCSpace = nearestCSpace->GetActorLocation() - this->GetActorLocation();
 		float distPlantToNearestCSpace = plantToNearestCSpace.Size();
 
 		float maxDistanceToCSpaceCenter = nearestCSpace->GetMaxDistanceFromCenter();
 
+		FVector normalPlantToNearestCSpace = plantToNearestCSpace.GetSafeNormal();
 		if (distPlantToNearestCSpace > maxDistanceToCSpaceCenter) {
 			// plant is outside of CSpace Center
-			FVector normalPlantToNearestCSpace = plantToNearestCSpace.GetSafeNormal();
-			RootBranch->End = (distPlantToNearestCSpace - maxDistanceToCSpaceCenter) * normalPlantToNearestCSpace;
+			RootBranch->End = (distPlantToNearestCSpace - maxDistanceToCSpaceCenter) * normalPlantToNearestCSpace;	
 		}
 		else {
 			RootBranch->End = plantToNearestCSpace.GetSafeNormal() * GrowthPerIteration;
+		}
+
+		bool PlantCanGrow = CheckAllColonizationPoints();
+		for (int i = 0; i < MaxNumGrowthIterations; ++i) {
+			if (PlantCanGrow) {
+				return;
+			}
+			else {
+				RootBranch->End += normalPlantToNearestCSpace * GrowthPerIteration;
+			}
+			PlantCanGrow |= CheckAllColonizationPoints();
+		}
+		UE_LOG(LogTemp, Warning, TEXT("RootGrowth: Exceeded Max Number of Growth Iterations and could not reach ColonizationSpace - interrupting Growth."));
+	}
+}
+
+void ASpaceColonizationPlant::DoRootGrowthIterations(float MaxDistanceToCSpaceCenter, FVector CSpaceLocation) {
+	float squaredMaxDistanceToCSCenter = MaxDistanceToCSpaceCenter * MaxDistanceToCSpaceCenter;
+
+	for (int i = 0; i < MaxNumGrowthIterations; ++i) {
+		GrowthIteration();
+		if (GrowingBranches.Num() < 1) {
+			UE_LOG(LogTemp, Warning, TEXT("RootGrowth: No Growing Branches left, interrupting Colonization"));
+			break;
+		}
+		if (AllColonizationPoints.Num() < 1) {
+			UE_LOG(LogTemp, Warning, TEXT("RootGrowth: No Colonization Points left, interrupting Colonization"));
+			break;
+		}
+		if (!IsStillGrowing) {
+			UE_LOG(LogTemp, Warning, TEXT("RootGrowth: No Colonization Points reachable, interrupting Colonization"));
+			break;
+		}
+
+		TArray<FBranch*> leafBranches = UBranchUtility::RecursiveGetAllLeaves(RootBranch);
+		if (leafBranches.Num() != 1) {
+			UE_LOG(LogTemp, Error, TEXT("RootGrowth: %d Leaf-Branches. Should be exactly 1."), leafBranches.Num());
+		}
+		FBranch* leaf = leafBranches[0];
+
+		FVector leafEndToCSCenter = CSpaceLocation - (leaf->End + this->GetActorLocation());
+		float squaredLeafEndToCSCenter = leafEndToCSCenter.SizeSquared();
+		if (squaredLeafEndToCSCenter < squaredMaxDistanceToCSCenter) {
+			UE_LOG(LogTemp, Warning, TEXT("RootGrowth: Inside Colonization Space Radius - stopping Root Growth."));
+			break;
 		}
 	}
 }

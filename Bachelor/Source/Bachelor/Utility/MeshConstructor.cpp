@@ -12,7 +12,7 @@
 
 
 void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshData& AllMeshData, 
-	FBranch* RootBranch, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection,
+	FBranch* RootBranch, float TrunkRadiusMultiplier, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection,
 	float BranchRadiusZero, float BranchRadiusGrowthParameter) {
 	if (Mesh->GetNumSections() > 1) {
 		Mesh->ClearAllMeshSections();
@@ -22,13 +22,17 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 	TArray<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranchesAsArray(RootBranch);
 	UE_LOG(LogTemp, Warning, TEXT("Number of Branches: %d"), allBranches.Num());
 	UBranchUtility::RecursiveCalculateAllBranchRadii(RootBranch, BranchRadiusZero, BranchRadiusGrowthParameter);
+	RootBranch->StartRadius *= TrunkRadiusMultiplier;
+	float RootMaxRadius = RootBranch->StartRadius;
+
 	UBranchUtility::CalcAllBranchConnectionNormals(RootBranch);
+	UBranchUtility::CalcPerBranchDepthZRotAngle(RootBranch, PI / 1.5f);
 
 	int vertexCounter = 0;
 	int meshSectionCount = 0;
 	while(allBranches.Num() > 0){
 		FBranch* currentBranch = allBranches[0];
-		GenerateBranchMesh(AllMeshData, currentBranch, allBranches, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch);
+		GenerateBranchMesh(AllMeshData, currentBranch, allBranches, RootMaxRadius, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch);
 
 		if (AllMeshData.Vertices.Num() > MaxNumberOfVerticesPerMeshSection) {
 			Mesh->CreateMeshSection(meshSectionCount, AllMeshData.Vertices, AllMeshData.Triangles, AllMeshData.Normals,
@@ -48,7 +52,7 @@ void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshDat
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), Mesh->GetNumSections());
 }
 
-void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin, TArray<FBranch*>& AllBranches,
+void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin, TArray<FBranch*>& AllBranches, float RootRadius,
 	int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch) {
 	TArray<FBranch*> BranchesOnSameDepth = UBranchUtility::RecursiveGetAllBranchesOnSameDepth(Origin);
 	for (FBranch* currentBranch : BranchesOnSameDepth) {
@@ -70,7 +74,7 @@ void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origi
 		ConnectionNormals.Add(currentBranch->EndConnectionNormal);
 	}
 
-	int NumberOfSectionsUsed = UBranchUtility::CalcNumOfBranchSections(RingRadii[0], MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch);
-	
-	UMeshDataConstructor::GenerateMultiLevelCylinder(AllMeshData, RingCenters, ConnectionNormals, RingRadii, NumberOfSectionsUsed);
+	int NumberOfSectionsUsed = UBranchUtility::CalcNumOfBranchSections(RingRadii[0], RootRadius, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch);
+
+	UMeshDataConstructor::GenerateMultiLevelCylinder(AllMeshData, RingCenters, ConnectionNormals, RingRadii, NumberOfSectionsUsed, Origin->ZRotationAngle);
 }

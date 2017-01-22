@@ -20,6 +20,8 @@ public:
 		StartConnectionNormal = FVector(0);
 		EndConnectionNormal = FVector(0);
 
+		ZRotationAngle = 0.f;
+
 		GrowDirection = FVector(0);
 
 		GrowCount = 0;
@@ -39,6 +41,8 @@ public:
 
 	FVector StartConnectionNormal;
 	FVector EndConnectionNormal;
+
+	float ZRotationAngle;
 
 	FVector GrowDirection;
 	int GrowCount;

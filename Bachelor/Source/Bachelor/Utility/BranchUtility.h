@@ -19,13 +19,15 @@ public:
 
 	static TArray<FBranch*> RecursiveGetAllBranchesOnSameDepth(FBranch* Parent);
 
-	static TSet<FBranch*> RecursiveGetAllLeaves(FBranch* RootBranch);
+	static TArray<FBranch*> RecursiveGetAllLeaves(FBranch* RootBranch);
 
 	static float RecursiveCalculateAllBranchRadii(FBranch* Parent, float RadiusZero, float BranchingRadiusParameter);
 
 	static void CalcAllBranchConnectionNormals(FBranch* Current);
 
-	static int CalcNumOfBranchSections(float MaxRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch);
+	static int CalcNumOfBranchSections(float CurrentRadius, float MaxRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch);
+
+	static void CalcPerBranchDepthZRotAngle(FBranch* Current, float RotationAngleIncrement);
 
 	static void RecursiveReduceGrownBranches(FBranch* Parent);
 	

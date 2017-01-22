@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Data/MeshData.h"
+#include "Bachelor/Procedural/Data/MeshData.h"
 #include "GameFramework/Actor.h"
 #include "SpaceColonizationPlant.generated.h"
 
@@ -72,6 +72,9 @@ public:
 		FVector Tropism;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
+		float TrunkRadiusMultiplier;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		int MaxNumGrowthIterations;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
@@ -89,6 +92,8 @@ private:
 	void ColonizeGivenSpaces();
 
 	void InitialRootGrowth();
+
+	void DoRootGrowthIterations(float MaxDistanceToCSpaceCenter, FVector CSpaceLocation);
 
 	AColonizationSpace* GetNearestColonizationSpace();
 

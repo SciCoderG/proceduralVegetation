@@ -34,8 +34,8 @@ TArray<FBranch*> UBranchUtility::RecursiveGetAllBranchesOnSameDepth(FBranch* Par
 	return BranchesOnSameDepth;
 }
 
-TSet<FBranch*> UBranchUtility::RecursiveGetAllLeaves(FBranch* Parent) {
-	TSet<FBranch*> leaves;
+TArray<FBranch*> UBranchUtility::RecursiveGetAllLeaves(FBranch* Parent) {
+	TArray<FBranch*> leaves;
 	for (FBranch* potentialLeaf : Parent->ChildBranches) {
 		if (potentialLeaf->ChildBranches.Num() < 1) {
 			leaves.Add(potentialLeaf);
@@ -88,17 +88,40 @@ void UBranchUtility::CalcAllBranchConnectionNormals(FBranch* Current) {
 	}
 }
 
-int UBranchUtility::CalcNumOfBranchSections(float MaxRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch) {
+int UBranchUtility::CalcNumOfBranchSections(float CurrentRadius, float MaxRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch) {
 	if (MaxNumberOfSectionsPerBranch < 2) {
-		UE_LOG(LogTemp, Warning, TEXT("Max Number of Sections Per Branch: %d - Should be equal to or greater than 2."), MaxNumberOfSectionsPerBranch);
+		UE_LOG(LogTemp, Warning, TEXT("UBranchUtility::CalcNumOfBranchSections: Max Number of Sections Per Branch: %d - Should be equal to or greater than 2."), MaxNumberOfSectionsPerBranch);
 		MaxNumberOfSectionsPerBranch = 2;
 	}
-	int NumberOfSectionsUsed = MaxNumberOfSectionsPerBranch;
-	int CalculatedNumberOfSections = ((MaxRadius / 2.0f) - 1) + MinNumberOfSectionsPerBranch;
-	if (CalculatedNumberOfSections < MaxNumberOfSectionsPerBranch) {
-		NumberOfSectionsUsed = CalculatedNumberOfSections;
+	if (MaxNumberOfSectionsPerBranch < MinNumberOfSectionsPerBranch) {
+		UE_LOG(LogTemp, Warning, TEXT("UBranchUtility::CalcNumOfBranchSections: Max Number of Sections greater than Min Number - switching values"));
+		int temp = MaxNumberOfSectionsPerBranch;
+		MaxNumberOfSectionsPerBranch = MinNumberOfSectionsPerBranch;
+		MinNumberOfSectionsPerBranch = temp;
 	}
-	return NumberOfSectionsUsed;
+
+	int numberOfSectionsUsed = MaxNumberOfSectionsPerBranch;
+
+	int diffMinMaxSections = MaxNumberOfSectionsPerBranch - MinNumberOfSectionsPerBranch ;
+	int calculatedNumberOfSections = (CurrentRadius / MaxRadius) * (diffMinMaxSections + 0.5f) + MinNumberOfSectionsPerBranch;
+	/*
+	int CalculatedNumberOfSections = ((MaxRadius / 2.0f) - 1) + MinNumberOfSectionsPerBranch;
+	*/
+	if (calculatedNumberOfSections < MaxNumberOfSectionsPerBranch) {
+		numberOfSectionsUsed = calculatedNumberOfSections;
+	}
+	
+	return numberOfSectionsUsed;
+}
+
+void UBranchUtility::CalcPerBranchDepthZRotAngle(FBranch* Current, float RotationAngleIncrement){
+	int numChildBranches = Current->ChildBranches.Num();
+	for (int i = 0; i < numChildBranches; ++i) {
+		FBranch* childBranch = Current->ChildBranches[i];
+		childBranch->ZRotationAngle = Current->ZRotationAngle + RotationAngleIncrement * i;
+		
+		CalcPerBranchDepthZRotAngle(childBranch, RotationAngleIncrement);
+	}
 }
 
 void UBranchUtility::RecursiveReduceGrownBranches(FBranch* Parent) {

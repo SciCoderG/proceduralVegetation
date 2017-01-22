@@ -9,23 +9,24 @@ UMeshDataConstructor::UMeshDataConstructor(const FObjectInitializer& ObjectIniti
 }
 void UMeshDataConstructor::GenerateCylinder(FMeshData& MeshData, FVector BottomCenter, FVector BottomNormal,
 	float BottomRadius, FVector TopCenter, FVector TopNormal, float TopRadius, int NumSegments) {
-	GenerateCircle(MeshData, BottomCenter, BottomNormal, BottomRadius, 0.f, NumSegments);
-	GenerateCircle(MeshData, TopCenter, TopNormal, TopRadius, 1.f, NumSegments);
+	GenerateCircle(MeshData, BottomCenter, BottomNormal, BottomRadius, 0.f, NumSegments, 0.f);
+	GenerateCircle(MeshData, TopCenter, TopNormal, TopRadius, 1.f, NumSegments, 0.f);
 	GenerateCylinderSectionTriangles(MeshData, BottomCenter, TopCenter, NumSegments, 0);
 	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(MeshData.Vertices, MeshData.Triangles, 
 		MeshData.UVs, MeshData.Normals, MeshData.Tangents);
 }
 
 void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, TArray<FVector> RingCenters, TArray<FVector> ConnectionNormals,
-	TArray<float> RingRadii, int NumSegmentsPerCircle) {
+	TArray<float> RingRadii, int NumSegmentsPerCircle, float ZRotationAngle) {
 	int StartingIndex = MeshData.Vertices.Num();
 
 	float TexCoordVIncrement = 1.0f / (RingCenters.Num() - 1);
-	GenerateCircle(MeshData, RingCenters[0], ConnectionNormals[0], RingRadii[0], 0.f, NumSegmentsPerCircle);
+
+	GenerateCircle(MeshData, RingCenters[0], ConnectionNormals[0], RingRadii[0], 0.f, NumSegmentsPerCircle, ZRotationAngle);
 	for (int i = 1; i < RingCenters.Num(); ++i) {
 		int TriangleIndexOffset = (i - 1) * (NumSegmentsPerCircle + 1) + StartingIndex;
 
-		GenerateCircle(MeshData, RingCenters[i], ConnectionNormals[i], RingRadii[i], i * TexCoordVIncrement, NumSegmentsPerCircle);
+		GenerateCircle(MeshData, RingCenters[i], ConnectionNormals[i], RingRadii[i], i * TexCoordVIncrement, NumSegmentsPerCircle, ZRotationAngle);
 		GenerateCylinderSectionTriangles(MeshData, RingCenters[i - 1], RingCenters[i],
 			NumSegmentsPerCircle, TriangleIndexOffset);
 	}
@@ -34,7 +35,7 @@ void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, TArra
 }
 
 void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
-	FVector Center, FVector CircleNormal, float Radius, float TexCoordV, int NumSegments) {
+	FVector Center, FVector CircleNormal, float Radius, float TexCoordV, int NumSegments, float ZRotationAngle) {
 
 	float anglePerSection = (PI * 2.0f) / NumSegments;
 
@@ -43,6 +44,7 @@ void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
 	for (int i = 0; i < NumSegments + 1; ++i) {
 
 		float currentAngle = anglePerSection * i;
+		currentAngle += ZRotationAngle;
 		float sin;
 		float cos;
 		FMath::SinCos(&sin, &cos, currentAngle);
