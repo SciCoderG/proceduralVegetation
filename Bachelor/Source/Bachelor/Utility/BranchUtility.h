@@ -23,10 +23,13 @@ public:
 
 	static float RecursiveCalculateAllBranchRadii(FBranch* Parent, float RadiusZero, float BranchingRadiusParameter);
 
+	static void CalcAllBranchConnectionNormals(FBranch* Current);
+
+	static int CalcNumOfBranchSections(float MaxRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch);
+
 	static void RecursiveReduceGrownBranches(FBranch* Parent);
 	
 	static void RecursiveDeleteAllBranches(FBranch* Parent);
-
 
 private:
 	static void ElongateGrownBranches(FBranch* Parent);

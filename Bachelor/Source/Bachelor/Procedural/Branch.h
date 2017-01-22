@@ -17,6 +17,9 @@ public:
 		StartRadius = 0.f;
 		EndRadius = 0.f;
 
+		StartConnectionNormal = FVector(0);
+		EndConnectionNormal = FVector(0);
+
 		GrowDirection = FVector(0);
 
 		GrowCount = 0;
@@ -33,6 +36,9 @@ public:
 	FVector End;
 	float StartRadius;
 	float EndRadius;
+
+	FVector StartConnectionNormal;
+	FVector EndConnectionNormal;
 
 	FVector GrowDirection;
 	int GrowCount;

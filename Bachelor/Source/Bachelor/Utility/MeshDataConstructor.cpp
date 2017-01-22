@@ -7,25 +7,25 @@ UMeshDataConstructor::UMeshDataConstructor(const FObjectInitializer& ObjectIniti
 {
 	
 }
-void UMeshDataConstructor::GenerateCylinder(FMeshData& MeshData, FVector BottomCenter,
-	float BottomRadius, FVector TopCenter, float TopRadius, int NumSegments) {
-	GenerateCircle(MeshData, BottomCenter, BottomRadius, 0.f, NumSegments);
-	GenerateCircle(MeshData, TopCenter, TopRadius, 1.f, NumSegments);
+void UMeshDataConstructor::GenerateCylinder(FMeshData& MeshData, FVector BottomCenter, FVector BottomNormal,
+	float BottomRadius, FVector TopCenter, FVector TopNormal, float TopRadius, int NumSegments) {
+	GenerateCircle(MeshData, BottomCenter, BottomNormal, BottomRadius, 0.f, NumSegments);
+	GenerateCircle(MeshData, TopCenter, TopNormal, TopRadius, 1.f, NumSegments);
 	GenerateCylinderSectionTriangles(MeshData, BottomCenter, TopCenter, NumSegments, 0);
 	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(MeshData.Vertices, MeshData.Triangles, 
 		MeshData.UVs, MeshData.Normals, MeshData.Tangents);
 }
 
-void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, TArray<FVector> RingCenters,
+void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, TArray<FVector> RingCenters, TArray<FVector> ConnectionNormals,
 	TArray<float> RingRadii, int NumSegmentsPerCircle) {
 	int StartingIndex = MeshData.Vertices.Num();
 
 	float TexCoordVIncrement = 1.0f / (RingCenters.Num() - 1);
-	GenerateCircle(MeshData, RingCenters[0], RingRadii[0], 0.f, NumSegmentsPerCircle);
+	GenerateCircle(MeshData, RingCenters[0], ConnectionNormals[0], RingRadii[0], 0.f, NumSegmentsPerCircle);
 	for (int i = 1; i < RingCenters.Num(); ++i) {
 		int TriangleIndexOffset = (i - 1) * (NumSegmentsPerCircle + 1) + StartingIndex;
 
-		GenerateCircle(MeshData, RingCenters[i], RingRadii[i], i * TexCoordVIncrement, NumSegmentsPerCircle);
+		GenerateCircle(MeshData, RingCenters[i], ConnectionNormals[i], RingRadii[i], i * TexCoordVIncrement, NumSegmentsPerCircle);
 		GenerateCylinderSectionTriangles(MeshData, RingCenters[i - 1], RingCenters[i],
 			NumSegmentsPerCircle, TriangleIndexOffset);
 	}
@@ -34,9 +34,11 @@ void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, TArra
 }
 
 void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
-	FVector Center, float Radius, float TexCoordV, int NumSegments) {
+	FVector Center, FVector CircleNormal, float Radius, float TexCoordV, int NumSegments) {
 
 	float anglePerSection = (PI * 2.0f) / NumSegments;
+
+	FQuat unitCircleRotation = FQuat::FindBetweenNormals(FVector::UpVector, CircleNormal);
 
 	for (int i = 0; i < NumSegments + 1; ++i) {
 
@@ -44,11 +46,12 @@ void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
 		float sin;
 		float cos;
 		FMath::SinCos(&sin, &cos, currentAngle);
-		FVector unitCirclePosition = FVector(cos, sin, 0.0f);
+		FVector positionOnUnitCircle = FVector(cos, sin, 0.0f);
+		positionOnUnitCircle = unitCircleRotation.RotateVector(positionOnUnitCircle);
+		
+		MeshData.Vertices.Add(Center + Radius * positionOnUnitCircle);
 
-		MeshData.Vertices.Add(Center + Radius * unitCirclePosition);
-
-		MeshData.Normals.Add(unitCirclePosition);
+		MeshData.Normals.Add(positionOnUnitCircle);
 
 		float calculatedTexCoordU = (float)i / (float)NumSegments;
 		FVector2D calculatedUV = FVector2D(calculatedTexCoordU, TexCoordV);
@@ -57,12 +60,10 @@ void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
 }
 
 void UMeshDataConstructor::GenerateCylinderSectionTriangles(FMeshData& MeshData, FVector BottomCenter,
-	FVector TopCenter, int NumSegments, int TriangleIndexOffset) {
+	FVector TopCenter, int NumSegments, int TriangleIndexOffset, bool SwapTriangles) {
 	int verticesPerCircle = NumSegments + 1;
 
 	FVector bottomToCenter = TopCenter - BottomCenter;
-	bool bSwapTriangles = bottomToCenter.Z < 0.f;
-
 	// starting triangle construction at top circle
 	int indexStart = verticesPerCircle + TriangleIndexOffset;
 	int indexEnd = (verticesPerCircle * 2) + TriangleIndexOffset;
@@ -72,7 +73,7 @@ void UMeshDataConstructor::GenerateCylinderSectionTriangles(FMeshData& MeshData,
 		int triangleIndex2 = i - verticesPerCircle + 1;
 		int triangleIndex3 = i - verticesPerCircle;
 
-		if (bSwapTriangles) {
+		if (SwapTriangles) {
 			MeshData.AddTriangle(triangleIndex1, triangleIndex2, triangleIndex0);
 			MeshData.AddTriangle(triangleIndex1, triangleIndex3, triangleIndex2);
 		}

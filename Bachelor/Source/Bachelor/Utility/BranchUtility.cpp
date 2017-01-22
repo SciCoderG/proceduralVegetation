@@ -53,22 +53,52 @@ float UBranchUtility::RecursiveCalculateAllBranchRadii(FBranch* Parent, float Ra
 		Parent->EndRadius = RadiusZero;
 		return RadiusZero;
 	}
-	else {
-		float maxChildBranchRadius = 0.f;
-		float nthPowerOfEndRadius = 0.f;
-		for (FBranch* childBranch : Parent->ChildBranches) {
-			float childBranchEndRadius = RecursiveCalculateAllBranchRadii(childBranch, RadiusZero, BranchingRadiusParameter);
-			if (childBranchEndRadius > maxChildBranchRadius) {
-				maxChildBranchRadius = childBranchEndRadius;
-			}
-			nthPowerOfEndRadius += FMath::Pow(childBranchEndRadius, BranchingRadiusParameter);
-		}
-		float calculatedEndRadius = FMath::Pow(nthPowerOfEndRadius, 1.0f / BranchingRadiusParameter); // nth Root of x = x ^ (1 / n)
 
-		Parent->StartRadius = calculatedEndRadius;
-		Parent->EndRadius = maxChildBranchRadius;
-		return calculatedEndRadius;
+	float maxChildBranchRadius = 0.f;
+	float nthPowerOfEndRadius = 0.f;
+	for (FBranch* childBranch : Parent->ChildBranches) {
+		float childBranchEndRadius = RecursiveCalculateAllBranchRadii(childBranch, RadiusZero, BranchingRadiusParameter);
+		if (childBranchEndRadius > maxChildBranchRadius) {
+			maxChildBranchRadius = childBranchEndRadius;
+		}
+		nthPowerOfEndRadius += FMath::Pow(childBranchEndRadius, BranchingRadiusParameter);
 	}
+	float calculatedEndRadius = FMath::Pow(nthPowerOfEndRadius, 1.0f / BranchingRadiusParameter); // nth Root of x = x ^ (1 / n)
+
+	Parent->StartRadius = calculatedEndRadius;
+	Parent->EndRadius = maxChildBranchRadius;
+	return calculatedEndRadius;
+}
+
+void UBranchUtility::CalcAllBranchConnectionNormals(FBranch* Current) {
+	FBranch* Parent = Current->ParentBranch;
+	if (NULL != Parent) {
+		Current->StartConnectionNormal = Parent->EndConnectionNormal;
+	}
+	else {
+		Current->StartConnectionNormal = FVector(0.f, 0.f, 1.0f);
+	}
+
+	Current->EndConnectionNormal = Current->StartConnectionNormal;
+	Current->EndConnectionNormal += Current->End - Current->Start;
+	Current->EndConnectionNormal = Current->EndConnectionNormal.GetSafeNormal();
+
+	for (FBranch* childBranch : Current->ChildBranches) {
+		CalcAllBranchConnectionNormals(childBranch);
+	}
+}
+
+int UBranchUtility::CalcNumOfBranchSections(float MaxRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch) {
+	if (MaxNumberOfSectionsPerBranch < 2) {
+		UE_LOG(LogTemp, Warning, TEXT("Max Number of Sections Per Branch: %d - Should be equal to or greater than 2."), MaxNumberOfSectionsPerBranch);
+		MaxNumberOfSectionsPerBranch = 2;
+	}
+	int NumberOfSectionsUsed = MaxNumberOfSectionsPerBranch;
+	int CalculatedNumberOfSections = ((MaxRadius / 2.0f) - 1) + MinNumberOfSectionsPerBranch;
+	if (CalculatedNumberOfSections < MaxNumberOfSectionsPerBranch) {
+		NumberOfSectionsUsed = CalculatedNumberOfSections;
+	}
+	return NumberOfSectionsUsed;
 }
 
 void UBranchUtility::RecursiveReduceGrownBranches(FBranch* Parent) {

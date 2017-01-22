@@ -107,6 +107,8 @@ private:
 
 	void TryCreatingNewBranch(FBranch* Parent, FVector NormalizedGrowthDirection, float IndividualGrowthPerIteration);
 
+
+
 	FMeshData AllMeshData;
 
 	FBranch* RootBranch;
