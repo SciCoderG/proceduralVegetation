@@ -42,7 +42,6 @@ public:
 		float DebugPointSize;
 protected:
 	virtual void GenerateRandomColonizationPoints() PURE_VIRTUAL(AColonizationSpace::GenerateRandomColonizationPoints, );
-	virtual void InitValues() PURE_VIRTUAL(AColonizationSpace::InitValues, );
 
 	void DrawDebugColonizationPoints();
 

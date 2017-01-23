@@ -21,15 +21,13 @@ AColonizationSpace::AColonizationSpace()
 	DebugPointColor = FColor(0, 0, 0);
 	DebugPointSize = 5.0f;
 
-	InitValues();
 }
 
 // Called when the game starts or when spawned
 void AColonizationSpace::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	InitValues();
+
 	GenerateRandomColonizationPoints();
 }
 
@@ -51,11 +49,7 @@ void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 	if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, NumberOfGenerationPoints)) ||
 		(PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, RandomSeed)))
 	{
-		InitValues();
 		GenerateRandomColonizationPoints();
-	}
-	else {
-		InitValues();
 	}
 }
 

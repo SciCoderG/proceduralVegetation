@@ -22,14 +22,18 @@ public:
 
 	void InitCylinder(float Height, float Radius);
 
-private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
+		float CylinderHeight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
+		float CylinderRadius;
+
+protected:
 
 	virtual void GenerateRandomColonizationPoints();
 
-	virtual void InitValues();
-
-	float CylinderHeight;
-	float CylinderRadius;
-
 	FVector Get2DUnitVector();
+
+private:
+	void InitValues();
 };

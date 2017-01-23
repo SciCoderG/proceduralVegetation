@@ -3,6 +3,7 @@
 #include "Bachelor.h"
 #include "SpaceAndPlantSpawner.h"
 #include "ColonizationSpaces/SphericalColonizationSpace.h"
+#include "ColonizationSpaces/CylindricalColonizationSpace.h"
 #include "SpaceColonizationPlant.h"
 
 // Sets default values
@@ -22,7 +23,13 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 	ShouldGenerateContinuousNumberOfGrowthIterations = false;
 
 	// ColonizationSpace Parameters
-	ColonizationRadius = 250.0f;
+	SphericalRadius = 250.0f;
+
+	CylinderHeight = 400.0f;
+
+	CylinderRadius = 100.0f;
+
+	ColonizationSpaceType = EColonizationSpaceType::VE_Spherical;
 
 	NumberOfGenerationPoints = 2000;
 
@@ -72,13 +79,13 @@ void ASpaceAndPlantSpawner::BeginPlay()
 	World = GetWorld();
 
 	int wrapValue = FMath::Sqrt(NumberOfSpacesAndPlantsToSpawn);
-	FVector xOffset = FVector(ColonizationRadius * 2.0f, 0.f, 0.f);
-	FVector yOffset = FVector(0.f, ColonizationRadius * 2.0f, 0.f);
+	FVector xOffset = FVector(SphericalRadius * 2.0f, 0.f, 0.f);
+	FVector yOffset = FVector(0.f, SphericalRadius * 2.0f, 0.f);
 	for (int i = 0; i < NumberOfSpacesAndPlantsToSpawn; ++i) {
 		FVector location = GetActorLocation();
 		location += (i % wrapValue) * xOffset;
 		location += (i / wrapValue) * yOffset;
-		ASphericalColonizationSpace* colonizationSpace = SpawnColonizationSpace(location + ColonizationSpaceOffset);
+		ASphericalColonizationSpace* colonizationSpace = SpawnSphericalColonizationSpace(location + ColonizationSpaceOffset);
 		SpawnColonizationPlant(location, colonizationSpace);
 	}
 }
@@ -89,19 +96,36 @@ void ASpaceAndPlantSpawner::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 }
 
+void ASpaceAndPlantSpawner::SetGeneralCSParameters(AColonizationSpace* ToSet) {
+	ToSet->NumberOfGenerationPoints = NumberOfGenerationPoints;
+	ToSet->RandomSeed = RandomSeedForAllSpaces;
+	ToSet->DrawDebugPoints = DrawDebugPoints;
+	ToSet->DebugPointColor = DebugPointColor;
+	ToSet->DebugPointSize = DebugPointSize;
+}
 
-ASphericalColonizationSpace* ASpaceAndPlantSpawner::SpawnColonizationSpace(FVector Location) {
+
+ASphericalColonizationSpace* ASpaceAndPlantSpawner::SpawnSphericalColonizationSpace(FVector Location) {
 	ASphericalColonizationSpace* spawnedColonizationSpace = NULL;
 	if (World) {
 		UClass* colonizationSpaceClass = ASphericalColonizationSpace::StaticClass();
 		spawnedColonizationSpace = World->SpawnActor<ASphericalColonizationSpace>(colonizationSpaceClass, Location, FRotator(0.f), FActorSpawnParameters());
 
-		spawnedColonizationSpace->ColonizationRadius = ColonizationRadius;
-		spawnedColonizationSpace->NumberOfGenerationPoints = NumberOfGenerationPoints;
-		spawnedColonizationSpace->RandomSeed = RandomSeedForAllSpaces;
-		spawnedColonizationSpace->DrawDebugPoints = DrawDebugPoints;
-		spawnedColonizationSpace->DebugPointColor = DebugPointColor;
-		spawnedColonizationSpace->DebugPointSize = DebugPointSize;
+		spawnedColonizationSpace->ColonizationRadius = SphericalRadius;
+		SetGeneralCSParameters(spawnedColonizationSpace);
+	}
+	return spawnedColonizationSpace;
+}
+
+ACylindricalColonizationSpace* ASpaceAndPlantSpawner::SpawnCylindricalColonizationSpace(FVector Location) {
+	ACylindricalColonizationSpace* spawnedColonizationSpace = NULL;
+	if (World) {
+		UClass* colonizationSpaceClass = ACylindricalColonizationSpace::StaticClass();
+		spawnedColonizationSpace = World->SpawnActor<ACylindricalColonizationSpace>(colonizationSpaceClass, Location, FRotator(0.f), FActorSpawnParameters());
+
+		spawnedColonizationSpace->CylinderHeight = CylinderHeight;
+		spawnedColonizationSpace->CylinderRadius = CylinderRadius;
+		SetGeneralCSParameters(spawnedColonizationSpace);
 	}
 	return spawnedColonizationSpace;
 }
@@ -132,4 +156,6 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 	}
 	return spawnedColonizationPlant;
 }
+
+
 

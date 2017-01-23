@@ -18,8 +18,6 @@ ACylindricalColonizationSpace::ACylindricalColonizationSpace()
 	CylinderHeight = 200.0f;
 	CylinderRadius = 50.0f;
 
-	InitCylinder(CylinderHeight, CylinderRadius);
-
 	InitValues();
 }
 
@@ -53,8 +51,6 @@ FVector ACylindricalColonizationSpace::Get2DUnitVector()
 	return Result.GetUnsafeNormal();
 }
 
-
-
 void ACylindricalColonizationSpace::GenerateRandomColonizationPoints() {
 	ColonizationPoints.Reset();
 	
@@ -66,15 +62,15 @@ void ACylindricalColonizationSpace::GenerateRandomColonizationPoints() {
 	}
 
 	for (uint32 i = 0; i < NumberOfGenerationPoints; ++i) {
-		FVector RandomRadialVector = FVector(RandomStream.GetFraction(), RandomStream.GetFraction(), 0.f);
-
-		FVector RandomPoint = this->GetActorLocation() + RandomStream.RandRange(-CylinderRadius, CylinderRadius) ;
+		FVector RandomRadialVector = Get2DUnitVector() * RandomStream.RandRange(-CylinderRadius, CylinderRadius);
+		RandomRadialVector.Z = RandomStream.RandRange(- CylinderHeight / 2.0f, CylinderHeight / 2.0f);
+		FVector RandomPoint = this->GetActorLocation() + RandomRadialVector;
 		ColonizationPoints.Add(RandomPoint);
 	}
 }
 
 void ACylindricalColonizationSpace::InitValues() {
-
+	InitCylinder(CylinderHeight, CylinderRadius);
 }
 
 float ACylindricalColonizationSpace::GetMaxDistanceFromCenter() {

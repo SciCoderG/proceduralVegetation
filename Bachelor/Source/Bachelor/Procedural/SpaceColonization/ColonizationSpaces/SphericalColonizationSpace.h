@@ -26,10 +26,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 	float ColonizationRadius;
 
-private:
+protected:
 
 	virtual void GenerateRandomColonizationPoints();
 
-	virtual void InitValues();
+private:
+	void InitValues();
 
 };

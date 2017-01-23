@@ -8,6 +8,14 @@
 class ASpaceColonizationPlant;
 class AColonizationSpace;
 class ASphericalColonizationSpace;
+class ACylindricalColonizationSpace;
+
+UENUM(BlueprintType)	
+enum class EColonizationSpaceType : uint8
+{
+	VE_Spherical	UMETA(DisplayName = "Spherical"),
+	VE_Cylindrical 	UMETA(DisplayName = "Cylindrical")
+};
 
 UCLASS()
 class BACHELOR_API ASpaceAndPlantSpawner : public AActor
@@ -15,6 +23,9 @@ class BACHELOR_API ASpaceAndPlantSpawner : public AActor
 	GENERATED_BODY()
 	
 public:	
+
+
+
 	// Sets default values for this actor's properties
 	ASpaceAndPlantSpawner();
 
@@ -84,9 +95,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
 		bool SmoothOutBranchingAngles;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace|Type")
+		EColonizationSpaceType ColonizationSpaceType;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace")
-		float ColonizationRadius;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace|Type")
+		float SphericalRadius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace|Type")
+		float CylinderHeight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace|Type")
+		float CylinderRadius;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace")
 		float NumberOfGenerationPoints;
@@ -105,7 +125,11 @@ public:
 
 private:
 
-	ASphericalColonizationSpace* SpawnColonizationSpace(FVector Location);
+	void SetGeneralCSParameters(AColonizationSpace* ToSet);
+
+	ASphericalColonizationSpace* SpawnSphericalColonizationSpace(FVector Location);
+
+	ACylindricalColonizationSpace* SpawnCylindricalColonizationSpace(FVector Location);
 
 	ASpaceColonizationPlant* SpawnColonizationPlant(FVector Location, ASphericalColonizationSpace* ColonizationSpace);
 
