@@ -12,12 +12,8 @@ AColonizationSpace::AColonizationSpace()
 
 	USphereComponent* RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	RootComponent = RootSphere;
-
-	ColonizationSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ColonizationSphere"));
-	ColonizationSphere->SetupAttachment(RootComponent);
 	
 	// initial values
-	ColonizationRadius = 150.0f;
 	NumberOfGenerationPoints = 2000.0f;
 	RandomSeed = -1;
 
@@ -48,18 +44,15 @@ void AColonizationSpace::Tick( float DeltaTime )
 }
 
 void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
 	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
 
-	if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, ColonizationRadius)) || 
-		(PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, NumberOfGenerationPoints)) ||
+	if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, NumberOfGenerationPoints)) ||
 		(PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, RandomSeed)))
 	{
 		InitValues();
 		GenerateRandomColonizationPoints();
-		
-	}
-	else if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, DrawDebugPoints))) {
-		ColonizationSphere->SetHiddenInGame(!DrawDebugPoints);
 	}
 	else {
 		InitValues();
@@ -71,22 +64,6 @@ TSet<FVector>* AColonizationSpace::GetColonizationPoints() {
 	return &ColonizationPoints;
 }
 
-void AColonizationSpace::GenerateRandomColonizationPoints() {
-	ColonizationPoints.Reset();
-	float scaledSphereRadius = ColonizationSphere->GetScaledSphereRadius();
-	
-	if (RandomSeed > 0) {
-		RandomStream.Initialize(RandomSeed);
-	}
-	else {
-		RandomStream.GenerateNewSeed();
-	}
-
-	for (uint32 i = 0; i < NumberOfGenerationPoints; ++i) {
-		FVector RandomPoint = this->GetActorLocation() + RandomStream.RandRange(-scaledSphereRadius, scaledSphereRadius) * RandomStream.VRand();
-		ColonizationPoints.Add(RandomPoint);
-	}
-}
 
 void AColonizationSpace::DrawDebugColonizationPoints() {
 	for (FVector Point : ColonizationPoints) {
@@ -99,15 +76,4 @@ void AColonizationSpace::DrawDebugColonizationPoints() {
 	}	
 }
 
-void AColonizationSpace::InitValues() {
-	ColonizationSphere->SetSphereRadius(ColonizationRadius, false);
-	ColonizationSphere->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
-	if (DrawDebugPoints) {
-		ColonizationSphere->SetHiddenInGame(false);
-	}
-}
-
-float AColonizationSpace::GetMaxDistanceFromCenter() {
-	return ColonizationSphere->GetScaledSphereRadius();
-}
 

@@ -7,6 +7,7 @@
 
 class ASpaceColonizationPlant;
 class AColonizationSpace;
+class ASphericalColonizationSpace;
 
 UCLASS()
 class BACHELOR_API ASpaceAndPlantSpawner : public AActor
@@ -104,9 +105,9 @@ public:
 
 private:
 
-	AColonizationSpace* SpawnColonizationSpace(FVector Location);
+	ASphericalColonizationSpace* SpawnColonizationSpace(FVector Location);
 
-	ASpaceColonizationPlant* SpawnColonizationPlant(FVector Location, AColonizationSpace* ColonizationSpace);
+	ASpaceColonizationPlant* SpawnColonizationPlant(FVector Location, ASphericalColonizationSpace* ColonizationSpace);
 
 	UWorld* World;
 	

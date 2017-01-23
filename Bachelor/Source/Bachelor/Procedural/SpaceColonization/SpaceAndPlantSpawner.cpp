@@ -2,7 +2,7 @@
 
 #include "Bachelor.h"
 #include "SpaceAndPlantSpawner.h"
-#include "ColonizationSpace.h"
+#include "ColonizationSpaces/SphericalColonizationSpace.h"
 #include "SpaceColonizationPlant.h"
 
 // Sets default values
@@ -78,7 +78,7 @@ void ASpaceAndPlantSpawner::BeginPlay()
 		FVector location = GetActorLocation();
 		location += (i % wrapValue) * xOffset;
 		location += (i / wrapValue) * yOffset;
-		AColonizationSpace* colonizationSpace = SpawnColonizationSpace(location + ColonizationSpaceOffset);
+		ASphericalColonizationSpace* colonizationSpace = SpawnColonizationSpace(location + ColonizationSpaceOffset);
 		SpawnColonizationPlant(location, colonizationSpace);
 	}
 }
@@ -90,11 +90,11 @@ void ASpaceAndPlantSpawner::Tick( float DeltaTime )
 }
 
 
-AColonizationSpace* ASpaceAndPlantSpawner::SpawnColonizationSpace(FVector Location) {
-	AColonizationSpace* spawnedColonizationSpace = NULL;
+ASphericalColonizationSpace* ASpaceAndPlantSpawner::SpawnColonizationSpace(FVector Location) {
+	ASphericalColonizationSpace* spawnedColonizationSpace = NULL;
 	if (World) {
-		UClass* colonizationSpaceClass = AColonizationSpace::StaticClass();
-		spawnedColonizationSpace = World->SpawnActor<AColonizationSpace>(colonizationSpaceClass, Location, FRotator(0.f), FActorSpawnParameters());
+		UClass* colonizationSpaceClass = ASphericalColonizationSpace::StaticClass();
+		spawnedColonizationSpace = World->SpawnActor<ASphericalColonizationSpace>(colonizationSpaceClass, Location, FRotator(0.f), FActorSpawnParameters());
 
 		spawnedColonizationSpace->ColonizationRadius = ColonizationRadius;
 		spawnedColonizationSpace->NumberOfGenerationPoints = NumberOfGenerationPoints;
@@ -106,7 +106,7 @@ AColonizationSpace* ASpaceAndPlantSpawner::SpawnColonizationSpace(FVector Locati
 	return spawnedColonizationSpace;
 }
 
-ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector Location, AColonizationSpace* ColonizationSpace) {
+ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector Location, ASphericalColonizationSpace* ColonizationSpace) {
 	ASpaceColonizationPlant* spawnedColonizationPlant = NULL;
 	if (World) {
 		UClass* colonizationPlantClass = ASpaceColonizationPlant::StaticClass();

@@ -5,11 +5,10 @@
 #include "GameFramework/Actor.h"
 #include "ColonizationSpace.generated.h"
 
-UCLASS()
+UCLASS(abstract)
 class BACHELOR_API AColonizationSpace : public AActor
 {
 	GENERATED_BODY()
-	
 public:	
 	// Sets default values for this actor's properties
 	AColonizationSpace();
@@ -19,19 +18,13 @@ public:
 	
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
-
+	
 	// Called on property changes
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
 
+	virtual float GetMaxDistanceFromCenter() PURE_VIRTUAL(AColonizationSpace::GetMaxDistanceFromCenter, return 0;);
+
 	TSet<FVector>* GetColonizationPoints();
-
-	float GetMaxDistanceFromCenter();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Procedural")
-		class USphereComponent* ColonizationSphere;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
-		float ColonizationRadius;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 		float NumberOfGenerationPoints;
@@ -47,15 +40,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Debug")
 		float DebugPointSize;
-private:
-
-	void GenerateRandomColonizationPoints();
+protected:
+	virtual void GenerateRandomColonizationPoints() PURE_VIRTUAL(AColonizationSpace::GenerateRandomColonizationPoints, );
+	virtual void InitValues() PURE_VIRTUAL(AColonizationSpace::InitValues, );
 
 	void DrawDebugColonizationPoints();
 
-	void InitValues();
-
 	TSet<FVector> ColonizationPoints;
-
 	FRandomStream RandomStream;
 };
