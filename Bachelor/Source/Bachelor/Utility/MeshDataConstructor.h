@@ -2,6 +2,7 @@
 
 #include "UnrealMath.h"
 #include "Procedural/Data/MeshData.h"
+#include "Procedural/Data/CylinderData.h"
 #include "MeshDataConstructor.generated.h"
 
 
@@ -14,9 +15,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Components|ProceduralMesh")
 	static void GenerateCylinder(FMeshData& MeshData, FVector BottomCenter, FVector BottomNormal, float BottomRadius, FVector TopCenter, FVector TopNormal, float TopRadius, int NumSegments);
 
+
 	UFUNCTION(BlueprintCallable, Category = "Components|ProceduralMesh")
-	static void GenerateMultiLevelCylinder(FMeshData& MeshData, TArray<FVector> RingCenters, TArray<FVector> ConnectionNormals,
-		TArray<float> RingRadii, int NumSegmentsPerCircle, float ZRotationAngle = 0.f);
+	static void GenerateMultiLevelCylinder(FMeshData& MeshData, FCylinderData& CylinderData);
 
 private:
 	// Calculates Vertices, Normals and UVs for a Circle and ads them to MeshData. No TriangleCalculation!

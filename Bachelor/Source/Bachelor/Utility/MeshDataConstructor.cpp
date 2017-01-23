@@ -16,12 +16,15 @@ void UMeshDataConstructor::GenerateCylinder(FMeshData& MeshData, FVector BottomC
 		MeshData.UVs, MeshData.Normals, MeshData.Tangents);
 }
 
-void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, TArray<FVector> RingCenters, TArray<FVector> ConnectionNormals,
-	TArray<float> RingRadii, int NumSegmentsPerCircle, float ZRotationAngle) {
+void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, FCylinderData& CylinderData) {
+	TArray<FVector> RingCenters = CylinderData.RingCenters;
+	TArray<FVector> ConnectionNormals = CylinderData.ConnectionNormals;
+	TArray<float> RingRadii = CylinderData.RingRadii;
+	int NumSegmentsPerCircle = CylinderData.NumberOfMeshSections;
+	float ZRotationAngle = CylinderData.LocalZRotationAngle;
+
 	int StartingIndex = MeshData.Vertices.Num();
-
 	float TexCoordVIncrement = 1.0f / (RingCenters.Num() - 1);
-
 	GenerateCircle(MeshData, RingCenters[0], ConnectionNormals[0], RingRadii[0], 0.f, NumSegmentsPerCircle, ZRotationAngle);
 	for (int i = 1; i < RingCenters.Num(); ++i) {
 		int TriangleIndexOffset = (i - 1) * (NumSegmentsPerCircle + 1) + StartingIndex;

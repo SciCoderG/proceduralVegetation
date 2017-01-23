@@ -2,13 +2,14 @@
 
 #pragma once
 
-#include "Bachelor/Procedural/Data/MeshData.h"
 #include "GameFramework/Actor.h"
 #include "SpaceColonizationPlant.generated.h"
 
 class UProceduralMeshComponent;
 class AColonizationSpace;
 struct FBranch;
+struct FMeshData;
+struct FTreeConstructionData;
 
 UCLASS()
 class BACHELOR_API ASpaceColonizationPlant : public AActor
@@ -115,7 +116,8 @@ private:
 
 	void TryCreatingNewBranch(FBranch* Parent, FVector NormalizedGrowthDirection, float IndividualGrowthPerIteration);
 
-	FMeshData AllMeshData;
+	FMeshData* AllMeshData;
+	FTreeConstructionData* TreeConstructionData;
 
 	FBranch* RootBranch;
 

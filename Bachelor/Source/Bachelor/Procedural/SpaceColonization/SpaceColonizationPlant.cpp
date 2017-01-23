@@ -8,6 +8,8 @@
 
 #include "ColonizationSpace.h"
 #include "Bachelor/Procedural/Branch.h"
+#include "Bachelor/Procedural/Data/MeshData.h"
+#include "Bachelor/Procedural/Data/TreeConstructionData.h"
 #include "Bachelor/Utility/MeshDataConstructor.h"
 #include "Bachelor/Utility/MeshConstructor.h"
 #include "Bachelor/Utility/BranchUtility.h"
@@ -45,11 +47,17 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	SmoothOutBranchingAngles = true;
 
 	IsStillGrowing = true;
+
+	AllMeshData = new FMeshData();
+	TreeConstructionData = new FTreeConstructionData();
+
 	InitUtilityValues();
 }
 
 ASpaceColonizationPlant::~ASpaceColonizationPlant() {
-
+	delete AllMeshData;
+	delete TreeConstructionData;
+	delete RootBranch;
 }
 
 // Called when the game starts or when spawned
@@ -60,7 +68,6 @@ void ASpaceColonizationPlant::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 	InitUtilityValues();
 	ColonizeGivenSpaces();
-
 	if (SmoothOutBranchingAngles) {
 		UBranchUtility::SmoothOutBranchingAngles(RootBranch);
 	}
@@ -68,8 +75,7 @@ void ASpaceColonizationPlant::BeginPlay()
 		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 	}
 
-	UMeshConstructor::GenerateTreeMesh(Mesh, AllMeshData, RootBranch, TrunkRadiusMultiplier, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch,  
-		MaxNumberOfVerticesPerMeshSection, BranchRadiusZero, BranchRadiusGrowthParameter);
+	UMeshConstructor::GenerateTreeMesh(TreeConstructionData);
 }
 
 // Called every frame
@@ -93,6 +99,20 @@ void ASpaceColonizationPlant::PostEditChangeProperty(struct FPropertyChangedEven
 void ASpaceColonizationPlant::InitUtilityValues() {
 	KillDistanceSquared = KillDistance * KillDistance;
 	RadiusOfInfluenceSquared = RadiusOfInfluence * RadiusOfInfluence;
+
+	if (NULL == TreeConstructionData) {
+		TreeConstructionData = new FTreeConstructionData();
+	}
+	TreeConstructionData->Mesh = Mesh;
+	TreeConstructionData->AllMeshData = AllMeshData;
+	TreeConstructionData->RootBranch = RootBranch;
+
+	TreeConstructionData->TrunkRadiusMultiplier = TrunkRadiusMultiplier;
+	TreeConstructionData->MinNumberOfSectionsPerBranch = MinNumberOfSectionsPerBranch;
+	TreeConstructionData->MaxNumberOfSectionsPerBranch = MaxNumberOfSectionsPerBranch;
+	TreeConstructionData->MaxNumberOfVerticesPerMeshSection = MaxNumberOfVerticesPerMeshSection;
+	TreeConstructionData->BranchRadiusZero = BranchRadiusZero;
+	TreeConstructionData->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
 }
 
 void ASpaceColonizationPlant::ColonizeGivenSpaces() {
@@ -100,6 +120,7 @@ void ASpaceColonizationPlant::ColonizeGivenSpaces() {
 		UBranchUtility::RecursiveDeleteAllBranches(RootBranch);
 	}
 	RootBranch = new FBranch();
+	TreeConstructionData->RootBranch = RootBranch;
 	InitialRootGrowth();
 	int iterations = 0;
 	for (int i = 0; i < MaxNumGrowthIterations; ++i) {

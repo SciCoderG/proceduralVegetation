@@ -3,6 +3,8 @@
 #include "Bachelor.h"
 #include "MeshConstructor.h"
 #include "Procedural/Data/MeshData.h"
+#include "Procedural/Data/TreeConstructionData.h"
+#include "Procedural/Data/CylinderData.h"
 #include "Procedural/Branch.h"
 #include "MeshDataConstructor.h"
 #include "BranchUtility.h"
@@ -10,6 +12,12 @@
 #include "ProceduralMeshComponent.h"
 #include "KismetProceduralMeshLibrary.h"
 
+
+void UMeshConstructor::GenerateTreeMesh(FTreeConstructionData* TreeConstructionData) {
+	GenerateTreeMesh(TreeConstructionData->Mesh, *TreeConstructionData->AllMeshData, TreeConstructionData->RootBranch, TreeConstructionData->TrunkRadiusMultiplier,
+		TreeConstructionData->MinNumberOfSectionsPerBranch, TreeConstructionData->MaxNumberOfSectionsPerBranch, TreeConstructionData->MaxNumberOfVerticesPerMeshSection,
+		TreeConstructionData->BranchRadiusZero, TreeConstructionData->BranchRadiusGrowthParameter);
+}
 
 void UMeshConstructor::GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshData& AllMeshData, 
 	FBranch* RootBranch, float TrunkRadiusMultiplier, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection,
@@ -59,22 +67,23 @@ void UMeshConstructor::GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origi
 		AllBranches.Remove(currentBranch);
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Num Of Branches as one cylinder: %d"), BranchesOnSameDepth.Num());
-	TArray<FVector> RingCenters;
-	RingCenters.Add(Origin->Start);
 
-	TArray<FVector> ConnectionNormals;
-	ConnectionNormals.Add(Origin->StartConnectionNormal);
+	FCylinderData CylinderData;
 
-	TArray<float> RingRadii;
-	RingRadii.Add(Origin->StartRadius);
+	CylinderData.RingCenters.Add(Origin->Start);
+	CylinderData.ConnectionNormals.Add(Origin->StartConnectionNormal);
+	CylinderData.RingRadii.Add(Origin->StartRadius);
 	
 	for (FBranch* currentBranch : BranchesOnSameDepth) {
-		RingCenters.Add(currentBranch->End);
-		RingRadii.Add(currentBranch->EndRadius);
-		ConnectionNormals.Add(currentBranch->EndConnectionNormal);
+		CylinderData.RingCenters.Add(currentBranch->End);
+		CylinderData.RingRadii.Add(currentBranch->EndRadius);
+		CylinderData.ConnectionNormals.Add(currentBranch->EndConnectionNormal);
 	}
 
-	int NumberOfSectionsUsed = UBranchUtility::CalcNumOfBranchSections(RingRadii[0], RootRadius, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch);
+	int NumberOfSectionsUsed = UBranchUtility::CalcNumOfBranchSections(CylinderData.RingRadii[0], RootRadius, MinNumberOfSectionsPerBranch, MaxNumberOfSectionsPerBranch);
 
-	UMeshDataConstructor::GenerateMultiLevelCylinder(AllMeshData, RingCenters, ConnectionNormals, RingRadii, NumberOfSectionsUsed, Origin->ZRotationAngle);
+	CylinderData.NumberOfMeshSections = NumberOfSectionsUsed;
+	CylinderData.LocalZRotationAngle = Origin->ZRotationAngle;
+
+	UMeshDataConstructor::GenerateMultiLevelCylinder(AllMeshData, CylinderData);
 }
