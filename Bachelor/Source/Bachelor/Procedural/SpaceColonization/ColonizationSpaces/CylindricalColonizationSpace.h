@@ -15,10 +15,10 @@ public:
 	// Sets default values for this actor's properties
 	ACylindricalColonizationSpace();
 
-	virtual float GetMaxDistanceFromCenter();
+	virtual float GetMaxDistanceFromCenter() override;
 
 	// Called on property changes
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 
 	void InitCylinder(float Height, float Radius);
 
@@ -30,9 +30,7 @@ public:
 
 protected:
 
-	virtual void GenerateRandomColonizationPoints();
-
-	FVector Get2DUnitVector();
+	virtual void GenerateRandomColonizationPoints() override;
 
 private:
 	void InitValues();

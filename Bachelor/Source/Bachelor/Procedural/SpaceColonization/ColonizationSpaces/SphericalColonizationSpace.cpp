@@ -12,7 +12,7 @@ ASphericalColonizationSpace::ASphericalColonizationSpace()
 	
 	// initial values
 	ColonizationRadius = 150.0f;
-	NumberOfGenerationPoints = 2000.0f;
+	NumberOfGenerationPoints = 2000;
 	RandomSeed = -1;
 
 	DrawDebugPoints = false;
@@ -20,6 +20,7 @@ ASphericalColonizationSpace::ASphericalColonizationSpace()
 	DebugPointSize = 5.0f;
 
 	InitValues();
+	GenerateRandomColonizationPoints();
 }
 
 
@@ -30,10 +31,15 @@ void ASphericalColonizationSpace::PostEditChangeProperty(struct FPropertyChanged
 	if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, DrawDebugPoints))) {
 		ColonizationSphere->SetHiddenInGame(!DrawDebugPoints);
 	}
+	if ((PropertyName == GET_MEMBER_NAME_CHECKED(ASphericalColonizationSpace, ColonizationRadius)))
+	{
+		GenerateRandomColonizationPoints();
+	}
 }
 
 void ASphericalColonizationSpace::GenerateRandomColonizationPoints() {
 	ColonizationPoints.Reset();
+	InitValues();
 	float scaledSphereRadius = ColonizationSphere->GetScaledSphereRadius();
 	
 	if (RandomSeed > 0) {
@@ -43,7 +49,7 @@ void ASphericalColonizationSpace::GenerateRandomColonizationPoints() {
 		RandomStream.GenerateNewSeed();
 	}
 
-	for (uint32 i = 0; i < NumberOfGenerationPoints; ++i) {
+	for (int i = 0; i < NumberOfGenerationPoints; ++i) {
 		FVector RandomPoint = this->GetActorLocation() + RandomStream.RandRange(-scaledSphereRadius, scaledSphereRadius) * RandomStream.VRand();
 		ColonizationPoints.Add(RandomPoint);
 	}

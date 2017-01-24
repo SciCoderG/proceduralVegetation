@@ -8,7 +8,7 @@
 ACylindricalColonizationSpace::ACylindricalColonizationSpace()
 {
 	// initial values
-	NumberOfGenerationPoints = 2000.0f;
+	NumberOfGenerationPoints = 2000;
 	RandomSeed = -1;
 
 	DrawDebugPoints = false;
@@ -19,6 +19,7 @@ ACylindricalColonizationSpace::ACylindricalColonizationSpace()
 	CylinderRadius = 50.0f;
 
 	InitValues();
+	GenerateRandomColonizationPoints();
 }
 
 
@@ -26,8 +27,10 @@ void ACylindricalColonizationSpace::PostEditChangeProperty(struct FPropertyChang
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
 
-	if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, DrawDebugPoints))) {
-		
+	if ((PropertyName == GET_MEMBER_NAME_CHECKED(ACylindricalColonizationSpace, CylinderHeight)) ||
+		(PropertyName == GET_MEMBER_NAME_CHECKED(ACylindricalColonizationSpace, CylinderRadius)))
+	{
+		GenerateRandomColonizationPoints();
 	}
 }
 
@@ -36,20 +39,6 @@ void ACylindricalColonizationSpace::InitCylinder(float Height, float Radius) {
 	this->CylinderRadius = Radius * FMath::Max(GetActorScale3D().X, GetActorScale3D().Y);
 }
 
-
-FVector ACylindricalColonizationSpace::Get2DUnitVector()
-{
-	FVector Result;
-	float L;
-	do
-	{
-		Result.X = RandomStream.GetFraction() * 2.f - 1.f;
-		Result.Y = RandomStream.GetFraction() * 2.f - 1.f;
-		L = Result.SizeSquared();
-	} while (L > 1.f || L < KINDA_SMALL_NUMBER);
-
-	return Result.GetUnsafeNormal();
-}
 
 void ACylindricalColonizationSpace::GenerateRandomColonizationPoints() {
 	ColonizationPoints.Reset();
@@ -61,9 +50,11 @@ void ACylindricalColonizationSpace::GenerateRandomColonizationPoints() {
 		RandomStream.GenerateNewSeed();
 	}
 
-	for (uint32 i = 0; i < NumberOfGenerationPoints; ++i) {
-		FVector RandomRadialVector = Get2DUnitVector() * RandomStream.RandRange(-CylinderRadius, CylinderRadius);
-		RandomRadialVector.Z = RandomStream.RandRange(- CylinderHeight / 2.0f, CylinderHeight / 2.0f);
+	for (int i = 0; i < NumberOfGenerationPoints; ++i) {
+		FVector Random2DUnitVector = RandomStream.GetUnitVector();
+		Random2DUnitVector = Random2DUnitVector.GetSafeNormal2D();
+		FVector RandomRadialVector = Random2DUnitVector * RandomStream.FRandRange(-CylinderRadius, CylinderRadius);
+		RandomRadialVector.Z = RandomStream.FRandRange(0.f, CylinderHeight);
 		FVector RandomPoint = this->GetActorLocation() + RandomRadialVector;
 		ColonizationPoints.Add(RandomPoint);
 	}
@@ -74,6 +65,6 @@ void ACylindricalColonizationSpace::InitValues() {
 }
 
 float ACylindricalColonizationSpace::GetMaxDistanceFromCenter() {
-	return FMath::Max(CylinderHeight / 2.0f, CylinderRadius);
+	return 0.f;
 }
 

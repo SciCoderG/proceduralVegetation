@@ -131,7 +131,7 @@ private:
 
 	ACylindricalColonizationSpace* SpawnCylindricalColonizationSpace(FVector Location);
 
-	ASpaceColonizationPlant* SpawnColonizationPlant(FVector Location, ASphericalColonizationSpace* ColonizationSpace);
+	ASpaceColonizationPlant* SpawnColonizationPlant(FVector Location, AColonizationSpace* ColonizationSpace);
 
 	UWorld* World;
 	

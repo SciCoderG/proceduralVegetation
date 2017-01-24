@@ -14,7 +14,7 @@ AColonizationSpace::AColonizationSpace()
 	RootComponent = RootSphere;
 	
 	// initial values
-	NumberOfGenerationPoints = 2000.0f;
+	NumberOfGenerationPoints = 2000;
 	RandomSeed = -1;
 
 	DrawDebugPoints = false;
@@ -45,6 +45,10 @@ void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
 	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+
+	if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, DrawDebugPoints))) {
+		DrawDebugColonizationPoints();
+	}
 
 	if ((PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, NumberOfGenerationPoints)) ||
 		(PropertyName == GET_MEMBER_NAME_CHECKED(AColonizationSpace, RandomSeed)))

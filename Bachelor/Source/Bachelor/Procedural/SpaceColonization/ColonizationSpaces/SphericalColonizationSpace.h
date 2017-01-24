@@ -15,10 +15,10 @@ public:
 	// Sets default values for this actor's properties
 	ASphericalColonizationSpace();
 
-	virtual float GetMaxDistanceFromCenter();
+	virtual float GetMaxDistanceFromCenter() override;
 
 	// Called on property changes
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 	USphereComponent* ColonizationSphere;
@@ -28,7 +28,7 @@ public:
 
 protected:
 
-	virtual void GenerateRandomColonizationPoints();
+	virtual void GenerateRandomColonizationPoints() override;
 
 private:
 	void InitValues();

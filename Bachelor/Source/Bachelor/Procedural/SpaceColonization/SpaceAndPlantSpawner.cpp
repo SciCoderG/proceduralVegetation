@@ -85,7 +85,17 @@ void ASpaceAndPlantSpawner::BeginPlay()
 		FVector location = GetActorLocation();
 		location += (i % wrapValue) * xOffset;
 		location += (i / wrapValue) * yOffset;
-		ASphericalColonizationSpace* colonizationSpace = SpawnSphericalColonizationSpace(location + ColonizationSpaceOffset);
+
+		AColonizationSpace* colonizationSpace = NULL;
+		FVector colonizationSpaceSpawnLocation = location + ColonizationSpaceOffset;
+
+		switch (ColonizationSpaceType) {
+		case EColonizationSpaceType::VE_Cylindrical:
+			colonizationSpace = SpawnCylindricalColonizationSpace(colonizationSpaceSpawnLocation);
+			break;
+		default:
+			colonizationSpace = SpawnSphericalColonizationSpace(colonizationSpaceSpawnLocation);
+		}
 		SpawnColonizationPlant(location, colonizationSpace);
 	}
 }
@@ -130,7 +140,7 @@ ACylindricalColonizationSpace* ASpaceAndPlantSpawner::SpawnCylindricalColonizati
 	return spawnedColonizationSpace;
 }
 
-ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector Location, ASphericalColonizationSpace* ColonizationSpace) {
+ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector Location, AColonizationSpace* ColonizationSpace) {
 	ASpaceColonizationPlant* spawnedColonizationPlant = NULL;
 	if (World) {
 		UClass* colonizationPlantClass = ASpaceColonizationPlant::StaticClass();
