@@ -33,8 +33,6 @@ void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, FCyli
 		GenerateCylinderSectionTriangles(MeshData, RingCenters[i - 1], RingCenters[i],
 			NumSegmentsPerCircle, TriangleIndexOffset);
 	}
-	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(MeshData.Vertices, MeshData.Triangles, 
-		MeshData.UVs, MeshData.Normals, MeshData.Tangents);
 }
 
 void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
@@ -57,6 +55,10 @@ void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
 		MeshData.Vertices.Add(Center + Radius * positionOnUnitCircle);
 
 		MeshData.Normals.Add(positionOnUnitCircle);
+
+		FVector tangentVec = FVector::CrossProduct(CircleNormal, positionOnUnitCircle);
+		FProcMeshTangent tangent(tangentVec, false);
+		MeshData.Tangents.Add(tangent);
 
 		float calculatedTexCoordU = (float)i / (float)NumSegments;
 		FVector2D calculatedUV = FVector2D(calculatedTexCoordU, TexCoordV);
