@@ -20,7 +20,7 @@ ALSystemPlant::ALSystemPlant()
 	PrimaryActorTick.bCanEverTick = true;
 
 	USphereComponent* Root = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
-	Root->InitSphereRadius(1.0f);
+	Root->InitSphereRadius(50.0f);
 	RootComponent = Root;
 
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
@@ -41,6 +41,11 @@ void ALSystemPlant::BeginPlay()
 	Super::BeginPlay();
 
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
+
+	ConstructProductionMap();
+	ConstructFunctionMap();
+
+
 
 	if (SmoothOutBranchingAngles) {
 		UBranchUtility::SmoothOutBranchingAngles(RootBranch);
@@ -74,4 +79,28 @@ void ALSystemPlant::InitUtilityValues() {
 	TreeConstructionData.Mesh = Mesh;
 	TreeConstructionData.AllMeshData = AllMeshData;
 	TreeConstructionData.RootBranch = RootBranch;
+}
+
+void ALSystemPlant::ConstructProductionMap() {
+	for (FProductionData productionData : LSystemData.Productions) {
+		ProductionMap.Add(productionData.ID[0], productionData);
+	}
+}
+
+void ALSystemPlant::ConstructFunctionMap() {
+
+}
+
+void ALSystemPlant::CompleteDerivation() {
+	CurrentDerivation = "";
+	for (int i = 0; i < LSystemData.NumberOfDerivations; ++i) {
+		Derivate();
+	}
+}
+
+void ALSystemPlant::Derivate() {
+	for (int i = 0; i < CurrentDerivation.Len(); ++i) {
+		TCHAR currentChar = CurrentDerivation[i];
+
+	}
 }

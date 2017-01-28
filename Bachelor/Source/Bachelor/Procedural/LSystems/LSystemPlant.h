@@ -4,6 +4,7 @@
 
 #include "GameFramework/Actor.h"
 #include "Bachelor/Procedural/Data/TreeConstructionData.h"
+#include "Data/LSystemData.h"
 #include "LSystemPlant.generated.h"
 
 class UProceduralMeshComponent;
@@ -38,6 +39,9 @@ public:
 		UProceduralMeshComponent* Mesh;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|LSystem")
+		FLSystemData LSystemData;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|TreeConstruction")
 		FTreeConstructionData TreeConstructionData;
 
@@ -54,7 +58,22 @@ public:
 private:
 
 	void InitUtilityValues();
+
+	void ConstructProductionMap();
+	void ConstructFunctionMap();
+
+	void CompleteDerivation();
+
+	void Derivate();
+
+	// https://wiki.unrealengine.com/Function_Pointers
+	typedef void (ALSystemPlant::*FunctionPtrType)(void);
+	TMap<FString, FunctionPtrType> FunctionMap;
+
+	TMap<TCHAR, FProductionData> ProductionMap;
 	
+	FString CurrentDerivation;
+
 	FMeshData* AllMeshData;
 	
 	FBranch* RootBranch;
