@@ -22,7 +22,7 @@ public:
 		TrunkRadiusMultiplier = 1.41f;
 		MinNumberOfSectionsPerBranch = 2;
 		MaxNumberOfSectionsPerBranch = 6;
-		MaxNumberOfVerticesPerMeshSection = 400;
+		MaxNumberOfVerticesPerMeshSection = 3e5;
 		BranchRadiusZero = 2.0f;
 		BranchRadiusGrowthParameter = 2.5f;
 	}
@@ -31,11 +31,18 @@ public:
 	FMeshData* AllMeshData;
 	FBranch* RootBranch;
 	
-	float TrunkRadiusMultiplier;
-	int MinNumberOfSectionsPerBranch;
-	int MaxNumberOfSectionsPerBranch;
-	int MaxNumberOfVerticesPerMeshSection;
-	float BranchRadiusZero;
-	float BranchRadiusGrowthParameter;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
+		float TrunkRadiusMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
+		float BranchRadiusZero;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
+		float BranchRadiusGrowthParameter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		int MinNumberOfSectionsPerBranch;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		int MaxNumberOfSectionsPerBranch;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		int MaxNumberOfVerticesPerMeshSection;
 };
 

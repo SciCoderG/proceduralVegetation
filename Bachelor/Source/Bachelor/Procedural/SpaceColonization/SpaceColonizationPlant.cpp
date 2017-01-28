@@ -40,7 +40,7 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	MaxGrowthDepth = 6;
 	WeightedGrowth = true;
 
-	MaxNumberOfVerticesPerMeshSection = 400;
+	MaxNumberOfVerticesPerMeshSection = 3e5;
 	BranchRadiusZero = 1.0f;
 	BranchRadiusGrowthParameter = 2.0f;
 	PolyReductionByCurveReduction = false;
