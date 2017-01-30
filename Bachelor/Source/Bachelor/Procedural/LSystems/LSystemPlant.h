@@ -63,8 +63,11 @@ private:
 	void ConstructFunctionMap();
 
 	void CompleteDerivation();
+	bool Derivate();
 
-	void Derivate();
+	FString CheckProduction(FProductionData* Production, int KeyIndex, int& OutNumberOfCharsToIgnore);
+	bool FillParameterValues(TMap<FString, FString> &OutParameterValues, FProductionData* Production, FString ContentBetweenBrackets);
+
 
 	// https://wiki.unrealengine.com/Function_Pointers
 	typedef void (ALSystemPlant::*FunctionPtrType)(void);
