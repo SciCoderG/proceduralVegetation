@@ -32,7 +32,7 @@ private:
 
 	void ConstructFunctionMap();
 
-	void InterpreteLSystemResult();
+	void Interprete(FString ToInterprete);
 
 #pragma region FunctionMap functions
 	virtual void SetVertical();
@@ -51,21 +51,30 @@ private:
 	virtual void RollLeft(float angle);
 	virtual void RollRight(float angle);
 
+	virtual float Multiplicate(float first, float second);
+
 #pragma endregion
 
 	typedef void (ATurtleInterpreter::*ZeroArgFunctionPtrType)(void);
 	typedef void (ATurtleInterpreter::*OneArgFunctionPtrType)(float value);
-	typedef void (ATurtleInterpreter::*TwoArgFunctionPtrType)(float first, float second);
+	typedef float (ATurtleInterpreter::*TwoArgOperatorPtrType)(float first, float second);
 
-	bool CheckFunctions(int CurrentCharIndex, int& OutNumCharsToSkip);
-	bool CheckZeroArgFunctions(int CurrentCharIndex, int& OutNumCharsToSkip);
-	bool CheckOneArgFunctions(int CurrentCharIndex, int& OutNumCharsToSkip);
-	bool CheckTwoArgFunctions(int CurrentCharIndex, int& OutNumCharsToSkip);
+	bool CheckFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
+
+	bool CheckZeroArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
+
+	bool CheckOneArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
+	void CheckAllAttributesForOperators(TArray<FString>& OutAttributes);
+	FString CheckForMathOperators(FString Attribute);
+	int FindIndexOfNextOperator(FString Attribute, int LastOperatorIndex, TwoArgOperatorPtrType** OutOperatorPtrType);
+
+	bool TryCallOneArgFunction(TCHAR* CurrentChar, TArray<FString> Attributes, OneArgFunctionPtrType* FunctionPtr, int& OutNumCharsToSkip);
+
 
 	// https://wiki.unrealengine.com/Function_Pointers
 	TMap<TCHAR, ZeroArgFunctionPtrType> ZeroArgumentFunctionMap;
 	TMap<TCHAR, OneArgFunctionPtrType> OneArgumentFunctionMap;
-	TMap<TCHAR, TwoArgFunctionPtrType> TwoArgumentFunctionMap;
+	TMap<TCHAR, TwoArgOperatorPtrType> TwoArgumentOperatorMap;
 
 	FVector CurrentPosition;
 	FQuat CurrentRotation;

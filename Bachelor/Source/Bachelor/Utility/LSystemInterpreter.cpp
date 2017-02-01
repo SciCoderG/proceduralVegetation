@@ -41,6 +41,7 @@ FString ULSystemInterpreter::GetContentBetweenBrackets(FString Current, int Brac
 
 TArray<FString> ULSystemInterpreter::GetAttributesBetweenBrackets(FString Current, int BracketPositionIndex) {
 	TArray<FString> commaDividedContent;
+	commaDividedContent.Empty();
 
 	FString contentBetweenBrackets = ULSystemInterpreter::GetContentBetweenBrackets(Current, BracketPositionIndex);
 	if (INTERPRETER_ERROR_NUMBER_OF_BRACKETS == contentBetweenBrackets || INTERPRETER_ERROR_FIRST_CHAR_IS_NOT_A_BRACKET == contentBetweenBrackets) {

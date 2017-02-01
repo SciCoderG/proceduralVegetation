@@ -62,8 +62,10 @@ private:
 
 	void ConstructProductionMap();
 
+	void RemoveAnyWhiteSpaces();
+
 	void CompleteDerivation();
-	bool Derivate();
+	FString Derivate(FString ToDerivate);
 
 	FString CheckProduction(FProductionData* Production, int KeyIndex, int& OutNumberOfCharsToIgnore);
 	bool FillParameterValues(TMap<FString, FString> &OutParameterValues, FProductionData* Production, FString ContentBetweenBrackets);

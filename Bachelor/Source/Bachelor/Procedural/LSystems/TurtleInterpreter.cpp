@@ -45,14 +45,14 @@ void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FString LSyst
 	this->StringToInterpret = LSystemResult;
 
 	SetVertical();
-	InterpreteLSystemResult();
+	Interprete(LSystemResult);
 }
 
-void ATurtleInterpreter::InterpreteLSystemResult() {
-	for (int i = 0; i < StringToInterpret.Len(); ++i) {
-		TCHAR currentChar = StringToInterpret[i];
+void ATurtleInterpreter::Interprete(FString ToInterprete){
+	for (int i = 0; i < ToInterprete.Len(); ++i) {
+		TCHAR currentChar = ToInterprete[i];
 		int NumCharsToSkip = 0;
-		bool wasProcessed = CheckFunctions(i, NumCharsToSkip);
+		bool wasProcessed = CheckFunctions(ToInterprete, i, NumCharsToSkip);
 		if (wasProcessed) {
 			i += NumCharsToSkip;
 		}
@@ -76,6 +76,7 @@ void ATurtleInterpreter::ConstructFunctionMap() {
 	OneArgumentFunctionMap.Add('\\', &ATurtleInterpreter::RollRight);
 
 	// functions with two arguments
+	TwoArgumentOperatorMap.Add('*', &ATurtleInterpreter::Multiplicate);
 
 }
 
@@ -128,26 +129,26 @@ void ATurtleInterpreter::RollRight(float angle) {
 	Roll(-angle);
 }
 
+float ATurtleInterpreter::Multiplicate(float first, float second) {
+	return first * second;
+}
+
 #pragma endregion
 
 
-bool ATurtleInterpreter::CheckFunctions(int CurrentCharIndex, int& OutNumCharsToSkip) {
+bool ATurtleInterpreter::CheckFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
 	// this looks so freaking stupid.
-	bool wasProcessed = CheckZeroArgFunctions(CurrentCharIndex, OutNumCharsToSkip);
+	bool wasProcessed = CheckZeroArgFunctions(ToInterprete, CurrentCharIndex, OutNumCharsToSkip);
 	if (wasProcessed) {
 		return wasProcessed;
 	}
-	wasProcessed = CheckOneArgFunctions(CurrentCharIndex, OutNumCharsToSkip);
-	if (wasProcessed) {
-		return wasProcessed;
-	}
-	wasProcessed = CheckTwoArgFunctions(CurrentCharIndex, OutNumCharsToSkip);
+	wasProcessed = CheckOneArgFunctions(ToInterprete, CurrentCharIndex, OutNumCharsToSkip);
 	return wasProcessed;
 }
 
-bool ATurtleInterpreter::CheckZeroArgFunctions(int CurrentCharIndex, int& OutNumCharsToSkip) {
+bool ATurtleInterpreter::CheckZeroArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
 	bool wasProcessed = false;
-	TCHAR currentChar = StringToInterpret[CurrentCharIndex];
+	TCHAR currentChar = ToInterprete[CurrentCharIndex];
 	ZeroArgFunctionPtrType* functionPtr = ZeroArgumentFunctionMap.Find(currentChar);
 	if (NULL != functionPtr) {
 		(this->*(*functionPtr))();
@@ -157,48 +158,93 @@ bool ATurtleInterpreter::CheckZeroArgFunctions(int CurrentCharIndex, int& OutNum
 	return wasProcessed;
 }
 
-bool ATurtleInterpreter::CheckOneArgFunctions(int CurrentCharIndex, int& OutNumCharsToSkip) {
+bool ATurtleInterpreter::CheckOneArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
 	bool wasProcessed = false;
-	TCHAR currentChar = StringToInterpret[CurrentCharIndex];
+	TCHAR currentChar = ToInterprete[CurrentCharIndex];
 	OneArgFunctionPtrType* functionPtr = OneArgumentFunctionMap.Find(currentChar);
 	if (NULL != functionPtr) {
-		int BracketPositionIndex = CurrentCharIndex + 1;
-		TArray<FString> Attribute = ULSystemInterpreter::GetAttributesBetweenBrackets(StringToInterpret, BracketPositionIndex);
-		if (1 != Attribute.Num()) {
-			UE_LOG(LogTemp, Warning, TEXT("Number of Parameters for Function %s is %d, was given %d"), currentChar, 1, Attribute.Num());
+		int bracketPositionIndex = CurrentCharIndex + 1;
+		TArray<FString> attributes = ULSystemInterpreter::GetAttributesBetweenBrackets(ToInterprete, bracketPositionIndex);
+		if (1 != attributes.Num()) {
+			UE_LOG(LogTemp, Warning, TEXT("Number of Parameters for Function \"%s\" is %d, was given %d"), &currentChar, 1, attributes.Num());
 		}
 		else {
-			float firstAttribute = FCString::Atof(*Attribute[0]);
-			(this->*(*functionPtr))(firstAttribute);
-
-			int numOfBrackets = 2;
-			OutNumCharsToSkip += Attribute[0].Len() + numOfBrackets;
-			wasProcessed = true;
+			CheckAllAttributesForOperators(attributes);
+			wasProcessed = TryCallOneArgFunction(&currentChar, attributes, functionPtr, OutNumCharsToSkip);
 		}
 	}
 	return wasProcessed;
 }
 
-bool ATurtleInterpreter::CheckTwoArgFunctions(int CurrentCharIndex, int& OutNumCharsToSkip) {
+void ATurtleInterpreter::CheckAllAttributesForOperators(TArray<FString>& OutAttributes) {
+	for (int i = 0; i < OutAttributes.Num(); ++i) {
+		FString attribute = OutAttributes[i];
+		OutAttributes[i] = CheckForMathOperators(attribute);
+	}
+}
+
+
+FString ATurtleInterpreter::CheckForMathOperators(FString Attribute) {
+	TwoArgOperatorPtrType* CurrentOperatorPtr = NULL;
+	TwoArgOperatorPtrType* LastOperatorPtr = NULL;
+
+	int LastOperatorIndex = FindIndexOfNextOperator(Attribute, 0, &LastOperatorPtr);
+	FString resultString = Attribute.Left(LastOperatorIndex);
+	int CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
+	while (CurrentOperatorIndex != LastOperatorIndex) {
+		if (resultString.IsNumeric()) {
+			float firstParameter = FCString::Atof(*resultString);
+
+			int secondParameterStart = LastOperatorIndex + 1;
+			int secondParameterCount = CurrentOperatorIndex - secondParameterStart;
+			FString secondParameterString = Attribute.Mid(secondParameterStart, secondParameterCount);
+			
+			if (secondParameterString.IsNumeric()) {
+				float secondParameter = FCString::Atof(*secondParameterString);
+
+				float result = (this->*(*LastOperatorPtr))(firstParameter, secondParameter);
+				resultString = FString::SanitizeFloat(result);
+			}
+		}
+		LastOperatorIndex = CurrentOperatorIndex;
+		LastOperatorPtr = CurrentOperatorPtr;
+		CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
+	}
+	return resultString;
+}
+
+int ATurtleInterpreter::FindIndexOfNextOperator(FString Attribute, int LastOperatorIndex, TwoArgOperatorPtrType** OutOperatorPtrType) {
+	int nextOperatorIndex = LastOperatorIndex;
+	for (int i = LastOperatorIndex + 1; i < Attribute.Len(); ++i) {
+		TCHAR currentChar = Attribute[i];
+		nextOperatorIndex = i;
+		(*OutOperatorPtrType) = TwoArgumentOperatorMap.Find(currentChar);
+		if (NULL != (*OutOperatorPtrType)) {
+			return nextOperatorIndex;
+		}
+	}
+	if (nextOperatorIndex != LastOperatorIndex) {
+		nextOperatorIndex++;
+	}
+	return nextOperatorIndex;
+}
+
+
+bool ATurtleInterpreter::TryCallOneArgFunction(TCHAR* CurrentChar, TArray<FString> Attributes, OneArgFunctionPtrType* FunctionPtr, int& OutNumCharsToSkip) {
 	bool wasProcessed = false;
-	TCHAR currentChar = StringToInterpret[CurrentCharIndex];
-	TwoArgFunctionPtrType* functionPtr = TwoArgumentFunctionMap.Find(currentChar);
-	if (NULL != functionPtr) {
-		int BracketPositionIndex = CurrentCharIndex + 1;
-		TArray<FString> Attribute = ULSystemInterpreter::GetAttributesBetweenBrackets(StringToInterpret, BracketPositionIndex);
-		if (2 != Attribute.Num()) {
-			UE_LOG(LogTemp, Warning, TEXT("Number of Parameters for Function %s is %d, was given %d"), currentChar, 2, Attribute.Num());
-		}
-		else {
-			float firstAttribute = FCString::Atof(*Attribute[0]);
-			float secondAttribute = FCString::Atof(*Attribute[1]);
-			(this->*(*functionPtr))(firstAttribute, secondAttribute);
 
-			int numOfBrackets = 2;
-			int numOfCommas = 1;
-			OutNumCharsToSkip += Attribute[0].Len() + Attribute[1].Len() + numOfBrackets + numOfCommas;
-			wasProcessed = true;
-		}
+	if (Attributes[0].IsNumeric()) {
+		float firstAttribute = FCString::Atof(*Attributes[0]);
+		(this->*(*FunctionPtr))(firstAttribute);
+		int numOfBrackets = 2;
+		OutNumCharsToSkip += Attributes[0].Len() + numOfBrackets;
+		wasProcessed = true;
+	}
+	else {
+		// Using TCHAR* looks silly, but otherwise it won't be copied correctly.
+		UE_LOG(LogTemp, Warning, TEXT("Expected Numerical Input for Function \"%s\", was given \"%s\""), CurrentChar, *Attributes[0]);
 	}
 	return wasProcessed;
 }
+
+

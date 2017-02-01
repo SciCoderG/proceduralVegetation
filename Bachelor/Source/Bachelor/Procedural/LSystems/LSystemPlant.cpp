@@ -96,8 +96,17 @@ void ALSystemPlant::InitUtilityValues() {
 }
 
 void ALSystemPlant::ConstructProductionMap() {
+	RemoveAnyWhiteSpaces();
 	for (FProductionData productionData : LSystemData.Productions) {
 		ProductionMap.Add(productionData.ID[0], productionData);
+	}
+}
+
+void ALSystemPlant::RemoveAnyWhiteSpaces() {
+	LSystemData.Axiom = LSystemData.Axiom.Replace(TEXT(" "), TEXT(""));
+	for (int i = 0; i < LSystemData.Productions.Num(); ++i) {
+		FProductionData* production = &LSystemData.Productions[i];
+		production->ProductionResult = production->ProductionResult.Replace(TEXT(" "), TEXT(""));
 	}
 }
 
@@ -105,20 +114,18 @@ void ALSystemPlant::ConstructProductionMap() {
 void ALSystemPlant::CompleteDerivation() {
 	CurrentDerivation = LSystemData.Axiom;
 	for (int i = 0; i < LSystemData.NumberOfDerivations; ++i) {
-		bool derivationWasSuccessful = Derivate();
-
-		if (!derivationWasSuccessful) {
+		CurrentDerivation = Derivate(CurrentDerivation);
+		if (PRODUCTION_WAS_UNSUCCESSFUL == CurrentDerivation) {
 			UE_LOG(LogTemp, Warning, TEXT("Critical Error during Derivation - interrupting."));
 			break;
 		}
 	}
 }
 
-bool ALSystemPlant::Derivate() {
+FString ALSystemPlant::Derivate(FString ToDerivate) {
 	FString derivationResult;
-	bool derivationWasSuccessful = true;
-	for (int i = 0; i < CurrentDerivation.Len(); ++i) {
-		TCHAR currentChar = CurrentDerivation[i];
+	for (int i = 0; i < ToDerivate.Len(); ++i) {
+		TCHAR currentChar = ToDerivate[i];
 		FProductionData* potentialProduction = ProductionMap.Find(currentChar);
 		if (NULL == potentialProduction) {
 			derivationResult.AppendChar(currentChar);
@@ -127,18 +134,14 @@ bool ALSystemPlant::Derivate() {
 			int numberOfCharsToIgnore = 0;
 			FString productionResult = CheckProduction(potentialProduction, i, numberOfCharsToIgnore);
 			if (PRODUCTION_WAS_UNSUCCESSFUL == productionResult) {
-				derivationWasSuccessful = false;
 				UE_LOG(LogTemp, Warning, TEXT("Error during Derivation - Error during application of Production."));
-				return derivationWasSuccessful;
+				return PRODUCTION_WAS_UNSUCCESSFUL;
 			}
 			i += numberOfCharsToIgnore;
 			derivationResult += productionResult;
 		}
 	}
-	if (derivationWasSuccessful) {
-		CurrentDerivation = derivationResult;
-	}
-	return derivationWasSuccessful;
+	return derivationResult;
 }
 
 FString ALSystemPlant::CheckProduction(FProductionData* Production, int KeyIndex, int& OutNumberOfCharsToIgnore){
@@ -171,8 +174,12 @@ FString ALSystemPlant::CheckProduction(FProductionData* Production, int KeyIndex
 		FString parameter = Production->ParameterList[i];
 
 		FString parameterValueString = *parameterValues.Find(parameter);
+		parameterValueString = Derivate(parameterValueString); // Derivate parameter inputs!
+
+
 		const TCHAR* parameterValue = *parameterValueString;
 		const TCHAR* constParameter = *parameter;
+
 		productionResult = productionResult.Replace(constParameter, parameterValue, ESearchCase::CaseSensitive);
 	}
 
