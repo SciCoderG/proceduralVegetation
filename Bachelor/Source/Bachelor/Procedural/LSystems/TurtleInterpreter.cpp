@@ -3,6 +3,7 @@
 #include "Bachelor.h"
 #include "TurtleInterpreter.h"
 #include "Bachelor/Utility/LSystemInterpreter.h"
+#include "Data/TurtleState.h"
 #include "Procedural/Branch.h"
 
 // Sets default values
@@ -62,6 +63,8 @@ void ATurtleInterpreter::Interprete(FString ToInterprete){
 void ATurtleInterpreter::ConstructFunctionMap() {
 	// functions with no arguments
 	ZeroArgumentFunctionMap.Add('$', &ATurtleInterpreter::SetVertical);
+	ZeroArgumentFunctionMap.Add('[', &ATurtleInterpreter::PushTurtleState);
+	ZeroArgumentFunctionMap.Add(']', &ATurtleInterpreter::PopTurtleState);
 
 	// functions with one argument
 	OneArgumentFunctionMap.Add('F', &ATurtleInterpreter::ConstructBranch);
@@ -82,6 +85,32 @@ void ATurtleInterpreter::ConstructFunctionMap() {
 
 #pragma region FunctionMap functions
 
+void ATurtleInterpreter::PushTurtleState() {
+	FTurtleState* newState = new FTurtleState();
+	newState->StatePosition = CurrentPosition;
+	newState->StateRotation = CurrentRotation;
+	newState->StateBranch = &CurrentBranch;
+
+	TurtleStateStack.Push(newState);
+}
+
+void ATurtleInterpreter::PopTurtleState() {
+	FTurtleState* toReturnTo = TurtleStateStack.Pop();
+
+	if (NULL != toReturnTo) {
+		CurrentPosition = toReturnTo->StatePosition;
+		CurrentRotation = toReturnTo->StateRotation;
+
+		CurrentBranch = (*toReturnTo->StateBranch)->ParentBranch;
+		if (NULL == CurrentBranch) {
+			CurrentBranch = (*toReturnTo->StateBranch);
+		}
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Tried to pop Turtle State without any states left - there is a Branch-Bracket error in the L-System!"));
+	}
+}
+
 void ATurtleInterpreter::SetVertical() {
 	CurrentRotation = FQuat::MakeFromEuler(FVector::RightVector * 90);
 }
@@ -89,12 +118,14 @@ void ATurtleInterpreter::SetVertical() {
 
 void ATurtleInterpreter::ConstructBranch(float length) {
 	FBranch* newBranch = new FBranch();
-
+	
 	CurrentBranch->ChildBranches.Add(newBranch);
 	newBranch->ParentBranch = CurrentBranch;
 	newBranch->Start = CurrentBranch->End;
 	newBranch->End = newBranch->Start + length * CurrentRotation.RotateVector(GetActorForwardVector());
+	newBranch->BranchDepth = TurtleStateStack.Num();
 
+	CurrentPosition = newBranch->End;
 	CurrentBranch = newBranch;
 }
 
@@ -134,7 +165,6 @@ float ATurtleInterpreter::Multiplicate(float first, float second) {
 }
 
 #pragma endregion
-
 
 bool ATurtleInterpreter::CheckFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
 	// this looks so freaking stupid.
@@ -183,7 +213,6 @@ void ATurtleInterpreter::CheckAllAttributesForOperators(TArray<FString>& OutAttr
 	}
 }
 
-
 FString ATurtleInterpreter::CheckForMathOperators(FString Attribute) {
 	TwoArgOperatorPtrType* CurrentOperatorPtr = NULL;
 	TwoArgOperatorPtrType* LastOperatorPtr = NULL;
@@ -229,7 +258,6 @@ int ATurtleInterpreter::FindIndexOfNextOperator(FString Attribute, int LastOpera
 	return nextOperatorIndex;
 }
 
-
 bool ATurtleInterpreter::TryCallOneArgFunction(TCHAR* CurrentChar, TArray<FString> Attributes, OneArgFunctionPtrType* FunctionPtr, int& OutNumCharsToSkip) {
 	bool wasProcessed = false;
 
@@ -246,5 +274,3 @@ bool ATurtleInterpreter::TryCallOneArgFunction(TCHAR* CurrentChar, TArray<FStrin
 	}
 	return wasProcessed;
 }
-
-

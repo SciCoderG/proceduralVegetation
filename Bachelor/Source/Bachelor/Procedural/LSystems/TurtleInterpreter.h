@@ -6,6 +6,7 @@
 #include "TurtleInterpreter.generated.h"
 
 struct FBranch;
+struct FTurtleState;
 
 UCLASS()
 class BACHELOR_API ATurtleInterpreter : public AActor
@@ -36,6 +37,9 @@ private:
 
 #pragma region FunctionMap functions
 	virtual void SetVertical();
+
+	virtual void PushTurtleState();
+	virtual void PopTurtleState();
 
 	virtual void ConstructBranch(float length);
 
@@ -80,11 +84,7 @@ private:
 	FQuat CurrentRotation;
 	FBranch* CurrentBranch;
 
-	// do stacking by stacking data structs with Position, Rotation and FBranch
-	TArray<FVector> PositionStack;
-	TArray<FRotator> RotationStack;
-	TArray<FBranch*> BranchStack;
-
+	TArray<FTurtleState*> TurtleStateStack;
 
 	FString StringToInterpret;
 };

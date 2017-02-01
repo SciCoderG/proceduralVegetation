@@ -176,7 +176,6 @@ FString ALSystemPlant::CheckProduction(FProductionData* Production, int KeyIndex
 		FString parameterValueString = *parameterValues.Find(parameter);
 		parameterValueString = Derivate(parameterValueString); // Derivate parameter inputs!
 
-
 		const TCHAR* parameterValue = *parameterValueString;
 		const TCHAR* constParameter = *parameter;
 
