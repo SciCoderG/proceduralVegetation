@@ -12,6 +12,7 @@
 #include "Bachelor/Utility/MeshConstructor.h"
 #include "Bachelor/Utility/BranchUtility.h"
 #include "Bachelor/Utility/LSystemInterpreter.h"
+#include "TurtleInterpreter.h"
 
 #define PRODUCTION_WAS_UNSUCCESSFUL "ProductionUnsuccessfullError"
 
@@ -19,7 +20,7 @@
 ALSystemPlant::ALSystemPlant()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	USphereComponent* Root = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	Root->InitSphereRadius(50.0f);
@@ -27,6 +28,11 @@ ALSystemPlant::ALSystemPlant()
 
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
 	Mesh->SetupAttachment(RootComponent);
+
+	RootBranch = new FBranch();
+	RootBranch->End = RootBranch->Start + FVector::UpVector;
+
+	AllMeshData = new FMeshData();
 
 	InitUtilityValues();
 }
@@ -44,19 +50,28 @@ void ALSystemPlant::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 
 	ConstructProductionMap();
-	ConstructFunctionMap();
 
 	CompleteDerivation();
 	UE_LOG(LogTemp, Warning, TEXT("Result of derivation: %s"), *CurrentDerivation);
 
-/*
+
+	UClass* turtleInterpreterClass = ATurtleInterpreter::StaticClass();
+	turtleInterpreter = GetWorld()->SpawnActor<ATurtleInterpreter>(turtleInterpreterClass, GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
+	turtleInterpreter->StartInterpretation(&RootBranch, CurrentDerivation);
+	
+	
+
 	if (SmoothOutBranchingAngles) {
 		UBranchUtility::SmoothOutBranchingAngles(RootBranch);
 	}
 	if (PolyReductionByCurveReduction) {
 		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 	}
-	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData); */
+
+	InitUtilityValues();
+	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData); 
+
+	turtleInterpreter->Destroy();
 }
 
 // Called every frame
@@ -86,9 +101,6 @@ void ALSystemPlant::ConstructProductionMap() {
 	}
 }
 
-void ALSystemPlant::ConstructFunctionMap() {
-
-}
 
 void ALSystemPlant::CompleteDerivation() {
 	CurrentDerivation = LSystemData.Axiom;
@@ -136,9 +148,9 @@ FString ALSystemPlant::CheckProduction(FProductionData* Production, int KeyIndex
 	if (0 == numParameters) {
 		return productionResult;
 	}
+	int BracketPositionIndex = KeyIndex + 1;
+	FString contentBetweenBrackets = ULSystemInterpreter::GetContentBetweenBrackets(CurrentDerivation, BracketPositionIndex);
 
-	FString rightOfProduction = CurrentDerivation.RightChop(KeyIndex + 1);
-	FString contentBetweenBrackets = ULSystemInterpreter::GetContentBetweenBrackets(rightOfProduction);
 	if (INTERPRETER_ERROR_NUMBER_OF_BRACKETS == contentBetweenBrackets) {
 		return PRODUCTION_WAS_UNSUCCESSFUL;
 	}
@@ -147,7 +159,7 @@ FString ALSystemPlant::CheckProduction(FProductionData* Production, int KeyIndex
 		return PRODUCTION_WAS_UNSUCCESSFUL;
 	}
 
-	OutNumberOfCharsToIgnore = contentBetweenBrackets.Len() + 2; // content of parameterlist + brackets
+	OutNumberOfCharsToIgnore += contentBetweenBrackets.Len() + 2; // content of parameterlist + brackets
 
 	TMap<FString, FString> parameterValues;
 	bool fillingWasSuccessful = FillParameterValues(parameterValues, Production, contentBetweenBrackets);
@@ -155,8 +167,11 @@ FString ALSystemPlant::CheckProduction(FProductionData* Production, int KeyIndex
 		return PRODUCTION_WAS_UNSUCCESSFUL;
 	}
 
-	for (FString parameter : Production->ParameterList) {
-		const TCHAR* parameterValue = **parameterValues.Find(parameter);
+	for (int i = 0; i < numParameters; ++i) {
+		FString parameter = Production->ParameterList[i];
+
+		FString parameterValueString = *parameterValues.Find(parameter);
+		const TCHAR* parameterValue = *parameterValueString;
 		const TCHAR* constParameter = *parameter;
 		productionResult = productionResult.Replace(constParameter, parameterValue, ESearchCase::CaseSensitive);
 	}

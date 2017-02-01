@@ -3,7 +3,6 @@
 #include "KismetProceduralMeshLibrary.h"
 
 FMeshData::FMeshData() {
-
 }
 
 void FMeshData::GenerateTangents() {

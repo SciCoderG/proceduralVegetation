@@ -8,6 +8,7 @@
 #include "LSystemPlant.generated.h"
 
 class UProceduralMeshComponent;
+class ATurtleInterpreter;
 struct FBranch;
 struct FMeshData;
 struct FTreeConstructionData;
@@ -60,7 +61,6 @@ private:
 	void InitUtilityValues();
 
 	void ConstructProductionMap();
-	void ConstructFunctionMap();
 
 	void CompleteDerivation();
 	bool Derivate();
@@ -68,16 +68,12 @@ private:
 	FString CheckProduction(FProductionData* Production, int KeyIndex, int& OutNumberOfCharsToIgnore);
 	bool FillParameterValues(TMap<FString, FString> &OutParameterValues, FProductionData* Production, FString ContentBetweenBrackets);
 
-
-	// https://wiki.unrealengine.com/Function_Pointers
-	typedef void (ALSystemPlant::*FunctionPtrType)(void);
-	TMap<FString, FunctionPtrType> FunctionMap;
-
 	TMap<TCHAR, FProductionData> ProductionMap;
 	
 	FString CurrentDerivation;
 
+	ATurtleInterpreter* turtleInterpreter;
+
 	FMeshData* AllMeshData;
-	
 	FBranch* RootBranch;
 };

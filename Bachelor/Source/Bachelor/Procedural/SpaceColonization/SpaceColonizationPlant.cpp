@@ -19,7 +19,7 @@
 ASpaceColonizationPlant::ASpaceColonizationPlant()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	USphereComponent* Root = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	Root->InitSphereRadius(1.0f);

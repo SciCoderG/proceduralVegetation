@@ -13,6 +13,7 @@ class BACHELOR_API UBranchUtility : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
+
 	static TSet<FBranch*> RecursiveGetAllBranches(FBranch* Parent);
 
 	static TArray<FBranch*> RecursiveGetAllBranchesAsArray(FBranch* Parent);
