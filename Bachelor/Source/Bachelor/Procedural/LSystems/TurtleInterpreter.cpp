@@ -46,6 +46,9 @@ void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FString LSyst
 	this->CurrentBranch = *RootBranch;
 	this->StringToInterpret = LSystemResult;
 
+	
+	CurrentBranch->End = CurrentBranch->Start + FVector::UpVector * 10;
+
 	CurrentPosition = GetActorLocation();
 	CurrentRotation = GetActorQuat();
 
@@ -144,7 +147,7 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 	CurrentBranch->ChildBranches.Add(newBranch);
 	newBranch->ParentBranch = CurrentBranch;
 	newBranch->Start = CurrentBranch->End;
-	newBranch->End = newBranch->Start + length * CurrentRotation.RotateVector(FVector::ForwardVector);
+	newBranch->End = newBranch->Start + length * CurrentRotation.RotateVector(FVector::UpVector);
 	newBranch->BranchDepth = TurtleStateStack.Num();
 
 	CurrentPosition = newBranch->End;
@@ -153,7 +156,7 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 
 
 void ATurtleInterpreter::Turn(float angle) {
-	CurrentRotation *= FQuat(CurrentRotation.RotateVector(FVector::UpVector), FMath::DegreesToRadians(angle));
+	CurrentRotation *= FQuat(CurrentRotation.RotateVector(-FVector::ForwardVector), FMath::DegreesToRadians(angle));
 }
 void ATurtleInterpreter::TurnLeft(float angle) {
 	Turn(-angle);
@@ -173,7 +176,7 @@ void ATurtleInterpreter::PitchUp(float angle) {
 }
 
 void ATurtleInterpreter::Roll(float angle) {
-	CurrentRotation *= FQuat(CurrentRotation.RotateVector(-FVector::ForwardVector), FMath::DegreesToRadians(angle));
+	CurrentRotation *= FQuat(CurrentRotation.RotateVector(FVector::UpVector), FMath::DegreesToRadians(angle));
 }
 void ATurtleInterpreter::RollLeft(float angle) {
 	Roll(angle);

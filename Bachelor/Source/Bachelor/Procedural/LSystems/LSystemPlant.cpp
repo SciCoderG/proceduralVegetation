@@ -51,8 +51,6 @@ void ALSystemPlant::BeginPlay()
 
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 
-	SetActorRotation( FQuat::MakeFromEuler(FVector::RightVector * 90));
-
 	ConstructDataMaps();
 
 	CompleteDerivation();
