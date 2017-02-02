@@ -60,6 +60,8 @@ private:
 
 	void InitUtilityValues();
 
+	void ConstructDataMaps();
+	void ReplaceConstantIDsByValues();
 	void ConstructProductionMap();
 
 	void RemoveAnyWhiteSpaces();

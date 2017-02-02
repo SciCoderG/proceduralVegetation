@@ -17,6 +17,6 @@ public:
 
 	FVector StatePosition;
 	FQuat StateRotation;
-	FBranch** StateBranch;
+	FBranch* StateBranch;
 };
 

@@ -8,6 +8,8 @@
 struct FBranch;
 struct FTurtleState;
 
+DECLARE_STATS_GROUP(TEXT("TurtleInterpreter"), STATGROUP_TurtleInterpreter, STATCAT_Advanced);
+
 UCLASS()
 class BACHELOR_API ATurtleInterpreter : public AActor
 {

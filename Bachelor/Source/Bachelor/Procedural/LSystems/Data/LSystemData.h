@@ -2,6 +2,7 @@
 
 #include "UnrealMath.h"
 #include "ProductionData.h"
+#include "LSConstantData.h"
 #include "LSystemData.generated.h"
 
 USTRUCT()
@@ -19,6 +20,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parameters")
 		FString Axiom;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parameters")
+		TArray<FLSConstantData> Constants;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parameters")
 		TArray<FProductionData> Productions;

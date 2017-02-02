@@ -6,7 +6,6 @@
 #include "Data/TurtleState.h"
 #include "Procedural/Branch.h"
 
-
 // Sets default values
 ATurtleInterpreter::ATurtleInterpreter()
 {
@@ -23,7 +22,8 @@ ATurtleInterpreter::~ATurtleInterpreter() {
 // Called when the game starts or when spawned
 void ATurtleInterpreter::BeginPlay()
 {
-	
+	CurrentPosition = GetActorLocation();
+	CurrentRotation = GetActorRotation().Quaternion();
 }
 
 // Called every frame
@@ -42,26 +42,20 @@ void ATurtleInterpreter::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 }
 
 void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FString LSystemResult) {
-
 	this->CurrentBranch = *RootBranch;
 	this->StringToInterpret = LSystemResult;
 
-	CurrentPosition = GetActorLocation();
-	CurrentRotation = GetActorQuat();
-
+	SetVertical();
 	Interprete(LSystemResult);
 }
 
-DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ Interpretation"), STAT_Interpretation, STATGROUP_TurtleInterpreter);
 void ATurtleInterpreter::Interprete(FString ToInterprete){
-	{
-		SCOPE_CYCLE_COUNTER(STAT_Interpretation);
-		for (int i = 0; i < ToInterprete.Len(); ++i) {
-			int NumCharsToSkip = 0;
-			bool wasProcessed = CheckFunctions(ToInterprete, i, NumCharsToSkip);
-			if (wasProcessed) {
-				i += NumCharsToSkip;
-			}
+	for (int i = 0; i < ToInterprete.Len(); ++i) {
+		TCHAR currentChar = ToInterprete[i];
+		int NumCharsToSkip = 0;
+		bool wasProcessed = CheckFunctions(ToInterprete, i, NumCharsToSkip);
+		if (wasProcessed) {
+			i += NumCharsToSkip;
 		}
 	}
 }
@@ -95,20 +89,24 @@ void ATurtleInterpreter::PushTurtleState() {
 	FTurtleState* newState = new FTurtleState();
 	newState->StatePosition = CurrentPosition;
 	newState->StateRotation = CurrentRotation;
-	newState->StateBranch = CurrentBranch;
+	newState->StateBranch = &CurrentBranch;
 
 	TurtleStateStack.Push(newState);
 }
 
 void ATurtleInterpreter::PopTurtleState() {
+
 	if (TurtleStateStack.Num() > 0) {
 		FTurtleState* toReturnTo = TurtleStateStack.Pop();
 
 		CurrentPosition = toReturnTo->StatePosition;
 		CurrentRotation = toReturnTo->StateRotation;
 
-		if (NULL != toReturnTo->StateBranch) {
-			CurrentBranch = toReturnTo->StateBranch;
+		if (NULL != (*toReturnTo->StateBranch)) {
+			CurrentBranch = (*toReturnTo->StateBranch)->ParentBranch;
+			if (NULL == CurrentBranch) {
+				CurrentBranch = (*toReturnTo->StateBranch);
+			}
 		}
 		else {
 			UE_LOG(LogTemp, Warning, TEXT("Null Pointer was saved in StateBranch, can't recover correct branch during PopTurtleState()."));
@@ -120,23 +118,9 @@ void ATurtleInterpreter::PopTurtleState() {
 }
 
 void ATurtleInterpreter::SetVertical() {
-	FVector turtleWorldLeft = CurrentRotation.RotateVector(-FVector::RightVector).GetSafeNormal();
-	FVector turtleWorldProjX = turtleWorldLeft.ProjectOnToNormal(-FVector::ForwardVector);
-	FVector turtleWorldProjY = turtleWorldLeft.ProjectOnToNormal(-FVector::RightVector);
-
-	FVector turtleWorldProjHorizontal = turtleWorldProjX + turtleWorldProjY;
-	turtleWorldProjHorizontal = turtleWorldProjHorizontal.GetSafeNormal();
-
-	FQuat rotationToHorizontalPlane = FQuat::FindBetweenNormals(turtleWorldProjHorizontal, turtleWorldLeft);
-	CurrentRotation *= rotationToHorizontalPlane;
-	/*
-	FRotator turtleRotator = FRotator(CurrentRotation);
-	turtleRotator.Roll = 0;
-	CurrentRotation = turtleRotator.Quaternion();
-	*/
-
-	
+	CurrentRotation = FQuat::MakeFromEuler(FVector::RightVector * 90);
 }
+
 
 void ATurtleInterpreter::ConstructBranch(float length) {
 	FBranch* newBranch = new FBranch();
@@ -144,7 +128,7 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 	CurrentBranch->ChildBranches.Add(newBranch);
 	newBranch->ParentBranch = CurrentBranch;
 	newBranch->Start = CurrentBranch->End;
-	newBranch->End = newBranch->Start + length * CurrentRotation.RotateVector(FVector::ForwardVector);
+	newBranch->End = newBranch->Start + length * CurrentRotation.RotateVector(GetActorForwardVector());
 	newBranch->BranchDepth = TurtleStateStack.Num();
 
 	CurrentPosition = newBranch->End;
@@ -153,27 +137,27 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 
 
 void ATurtleInterpreter::Turn(float angle) {
-	CurrentRotation *= FQuat(CurrentRotation.RotateVector(FVector::UpVector), FMath::DegreesToRadians(angle));
+	CurrentRotation *= FQuat(FVector::UpVector, FMath::DegreesToRadians(angle));
 }
 void ATurtleInterpreter::TurnLeft(float angle) {
-	Turn(-angle);
+	Turn(angle);
 }
 void ATurtleInterpreter::TurnRight(float angle) {
-	Turn(angle);
+	Turn(-angle);
 }
 
 void ATurtleInterpreter::Pitch(float angle) {
-	CurrentRotation *= FQuat(CurrentRotation.RotateVector(-FVector::RightVector), FMath::DegreesToRadians(angle));
+	CurrentRotation *= FQuat(FVector::RightVector, FMath::DegreesToRadians(angle));
 }
 void ATurtleInterpreter::PitchDown(float angle) {
-	Pitch(-angle);
+	Pitch(angle);
 }
 void ATurtleInterpreter::PitchUp(float angle) {
-	Pitch(angle);
+	Pitch(-angle);
 }
 
 void ATurtleInterpreter::Roll(float angle) {
-	CurrentRotation *= FQuat(CurrentRotation.RotateVector(-FVector::ForwardVector), FMath::DegreesToRadians(angle));
+	CurrentRotation *= FQuat(FVector::ForwardVector, FMath::DegreesToRadians(angle));
 }
 void ATurtleInterpreter::RollLeft(float angle) {
 	Roll(angle);
@@ -187,38 +171,30 @@ float ATurtleInterpreter::Multiplicate(float first, float second) {
 }
 
 #pragma endregion
-DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ CheckFunctions"), STAT_CheckFunctions, STATGROUP_TurtleInterpreter);
-bool ATurtleInterpreter::CheckFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
-	{
-		SCOPE_CYCLE_COUNTER(STAT_CheckFunctions);
 
-		// this looks so freaking stupid.
-		bool wasProcessed = CheckZeroArgFunctions(ToInterprete, CurrentCharIndex, OutNumCharsToSkip);
-		if (wasProcessed) {
-			return wasProcessed;
-		}
-		wasProcessed = CheckOneArgFunctions(ToInterprete, CurrentCharIndex, OutNumCharsToSkip);
+bool ATurtleInterpreter::CheckFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
+	// this looks so freaking stupid.
+	bool wasProcessed = CheckZeroArgFunctions(ToInterprete, CurrentCharIndex, OutNumCharsToSkip);
+	if (wasProcessed) {
 		return wasProcessed;
 	}
+	wasProcessed = CheckOneArgFunctions(ToInterprete, CurrentCharIndex, OutNumCharsToSkip);
+	return wasProcessed;
 }
 
-DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ ZeroArgFunctions"), STAT_ZeroArgFunctions, STATGROUP_TurtleInterpreter);
 bool ATurtleInterpreter::CheckZeroArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
-	SCOPE_CYCLE_COUNTER(STAT_ZeroArgFunctions);
-
 	bool wasProcessed = false;
 	TCHAR currentChar = ToInterprete[CurrentCharIndex];
 	ZeroArgFunctionPtrType* functionPtr = ZeroArgumentFunctionMap.Find(currentChar);
 	if (NULL != functionPtr) {
 		(this->*(*functionPtr))();
 		wasProcessed = true;
-		OutNumCharsToSkip = 0;
+		OutNumCharsToSkip = 1;
 	}
 	return wasProcessed;
 }
-DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ OneArgFunctions"), STAT_OneArgFunctions, STATGROUP_TurtleInterpreter);
+
 bool ATurtleInterpreter::CheckOneArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
-	SCOPE_CYCLE_COUNTER(STAT_OneArgFunctions);
 	bool wasProcessed = false;
 	TCHAR currentChar = ToInterprete[CurrentCharIndex];
 	OneArgFunctionPtrType* functionPtr = OneArgumentFunctionMap.Find(currentChar);
@@ -229,6 +205,7 @@ bool ATurtleInterpreter::CheckOneArgFunctions(FString ToInterprete, int CurrentC
 			UE_LOG(LogTemp, Warning, TEXT("Number of Parameters for Function \"%s\" is %d, was given %d. Index: %d"), &currentChar, 1, attributes.Num(), CurrentCharIndex);
 		}
 		else {
+			CheckAllAttributesForOperators(attributes);
 			wasProcessed = TryCallOneArgFunction(&currentChar, attributes, functionPtr, OutNumCharsToSkip);
 		}
 	}
@@ -242,38 +219,33 @@ void ATurtleInterpreter::CheckAllAttributesForOperators(TArray<FString>& OutAttr
 	}
 }
 
-DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ MathOperators"), STAT_MathOperators, STATGROUP_TurtleInterpreter);
 FString ATurtleInterpreter::CheckForMathOperators(FString Attribute) {
-	{
-		SCOPE_CYCLE_COUNTER(STAT_MathOperators);
+	TwoArgOperatorPtrType* CurrentOperatorPtr = NULL;
+	TwoArgOperatorPtrType* LastOperatorPtr = NULL;
 
-		TwoArgOperatorPtrType* CurrentOperatorPtr = NULL;
-		TwoArgOperatorPtrType* LastOperatorPtr = NULL;
+	int LastOperatorIndex = FindIndexOfNextOperator(Attribute, 0, &LastOperatorPtr);
+	FString resultString = Attribute.Left(LastOperatorIndex);
+	int CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
+	while (CurrentOperatorIndex != LastOperatorIndex) {
+		if (resultString.IsNumeric()) {
+			float firstParameter = FCString::Atof(*resultString);
 
-		int LastOperatorIndex = FindIndexOfNextOperator(Attribute, 0, &LastOperatorPtr);
-		FString resultString = Attribute.Left(LastOperatorIndex);
-		int CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
-		while (CurrentOperatorIndex != LastOperatorIndex) {
-			if (resultString.IsNumeric()) {
-				float firstParameter = FCString::Atof(*resultString);
+			int secondParameterStart = LastOperatorIndex + 1;
+			int secondParameterCount = CurrentOperatorIndex - secondParameterStart;
+			FString secondParameterString = Attribute.Mid(secondParameterStart, secondParameterCount);
+			
+			if (secondParameterString.IsNumeric()) {
+				float secondParameter = FCString::Atof(*secondParameterString);
 
-				int secondParameterStart = LastOperatorIndex + 1;
-				int secondParameterCount = CurrentOperatorIndex - secondParameterStart;
-				FString secondParameterString = Attribute.Mid(secondParameterStart, secondParameterCount);
-
-				if (secondParameterString.IsNumeric()) {
-					float secondParameter = FCString::Atof(*secondParameterString);
-
-					float result = (this->*(*LastOperatorPtr))(firstParameter, secondParameter);
-					resultString = FString::SanitizeFloat(result);
-				}
+				float result = (this->*(*LastOperatorPtr))(firstParameter, secondParameter);
+				resultString = FString::SanitizeFloat(result);
 			}
-			LastOperatorIndex = CurrentOperatorIndex;
-			LastOperatorPtr = CurrentOperatorPtr;
-			CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
 		}
-		return resultString;
+		LastOperatorIndex = CurrentOperatorIndex;
+		LastOperatorPtr = CurrentOperatorPtr;
+		CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
 	}
+	return resultString;
 }
 
 int ATurtleInterpreter::FindIndexOfNextOperator(FString Attribute, int LastOperatorIndex, TwoArgOperatorPtrType** OutOperatorPtrType) {
@@ -292,23 +264,17 @@ int ATurtleInterpreter::FindIndexOfNextOperator(FString Attribute, int LastOpera
 	return nextOperatorIndex;
 }
 
-DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ TryCallOneArgFunction"), STAT_TryCallOneArgFunction, STATGROUP_TurtleInterpreter);
 bool ATurtleInterpreter::TryCallOneArgFunction(TCHAR* CurrentChar, TArray<FString> Attributes, OneArgFunctionPtrType* FunctionPtr, int& OutNumCharsToSkip) {
-	SCOPE_CYCLE_COUNTER(STAT_TryCallOneArgFunction);
-
 	bool wasProcessed = false;
 
-	int numOfBrackets = 2;
-	OutNumCharsToSkip += Attributes[0].Len() + numOfBrackets;
-
-	CheckAllAttributesForOperators(Attributes);
 	if (Attributes[0].IsNumeric()) {
 		float firstAttribute = FCString::Atof(*Attributes[0]);
 		(this->*(*FunctionPtr))(firstAttribute);
+		int numOfBrackets = 2;
+		OutNumCharsToSkip += Attributes[0].Len() + numOfBrackets;
 		wasProcessed = true;
 	}
 	else {
-		OutNumCharsToSkip = 0;
 		// Using TCHAR* looks silly, but otherwise it won't be copied correctly.
 		UE_LOG(LogTemp, Warning, TEXT("Expected Numerical Input for Function \"%s\", was given \"%s\""), CurrentChar, *Attributes[0]);
 	}

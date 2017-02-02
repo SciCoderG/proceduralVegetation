@@ -29,7 +29,6 @@ TArray<FBranch*> UBranchUtility::RecursiveGetAllBranchesOnSameDepth(FBranch* Par
 	for (FBranch* childBranch : Parent->ChildBranches) {
 		if (childBranch->BranchDepth == Parent->BranchDepth) {
 			BranchesOnSameDepth.Append(RecursiveGetAllBranchesOnSameDepth(childBranch));
-			break;
 		}
 	}
 	return BranchesOnSameDepth;

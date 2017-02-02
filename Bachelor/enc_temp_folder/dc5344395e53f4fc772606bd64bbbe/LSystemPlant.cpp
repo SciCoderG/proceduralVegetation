@@ -16,8 +16,6 @@
 
 #define PRODUCTION_WAS_UNSUCCESSFUL "ProductionUnsuccessfullError"
 
-
-
 // Sets default values
 ALSystemPlant::ALSystemPlant()
 {
@@ -32,7 +30,7 @@ ALSystemPlant::ALSystemPlant()
 	Mesh->SetupAttachment(RootComponent);
 
 	RootBranch = new FBranch();
-	
+	RootBranch->End = RootBranch->Start + FVector::UpVector;
 
 	AllMeshData = new FMeshData();
 
@@ -51,12 +49,13 @@ void ALSystemPlant::BeginPlay()
 
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 
-	SetActorRotation( FQuat::MakeFromEuler(FVector::RightVector * 90));
 
 	ConstructDataMaps();
 
 	CompleteDerivation();
-	//UE_LOG(LogTemp, Warning, TEXT("Result of derivation: %s"), *CurrentDerivation);
+	UE_LOG(LogTemp, Warning, TEXT("Result of derivation: %s"), *CurrentDerivation);
+
+
 	UClass* turtleInterpreterClass = ATurtleInterpreter::StaticClass();
 	turtleInterpreter = GetWorld()->SpawnActor<ATurtleInterpreter>(turtleInterpreterClass, GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
 	turtleInterpreter->StartInterpretation(&RootBranch, CurrentDerivation);
