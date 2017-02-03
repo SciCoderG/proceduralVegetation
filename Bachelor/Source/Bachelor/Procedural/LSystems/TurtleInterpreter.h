@@ -29,13 +29,13 @@ public:
 
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
 
-	void StartInterpretation(FBranch** RootBranch, FString LSystemResult);
+	void StartInterpretation(FBranch** RootBranch, FString* LSystemResult);
 
 private:
 
 	void ConstructFunctionMap();
 
-	void Interprete(FString ToInterprete);
+	void Interprete(FString* ToInterprete);
 
 #pragma region FunctionMap functions
 	virtual void SetVertical();
@@ -65,14 +65,15 @@ private:
 	typedef void (ATurtleInterpreter::*OneArgFunctionPtrType)(float value);
 	typedef float (ATurtleInterpreter::*TwoArgOperatorPtrType)(float first, float second);
 
-	bool CheckFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
+	bool CheckFunctions(FString* ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
 
-	bool CheckZeroArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
+	bool CheckZeroArgFunctions(FString* ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
 
-	bool CheckOneArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
+	bool CheckOneArgFunctions(FString* ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
+
 	void CheckAllAttributesForOperators(TArray<FString>& OutAttributes);
-	FString CheckForMathOperators(FString Attribute);
-	int FindIndexOfNextOperator(FString Attribute, int LastOperatorIndex, TwoArgOperatorPtrType** OutOperatorPtrType);
+	FString CheckForMathOperators(FString* Attribute);
+	int FindIndexOfNextOperator(FString* Attribute, int LastOperatorIndex, TwoArgOperatorPtrType** OutOperatorPtrType);
 
 	bool TryCallOneArgFunction(TCHAR* CurrentChar, TArray<FString> Attributes, OneArgFunctionPtrType* FunctionPtr, int& OutNumCharsToSkip);
 
@@ -88,5 +89,5 @@ private:
 
 	TArray<FTurtleState*> TurtleStateStack;
 
-	FString StringToInterpret;
+	FString CompleteStringToInterprete;
 };

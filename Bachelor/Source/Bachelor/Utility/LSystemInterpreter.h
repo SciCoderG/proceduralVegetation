@@ -15,10 +15,8 @@ class BACHELOR_API ULSystemInterpreter : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = "Components|ProceduralMesh")
-	static FString GetContentBetweenBrackets(FString Current, int BracketPositionIndex);
+	static FString GetContentBetweenBrackets(FString* Current, int BracketPositionIndex);
 
-	UFUNCTION(BlueprintCallable, Category = "Components|ProceduralMesh")
-	static TArray<FString> GetAttributesBetweenBrackets(FString Current, int BracketPositionIndex);
+	static TArray<FString> GetAttributesBetweenBrackets(FString* Current, int BracketPositionIndex);
 
 };

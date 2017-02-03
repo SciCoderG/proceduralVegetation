@@ -3,12 +3,12 @@
 #include "Bachelor.h"
 #include "LSystemInterpreter.h"
 
-FString ULSystemInterpreter::GetContentBetweenBrackets(FString Current, int BracketPositionIndex) {
+FString ULSystemInterpreter::GetContentBetweenBrackets(FString* Current, int BracketPositionIndex) {
 	int numberOfOpenBrackets = 0;
 	int startIndex = 0;
 	int endIndex = -1;
-	for (int i = BracketPositionIndex; i < Current.Len(); ++i) {
-		TCHAR currentChar = Current[i];
+	for (int i = BracketPositionIndex; i < (*Current).Len(); ++i) {
+		TCHAR currentChar = (*Current)[i];
 		if ('(' == currentChar) {
 			if (0 == numberOfOpenBrackets) {
 				startIndex = i+1;
@@ -25,21 +25,21 @@ FString ULSystemInterpreter::GetContentBetweenBrackets(FString Current, int Brac
 	}
 
 	if (-1 == endIndex) {
-		UE_LOG(LogTemp, Warning, TEXT("Error with bracket enclosing of string: %s"), *Current);
+		UE_LOG(LogTemp, Warning, TEXT("Error with bracket enclosing of string: %s"), *(*Current));
 		return INTERPRETER_ERROR_NUMBER_OF_BRACKETS;
 	}
 
 	if ((BracketPositionIndex + 1) != startIndex) {
-		UE_LOG(LogTemp, Warning, TEXT("First Char is not a bracket: %s"), *Current);
+		UE_LOG(LogTemp, Warning, TEXT("First Char is not a bracket: %s"), *(*Current));
 		return INTERPRETER_ERROR_FIRST_CHAR_IS_NOT_A_BRACKET;
 	}
 
 	int numOfChars = endIndex - startIndex;
-	return Current.Mid(startIndex, numOfChars);
+	return (*Current).Mid(startIndex, numOfChars);
 }
 
 
-TArray<FString> ULSystemInterpreter::GetAttributesBetweenBrackets(FString Current, int BracketPositionIndex) {
+TArray<FString> ULSystemInterpreter::GetAttributesBetweenBrackets(FString* Current, int BracketPositionIndex) {
 	TArray<FString> commaDividedContent;
 	commaDividedContent.Empty();
 

@@ -41,11 +41,9 @@ void ATurtleInterpreter::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 
-void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FString LSystemResult) {
+void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FString* LSystemResult) {
 
 	this->CurrentBranch = *RootBranch;
-	this->StringToInterpret = LSystemResult;
-
 	
 	CurrentBranch->End = CurrentBranch->Start + FVector::UpVector * 10;
 
@@ -56,10 +54,10 @@ void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FString LSyst
 }
 
 DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ Interpretation"), STAT_Interpretation, STATGROUP_TurtleInterpreter);
-void ATurtleInterpreter::Interprete(FString ToInterprete){
+void ATurtleInterpreter::Interprete(FString* ToInterprete){
 	{
 		SCOPE_CYCLE_COUNTER(STAT_Interpretation);
-		for (int i = 0; i < ToInterprete.Len(); ++i) {
+		for (int i = 0; i < (*ToInterprete).Len(); ++i) {
 			int NumCharsToSkip = 0;
 			bool wasProcessed = CheckFunctions(ToInterprete, i, NumCharsToSkip);
 			if (wasProcessed) {
@@ -191,7 +189,7 @@ float ATurtleInterpreter::Multiplicate(float first, float second) {
 
 #pragma endregion
 DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ CheckFunctions"), STAT_CheckFunctions, STATGROUP_TurtleInterpreter);
-bool ATurtleInterpreter::CheckFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
+bool ATurtleInterpreter::CheckFunctions(FString* ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
 	{
 		SCOPE_CYCLE_COUNTER(STAT_CheckFunctions);
 
@@ -206,11 +204,11 @@ bool ATurtleInterpreter::CheckFunctions(FString ToInterprete, int CurrentCharInd
 }
 
 DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ ZeroArgFunctions"), STAT_ZeroArgFunctions, STATGROUP_TurtleInterpreter);
-bool ATurtleInterpreter::CheckZeroArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
+bool ATurtleInterpreter::CheckZeroArgFunctions(FString* ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
 	SCOPE_CYCLE_COUNTER(STAT_ZeroArgFunctions);
 
 	bool wasProcessed = false;
-	TCHAR currentChar = ToInterprete[CurrentCharIndex];
+	TCHAR currentChar = (*ToInterprete)[CurrentCharIndex];
 	ZeroArgFunctionPtrType* functionPtr = ZeroArgumentFunctionMap.Find(currentChar);
 	if (NULL != functionPtr) {
 		(this->*(*functionPtr))();
@@ -220,10 +218,10 @@ bool ATurtleInterpreter::CheckZeroArgFunctions(FString ToInterprete, int Current
 	return wasProcessed;
 }
 DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ OneArgFunctions"), STAT_OneArgFunctions, STATGROUP_TurtleInterpreter);
-bool ATurtleInterpreter::CheckOneArgFunctions(FString ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
+bool ATurtleInterpreter::CheckOneArgFunctions(FString* ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip) {
 	SCOPE_CYCLE_COUNTER(STAT_OneArgFunctions);
 	bool wasProcessed = false;
-	TCHAR currentChar = ToInterprete[CurrentCharIndex];
+	TCHAR currentChar = (*ToInterprete)[CurrentCharIndex];
 	OneArgFunctionPtrType* functionPtr = OneArgumentFunctionMap.Find(currentChar);
 	if (NULL != functionPtr) {
 		int bracketPositionIndex = CurrentCharIndex + 1;
@@ -241,12 +239,12 @@ bool ATurtleInterpreter::CheckOneArgFunctions(FString ToInterprete, int CurrentC
 void ATurtleInterpreter::CheckAllAttributesForOperators(TArray<FString>& OutAttributes) {
 	for (int i = 0; i < OutAttributes.Num(); ++i) {
 		FString attribute = OutAttributes[i];
-		OutAttributes[i] = CheckForMathOperators(attribute);
+		OutAttributes[i] = CheckForMathOperators(&attribute);
 	}
 }
 
 DECLARE_CYCLE_STAT(TEXT("TurtleInterpreter ~ MathOperators"), STAT_MathOperators, STATGROUP_TurtleInterpreter);
-FString ATurtleInterpreter::CheckForMathOperators(FString Attribute) {
+FString ATurtleInterpreter::CheckForMathOperators(FString* Attribute) {
 	{
 		SCOPE_CYCLE_COUNTER(STAT_MathOperators);
 
@@ -254,7 +252,7 @@ FString ATurtleInterpreter::CheckForMathOperators(FString Attribute) {
 		TwoArgOperatorPtrType* LastOperatorPtr = NULL;
 
 		int LastOperatorIndex = FindIndexOfNextOperator(Attribute, 0, &LastOperatorPtr);
-		FString resultString = Attribute.Left(LastOperatorIndex);
+		FString resultString = (*Attribute).Left(LastOperatorIndex);
 		int CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
 		while (CurrentOperatorIndex != LastOperatorIndex) {
 			if (resultString.IsNumeric()) {
@@ -262,7 +260,7 @@ FString ATurtleInterpreter::CheckForMathOperators(FString Attribute) {
 
 				int secondParameterStart = LastOperatorIndex + 1;
 				int secondParameterCount = CurrentOperatorIndex - secondParameterStart;
-				FString secondParameterString = Attribute.Mid(secondParameterStart, secondParameterCount);
+				FString secondParameterString = (*Attribute).Mid(secondParameterStart, secondParameterCount);
 
 				if (secondParameterString.IsNumeric()) {
 					float secondParameter = FCString::Atof(*secondParameterString);
@@ -279,10 +277,10 @@ FString ATurtleInterpreter::CheckForMathOperators(FString Attribute) {
 	}
 }
 
-int ATurtleInterpreter::FindIndexOfNextOperator(FString Attribute, int LastOperatorIndex, TwoArgOperatorPtrType** OutOperatorPtrType) {
+int ATurtleInterpreter::FindIndexOfNextOperator(FString* Attribute, int LastOperatorIndex, TwoArgOperatorPtrType** OutOperatorPtrType) {
 	int nextOperatorIndex = LastOperatorIndex;
-	for (int i = LastOperatorIndex + 1; i < Attribute.Len(); ++i) {
-		TCHAR currentChar = Attribute[i];
+	for (int i = LastOperatorIndex + 1; i < (*Attribute).Len(); ++i) {
+		TCHAR currentChar = (*Attribute)[i];
 		nextOperatorIndex = i;
 		(*OutOperatorPtrType) = TwoArgumentOperatorMap.Find(currentChar);
 		if (NULL != (*OutOperatorPtrType)) {

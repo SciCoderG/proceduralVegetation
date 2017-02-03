@@ -54,10 +54,10 @@ void ALSystemPlant::BeginPlay()
 	ConstructDataMaps();
 
 	CompleteDerivation();
-	//UE_LOG(LogTemp, Warning, TEXT("Result of derivation: %s"), *CurrentDerivation);
+	UE_LOG(LogTemp, Warning, TEXT("Resulting derivation has a length of: %d"), CurrentDerivation.Len());
 	UClass* turtleInterpreterClass = ATurtleInterpreter::StaticClass();
 	turtleInterpreter = GetWorld()->SpawnActor<ATurtleInterpreter>(turtleInterpreterClass, GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
-	turtleInterpreter->StartInterpretation(&RootBranch, CurrentDerivation);
+	turtleInterpreter->StartInterpretation(&RootBranch, &CurrentDerivation);
 	
 	if (PolyReductionByCurveReduction) {
 		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
@@ -162,7 +162,7 @@ FString ALSystemPlant::CheckProduction(FProductionData* Production, int KeyIndex
 		return productionResult;
 	}
 	int BracketPositionIndex = KeyIndex + 1;
-	FString contentBetweenBrackets = ULSystemInterpreter::GetContentBetweenBrackets(CurrentDerivation, BracketPositionIndex);
+	FString contentBetweenBrackets = ULSystemInterpreter::GetContentBetweenBrackets(&CurrentDerivation, BracketPositionIndex);
 
 	if (INTERPRETER_ERROR_NUMBER_OF_BRACKETS == contentBetweenBrackets) {
 		return PRODUCTION_WAS_UNSUCCESSFUL;
