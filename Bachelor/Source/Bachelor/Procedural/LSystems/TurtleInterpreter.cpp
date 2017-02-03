@@ -41,9 +41,11 @@ void ATurtleInterpreter::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 
-void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FString* LSystemResult) {
+void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FVector TropismVec, float BendingByTropismParameterF, FString* LSystemResult) {
 
 	this->CurrentBranch = *RootBranch;
+	this->Tropism = TropismVec;
+	this->BendingByTropismParameter = BendingByTropismParameterF;
 	
 	CurrentBranch->End = CurrentBranch->Start + FVector::UpVector * 10;
 
@@ -130,6 +132,7 @@ void ATurtleInterpreter::SetVertical() {
 
 	FQuat rotationToHorizontalPlane = FQuat::FindBetweenNormals(turtleWorldProjHorizontal, turtleWorldLeft);
 	CurrentRotation *= rotationToHorizontalPlane;
+	CurrentRotation.Normalize();
 	/*
 	FRotator turtleRotator = FRotator(CurrentRotation);
 	turtleRotator.Roll = 0;
@@ -145,7 +148,21 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 	CurrentBranch->ChildBranches.Add(newBranch);
 	newBranch->ParentBranch = CurrentBranch;
 	newBranch->Start = CurrentBranch->End;
-	newBranch->End = newBranch->Start + length * CurrentRotation.RotateVector(FVector::UpVector);
+
+	FVector turtleForwardVec = CurrentRotation.RotateVector(FVector::UpVector);
+
+	if (Tropism.SizeSquared() > 0.001f) {
+		
+		FVector rotationAxis = FVector::CrossProduct(turtleForwardVec, Tropism);
+		float angleTowardTropism = BendingByTropismParameter * rotationAxis.Size();
+		FQuat rotation = FQuat(rotationAxis.SafeNormal(), angleTowardTropism);
+		rotation.Normalize();
+		turtleForwardVec = rotation.RotateVector(turtleForwardVec);
+		turtleForwardVec.Normalize();
+	}
+	
+	newBranch->End = newBranch->Start + length * turtleForwardVec;
+
 	newBranch->BranchDepth = TurtleStateStack.Num();
 
 	CurrentPosition = newBranch->End;
@@ -154,7 +171,9 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 
 
 void ATurtleInterpreter::Turn(float angle) {
-	CurrentRotation *= FQuat(CurrentRotation.RotateVector(-FVector::ForwardVector), FMath::DegreesToRadians(angle));
+	CurrentRotation *= FQuat(-FVector::ForwardVector, FMath::DegreesToRadians(angle));
+
+	CurrentRotation.Normalize();
 }
 void ATurtleInterpreter::TurnLeft(float angle) {
 	Turn(-angle);
@@ -164,7 +183,8 @@ void ATurtleInterpreter::TurnRight(float angle) {
 }
 
 void ATurtleInterpreter::Pitch(float angle) {
-	CurrentRotation *= FQuat(CurrentRotation.RotateVector(-FVector::RightVector), FMath::DegreesToRadians(angle));
+	CurrentRotation *= FQuat(-FVector::RightVector, FMath::DegreesToRadians(angle));
+	CurrentRotation.Normalize();
 }
 void ATurtleInterpreter::PitchDown(float angle) {
 	Pitch(-angle);
@@ -174,13 +194,16 @@ void ATurtleInterpreter::PitchUp(float angle) {
 }
 
 void ATurtleInterpreter::Roll(float angle) {
-	CurrentRotation *= FQuat(CurrentRotation.RotateVector(FVector::UpVector), FMath::DegreesToRadians(angle));
+	
+	CurrentRotation *= FQuat(FVector::UpVector, FMath::DegreesToRadians(angle));
+
+	CurrentRotation.Normalize();
 }
 void ATurtleInterpreter::RollLeft(float angle) {
-	Roll(angle);
+	Roll(-angle);
 }
 void ATurtleInterpreter::RollRight(float angle) {
-	Roll(-angle);
+	Roll(angle);
 }
 
 float ATurtleInterpreter::Multiplicate(float first, float second) {

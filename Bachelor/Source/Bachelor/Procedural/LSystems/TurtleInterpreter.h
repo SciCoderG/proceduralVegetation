@@ -29,7 +29,7 @@ public:
 
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
 
-	void StartInterpretation(FBranch** RootBranch, FString* LSystemResult);
+	void StartInterpretation(FBranch** RootBranch, FVector TropismVec, float BendingByTropismParameterF, FString* LSystemResult);
 
 private:
 
@@ -82,6 +82,9 @@ private:
 	TMap<TCHAR, ZeroArgFunctionPtrType> ZeroArgumentFunctionMap;
 	TMap<TCHAR, OneArgFunctionPtrType> OneArgumentFunctionMap;
 	TMap<TCHAR, TwoArgOperatorPtrType> TwoArgumentOperatorMap;
+
+	FVector Tropism;
+	float BendingByTropismParameter;
 
 	FVector CurrentPosition;
 	FQuat CurrentRotation;

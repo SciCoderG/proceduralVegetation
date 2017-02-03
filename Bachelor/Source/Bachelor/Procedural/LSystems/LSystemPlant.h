@@ -55,6 +55,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|TreeConstruction")
 		FVector Tropism;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|TreeConstruction")
+		float BendingByTropismParameter;
+
 
 private:
 
