@@ -129,5 +129,7 @@ private:
 	float KillDistanceSquared;
 	float RadiusOfInfluenceSquared;
 
+	int CurrentColonizationPointCount;
+
 	bool IsStillGrowing;
 };

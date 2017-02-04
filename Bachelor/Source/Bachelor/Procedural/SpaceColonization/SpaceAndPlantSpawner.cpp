@@ -71,7 +71,7 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 	PolyReductionByCurveReduction = false;
 	SmoothOutBranchingAngles = true;
 
-	MaxNumberOfNotDidNotGrowNums = 5;
+	MaxNumberOfNotDidNotGrowNums = 2;
 }
 
 // Called when the game starts or when spawned
