@@ -11,6 +11,8 @@ struct FBranch;
 struct FMeshData;
 struct FTreeConstructionData;
 
+DECLARE_STATS_GROUP(TEXT("SpaceColonizationPlant"), STATGROUP_SpaceColonization, STATCAT_Advanced);
+
 UCLASS()
 class BACHELOR_API ASpaceColonizationPlant : public AActor
 {
@@ -87,6 +89,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		bool WeightedGrowth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
+		int MaxNumberOfNotDidNotGrowNums;
+
 private:
 	void InitUtilityValues();
 
@@ -100,13 +105,9 @@ private:
 
 	void GrowthIteration();
 
-	TSet<FVector>& GetAllColonizationPoints();
-
 	bool CheckAllColonizationPoints();
 
-	void CheckIfInKillZone(FVector ColonizationPoint);
-
-	bool CheckColonizationPoint(FVector ColonizationPoint);
+	bool CheckColonizationPoint(FVector* ColonizationPoint);
 
 	void RemoveFromGrowthSpaces(FVector ToRemove);
 
@@ -122,7 +123,8 @@ private:
 	FBranch* RootBranch;
 
 	TSet<FBranch*> GrowingBranches;
-	TSet<FVector> AllColonizationPoints;
+
+	FVector ActorLocation;
 
 	float KillDistanceSquared;
 	float RadiusOfInfluenceSquared;

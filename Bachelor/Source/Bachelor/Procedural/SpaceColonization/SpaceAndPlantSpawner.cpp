@@ -70,6 +70,8 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 
 	PolyReductionByCurveReduction = false;
 	SmoothOutBranchingAngles = true;
+
+	MaxNumberOfNotDidNotGrowNums = 5;
 }
 
 // Called when the game starts or when spawned
@@ -163,6 +165,7 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		spawnedColonizationPlant->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
 		spawnedColonizationPlant->PolyReductionByCurveReduction = PolyReductionByCurveReduction;
 		spawnedColonizationPlant->SmoothOutBranchingAngles = SmoothOutBranchingAngles;
+		spawnedColonizationPlant->MaxNumberOfNotDidNotGrowNums = MaxNumberOfNotDidNotGrowNums;
 	}
 	return spawnedColonizationPlant;
 }

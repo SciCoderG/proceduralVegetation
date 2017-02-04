@@ -26,6 +26,8 @@ public:
 
 		GrowCount = 0;
 		BranchDepth = 0;
+
+		DidNotGrowCounter = 0;
 	}
 
 	void ResetForNextGrowthIteration();
@@ -46,5 +48,7 @@ public:
 
 	FVector GrowDirection;
 	int GrowCount;
+
+	float DidNotGrowCounter;
 };
 

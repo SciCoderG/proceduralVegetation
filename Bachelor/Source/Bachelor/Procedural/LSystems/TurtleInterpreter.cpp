@@ -155,7 +155,7 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 		
 		FVector rotationAxis = FVector::CrossProduct(turtleForwardVec, Tropism);
 		float angleTowardTropism = BendingByTropismParameter * rotationAxis.Size();
-		FQuat rotation = FQuat(rotationAxis.SafeNormal(), angleTowardTropism);
+		FQuat rotation = FQuat(rotationAxis.GetSafeNormal(), angleTowardTropism);
 		rotation.Normalize();
 		turtleForwardVec = rotation.RotateVector(turtleForwardVec);
 		turtleForwardVec.Normalize();
