@@ -20,6 +20,9 @@ public:
 		TArray<FString> ParameterList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Production")
+		FString Condition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Production")
 		FString ProductionResult;
 
 };
