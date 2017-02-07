@@ -15,8 +15,13 @@ class BACHELOR_API ULSystemInterpreter : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
+
+
 	static FString GetContentBetweenBrackets(FString* Current, int BracketPositionIndex);
 
 	static TArray<FString> GetAttributesBetweenBrackets(FString* Current, int BracketPositionIndex);
+
+
+
 
 };

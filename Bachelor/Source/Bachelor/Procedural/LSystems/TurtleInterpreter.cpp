@@ -271,30 +271,30 @@ FString ATurtleInterpreter::CheckForMathOperators(FString* Attribute) {
 	{
 		SCOPE_CYCLE_COUNTER(STAT_MathOperators);
 
-		TwoArgOperatorPtrType* CurrentOperatorPtr = NULL;
-		TwoArgOperatorPtrType* LastOperatorPtr = NULL;
+		TwoArgOperatorPtrType* currentOperatorPtr = NULL;
+		TwoArgOperatorPtrType* lastOperatorPtr = NULL;
 
-		int LastOperatorIndex = FindIndexOfNextOperator(Attribute, 0, &LastOperatorPtr);
-		FString resultString = (*Attribute).Left(LastOperatorIndex);
-		int CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
-		while (CurrentOperatorIndex != LastOperatorIndex) {
+		int lastOperatorIndex = FindIndexOfNextOperator(Attribute, 0, &lastOperatorPtr);
+		FString resultString = (*Attribute).Left(lastOperatorIndex);
+		int currentOperatorIndex = FindIndexOfNextOperator(Attribute, lastOperatorIndex, &currentOperatorPtr);
+		while (currentOperatorIndex != lastOperatorIndex) {
 			if (resultString.IsNumeric()) {
 				float firstParameter = FCString::Atof(*resultString);
 
-				int secondParameterStart = LastOperatorIndex + 1;
-				int secondParameterCount = CurrentOperatorIndex - secondParameterStart;
+				int secondParameterStart = lastOperatorIndex + 1;
+				int secondParameterCount = currentOperatorIndex - secondParameterStart;
 				FString secondParameterString = (*Attribute).Mid(secondParameterStart, secondParameterCount);
 
 				if (secondParameterString.IsNumeric()) {
 					float secondParameter = FCString::Atof(*secondParameterString);
 
-					float result = (this->*(*LastOperatorPtr))(firstParameter, secondParameter);
+					float result = (this->*(*lastOperatorPtr))(firstParameter, secondParameter);
 					resultString = FString::SanitizeFloat(result);
 				}
 			}
-			LastOperatorIndex = CurrentOperatorIndex;
-			LastOperatorPtr = CurrentOperatorPtr;
-			CurrentOperatorIndex = FindIndexOfNextOperator(Attribute, LastOperatorIndex, &CurrentOperatorPtr);
+			lastOperatorIndex = currentOperatorIndex;
+			lastOperatorPtr = currentOperatorPtr;
+			currentOperatorIndex = FindIndexOfNextOperator(Attribute, lastOperatorIndex, &currentOperatorPtr);
 		}
 		return resultString;
 	}

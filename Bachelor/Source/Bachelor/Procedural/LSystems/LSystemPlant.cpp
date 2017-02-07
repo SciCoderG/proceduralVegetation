@@ -99,11 +99,11 @@ void ALSystemPlant::ConstructDataMaps() {
 
 void ALSystemPlant::ReplaceConstantIDsByValues() {
 	for (FLSConstantData constantData : LSystemData.Constants) {
-		const TCHAR* constantToString = *FString::SanitizeFloat(constantData.ConstantValue);
+		FString constantToString = FString::SanitizeFloat(constantData.ConstantValue);
 		for (int i = 0; i < LSystemData.Productions.Num(); ++i) {
 			FProductionData* production = &LSystemData.Productions[i];
-			production->ProductionResult = production->ProductionResult.Replace(*constantData.ID, constantToString, ESearchCase::CaseSensitive);
-			production->Condition = production->Condition.Replace(*constantData.ID, constantToString, ESearchCase::CaseSensitive);
+			production->ProductionResult = production->ProductionResult.Replace(*constantData.ID, *constantToString, ESearchCase::CaseSensitive);
+//			production->Condition = production->Condition.Replace(*constantData.ID, *constantToString, ESearchCase::CaseSensitive);
 		}
 	}
 }

@@ -19,8 +19,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Production")
 		TArray<FString> ParameterList;
 
+	/* No time for:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Production")
 		FString Condition;
+		*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Production")
 		FString ProductionResult;
