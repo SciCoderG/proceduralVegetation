@@ -58,6 +58,9 @@ private:
 	virtual void RollRight(float angle);
 
 	virtual float Multiplicate(float first, float second);
+	virtual float Exponent(float first, float second);
+	virtual float Add(float first, float second);
+	virtual float Substract(float first, float second);
 
 #pragma endregion
 

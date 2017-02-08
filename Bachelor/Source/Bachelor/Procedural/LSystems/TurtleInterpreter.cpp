@@ -89,6 +89,9 @@ void ATurtleInterpreter::ConstructFunctionMap() {
 
 	// functions with two arguments
 	TwoArgumentOperatorMap.Add('*', &ATurtleInterpreter::Multiplicate);
+	TwoArgumentOperatorMap.Add('^', &ATurtleInterpreter::Exponent);
+	TwoArgumentOperatorMap.Add('+', &ATurtleInterpreter::Add);
+	TwoArgumentOperatorMap.Add('-', &ATurtleInterpreter::Substract);
 
 }
 
@@ -208,6 +211,18 @@ void ATurtleInterpreter::RollRight(float angle) {
 
 float ATurtleInterpreter::Multiplicate(float first, float second) {
 	return first * second;
+}
+
+float ATurtleInterpreter::Exponent(float first, float second) {
+	return FMath::Pow(first, second);
+}
+
+float ATurtleInterpreter::Add(float first, float second) {
+	return first + second;
+}
+
+float ATurtleInterpreter::Substract(float first, float second) {
+	return first - second;
 }
 
 #pragma endregion
