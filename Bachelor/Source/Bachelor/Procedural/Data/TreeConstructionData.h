@@ -20,11 +20,13 @@ public:
 		RootBranch = NULL;
 
 		TrunkRadiusMultiplier = 1.41f;
-		MinNumberOfSectionsPerBranch = 2;
-		MaxNumberOfSectionsPerBranch = 6;
+		MinNumberOfSectionsPerBranch = 3;
+		MaxNumberOfSectionsPerBranch = 4;
 		MaxNumberOfVerticesPerMeshSection = 3e5;
-		BranchRadiusZero = 2.0f;
+		BranchRadiusZero = 3.0f;
 		BranchRadiusGrowthParameter = 2.5f;
+		DoBranchRadiusCalculations = true;
+		ZRotationAnglePerBranch = 120;
 	}
 
 	UProceduralMeshComponent* Mesh;
@@ -32,12 +34,17 @@ public:
 	FBranch* RootBranch;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
+		bool DoBranchRadiusCalculations;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
 		float TrunkRadiusMultiplier;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
 		float BranchRadiusZero;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
 		float BranchRadiusGrowthParameter;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		float ZRotationAnglePerBranch;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 		int MinNumberOfSectionsPerBranch;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")

@@ -16,8 +16,6 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 	// Spawning Parameters
 	NumberOfSpacesAndPlantsToSpawn = 20;
 
-	MaxNumberOfVerticesPerMeshSection = 400;
-
 	ColonizationSpaceOffset = FVector(0.f, 0.f, 350.f);
 
 	ShouldGenerateContinuousNumberOfGrowthIterations = false;
@@ -52,21 +50,11 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 
 	Tropism = FVector(0.f, 0.f, 0.8f);
 
-	TrunkRadiusMultiplier = 1.41f;
-
 	MaxNumberOfBranchingTwigs = 5;
 
 	MaxGrowthDepth = 5;
 
 	WeightedGrowth = true;
-
-	MinNumberOfSectionsPerBranch = 2;
-
-	MaxNumberOfSectionsPerBranch = 8;
-
-	BranchRadiusZero = 1.0f;
-
-	BranchRadiusGrowthParameter = 2.0f;
 
 	PolyReductionByCurveReduction = false;
 	SmoothOutBranchingAngles = true;
@@ -149,20 +137,16 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		spawnedColonizationPlant = World->SpawnActor<ASpaceColonizationPlant>(colonizationPlantClass, Location, FRotator(0.f), FActorSpawnParameters());
 
 		spawnedColonizationPlant->GrowthSpaces.Add(ColonizationSpace);
-		spawnedColonizationPlant->MaxNumberOfVerticesPerMeshSection = MaxNumberOfVerticesPerMeshSection;
+		spawnedColonizationPlant->TreeConstructionData = TreeConstructionData;
 		spawnedColonizationPlant->KillDistance = KillDistance;
 		spawnedColonizationPlant->RadiusOfInfluence = RadiusOfInfluence;
 		spawnedColonizationPlant->GrowthPerIteration = GrowthPerIteration;
 		spawnedColonizationPlant->MaxNumGrowthIterations = MaxNumGrowthIterations;
 		spawnedColonizationPlant->Tropism = Tropism;
-		spawnedColonizationPlant->TrunkRadiusMultiplier = TrunkRadiusMultiplier;
 		spawnedColonizationPlant->MaxNumberOfBranchingTwigs = MaxNumberOfBranchingTwigs;
 		spawnedColonizationPlant->MaxGrowthDepth = MaxGrowthDepth;
 		spawnedColonizationPlant->WeightedGrowth = WeightedGrowth;
-		spawnedColonizationPlant->MinNumberOfSectionsPerBranch = MinNumberOfSectionsPerBranch;
-		spawnedColonizationPlant->MaxNumberOfSectionsPerBranch = MaxNumberOfSectionsPerBranch;
-		spawnedColonizationPlant->BranchRadiusZero = BranchRadiusZero;
-		spawnedColonizationPlant->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
+		
 		spawnedColonizationPlant->PolyReductionByCurveReduction = PolyReductionByCurveReduction;
 		spawnedColonizationPlant->SmoothOutBranchingAngles = SmoothOutBranchingAngles;
 		spawnedColonizationPlant->MaxNumberOfNotDidNotGrowNums = MaxNumberOfNotDidNotGrowNums;

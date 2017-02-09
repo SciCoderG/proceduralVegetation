@@ -3,13 +3,13 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "Bachelor/Procedural/Data/TreeConstructionData.h"
 #include "SpaceColonizationPlant.generated.h"
 
 class UProceduralMeshComponent;
 class AColonizationSpace;
 struct FBranch;
 struct FMeshData;
-struct FTreeConstructionData;
 
 DECLARE_STATS_GROUP(TEXT("SpaceColonizationPlant"), STATGROUP_SpaceColonization, STATCAT_Advanced);
 
@@ -39,19 +39,7 @@ public:
 		UProceduralMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		int MinNumberOfSectionsPerBranch;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		int MaxNumberOfSectionsPerBranch;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		int MaxNumberOfVerticesPerMeshSection;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		float BranchRadiusZero;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		float BranchRadiusGrowthParameter;
+		FTreeConstructionData TreeConstructionData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		bool SmoothOutBranchingAngles;
@@ -73,9 +61,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		FVector Tropism;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
-		float TrunkRadiusMultiplier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		int MaxNumGrowthIterations;
@@ -118,7 +103,6 @@ private:
 	void TryCreatingNewBranch(FBranch* Parent, FVector NormalizedGrowthDirection, float IndividualGrowthPerIteration);
 
 	FMeshData* AllMeshData;
-	FTreeConstructionData* TreeConstructionData;
 
 	FBranch* RootBranch;
 

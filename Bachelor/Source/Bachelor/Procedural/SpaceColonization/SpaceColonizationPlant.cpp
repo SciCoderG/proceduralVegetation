@@ -28,21 +28,15 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
 	Mesh->SetupAttachment(RootComponent);
 
-	MinNumberOfSectionsPerBranch = 2;
-	MaxNumberOfSectionsPerBranch = 12;
 	KillDistance = 100.0f;
 	RadiusOfInfluence = 500.0f;
 	GrowthPerIteration = 10.0f;
 	Tropism = FVector(0.0f, 0.0f, 1.0f);
-	TrunkRadiusMultiplier = 1.41;
 	MaxNumGrowthIterations = 20;
 	MaxNumberOfBranchingTwigs = 4;
 	MaxGrowthDepth = 6;
 	WeightedGrowth = true;
 
-	MaxNumberOfVerticesPerMeshSection = 3e5;
-	BranchRadiusZero = 1.0f;
-	BranchRadiusGrowthParameter = 2.0f;
 	PolyReductionByCurveReduction = false;
 	SmoothOutBranchingAngles = true;
 
@@ -51,7 +45,6 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	IsStillGrowing = true;
 
 	AllMeshData = new FMeshData();
-	TreeConstructionData = new FTreeConstructionData();
 
 	CurrentColonizationPointCount = 0;
 
@@ -60,7 +53,6 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 
 ASpaceColonizationPlant::~ASpaceColonizationPlant() {
 	delete AllMeshData;
-	delete TreeConstructionData;
 	delete RootBranch;
 }
 
@@ -81,7 +73,7 @@ void ASpaceColonizationPlant::BeginPlay()
 		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 	}
 
-	UMeshConstructor::GenerateTreeMesh(TreeConstructionData);
+	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData);
 }
 
 // Called every frame
@@ -108,19 +100,9 @@ void ASpaceColonizationPlant::InitUtilityValues() {
 
 	ActorLocation = this->GetActorLocation();
 
-	if (NULL == TreeConstructionData) {
-		TreeConstructionData = new FTreeConstructionData();
-	}
-	TreeConstructionData->Mesh = Mesh;
-	TreeConstructionData->AllMeshData = AllMeshData;
-	TreeConstructionData->RootBranch = RootBranch;
-
-	TreeConstructionData->TrunkRadiusMultiplier = TrunkRadiusMultiplier;
-	TreeConstructionData->MinNumberOfSectionsPerBranch = MinNumberOfSectionsPerBranch;
-	TreeConstructionData->MaxNumberOfSectionsPerBranch = MaxNumberOfSectionsPerBranch;
-	TreeConstructionData->MaxNumberOfVerticesPerMeshSection = MaxNumberOfVerticesPerMeshSection;
-	TreeConstructionData->BranchRadiusZero = BranchRadiusZero;
-	TreeConstructionData->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
+	TreeConstructionData.Mesh = Mesh;
+	TreeConstructionData.AllMeshData = AllMeshData;
+	TreeConstructionData.RootBranch = RootBranch;
 }
 
 DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ ColonizeGivenSpaces"), STAT_ColonizeGivenSpaces, STATGROUP_SpaceColonization);
@@ -130,7 +112,7 @@ void ASpaceColonizationPlant::ColonizeGivenSpaces() {
 		UBranchUtility::RecursiveDeleteAllBranches(RootBranch);
 	}
 	RootBranch = new FBranch();
-	TreeConstructionData->RootBranch = RootBranch;
+	TreeConstructionData.RootBranch = RootBranch;
 	InitialRootGrowth();
 	int iterations = 0;
 	for (int i = 0; i < MaxNumGrowthIterations; ++i) {

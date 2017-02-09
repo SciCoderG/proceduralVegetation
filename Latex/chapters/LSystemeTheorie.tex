@@ -38,7 +38,7 @@ Ein D0L-System kann wie folgt definiert werden:
 	Ein D0L-System ist ein Tupel G = $(V, P, \omega)$, bestehend aus
 	\begin{enumerate}
 		\item $V$ -- einem nichtleeren, endlichen Alphabet.
-		\item $P$ -- einer endlichen Menge von Produktionsregeln in der Form $P: a \rightarrow b$ mit $a \in V$ und $b \in V^*$. $a$ wird als Vorgänger, $b$ als Nachfolger bezeichnet. Ist für einen Buchstaben $x \in V$ keine explizite Produktionsregel angegeben, wird die Regel $P: x \rightarrow x$ angenommen -- der Buchstabe wird durch sich selbst ersetzt.
+		\item $P$ -- einer endlichen Menge von Produktionsregeln in der Form $P: a \rightarrow b$ mit $a \in V$ und $b \in V^*$. $a$ wird als Vorgänger, $b$ als Nachfolger bezeichnet. Ist für einen Buchstaben $x \in V$ keine explizite Produktionsregel angegeben, wird die Identitätsproduktion $P: x \rightarrow x$ angenommen -- der Buchstabe wird durch sich selbst ersetzt.
 		\item $\omega \in V^+$ -- dem Axiom, Startsymbol der Grammatik.
 	\end{enumerate}
 Die Menge $V^+$ ist die Menge aller nichtleeren Wörter über $V$. \cite[S.4]{ABOP:04} 
@@ -69,15 +69,13 @@ Die Entwicklung einer Anfangszelle $a_r$ (Axiom $\omega : a_r$) läuft daraufhin
 \begin{figure} [hbtp]
 	\centering
 	\includegraphics[height=0.3\textheight]{images/AnabaenaAbleitung.png}
-	\caption{n-fache Ableitung der Anfangszelle $a_r$ anhand der Produktionsregeln $p_1 ... p_4$ \ref{eq:ProdAnabaena}. Eigene Abbildung anhand \cite[S.4]{ABOP:04}}
+	\caption{n-fache Ableitung der Anfangszelle $a_r$ anhand der Produktionsregeln $p_1 ... p_4$ aus Gleichung \ref{eq:ProdAnabaena}. Eigene Abbildung anhand \cite[S.4]{ABOP:04}}
 	\label{fig:AnabaenaAbleitung}
 \end{figure}
 
-
-
 \subsection{Parametrische L-Systeme}
 
-Parametrische L-Systeme stellen eine Erweiterung der D0L-Systeme dar. Die Buchstaben eines verwendeten Alphabets $V$ werden um zugeordnete Parameter aus der Menge der reelen Zahlen ergänzt. Ein solches parametrisches Wort $V \times \Re^*$ besteht aus einem Zeichen $A \in V$ und Parametern $a_1,...,a_n \in \Re$ und wird als $A(a_1,...,a_n)$ dargestellt. \cite[S.41]{ABOP:04}
+Parametrische L-Systeme stellen eine Erweiterung der D0L-Systeme dar. Die Buchstaben eines verwendeten Alphabets $V$ werden um zugeordnete Parameter aus der Menge der reelen Zahlen ergänzt. Ein solches parametrisches Wort $V \times \Re^*$ besteht aus einem Zeichen $A \in V$ und Parametern $a_1,...,a_n \in \Re$ und wird als $A(a_1,...,a_n)$ dargestellt. Ein parametrisches Wort ohne Parameter mit dem Zeichen $A \in V$  wird schlicht als $A$ dargestellt. \cite[S.41]{ABOP:04}
 
 Während in der Definition von Modulen numerische Konstanten verwendet werden, werden bei der Angabe eines L-Systems Variablen verwendet. Ist $\Sigma$ eine Menge von Variablen, dann ist $E(\Sigma)$ ein arithmetischer Ausdruck, in dem Variablen, Konstanten und arithmetische Operatoren auf eine zulässige Weise kombiniert werden. \cite[S.41]{ABOP:04}
 
@@ -93,11 +91,31 @@ Während in der Definition von Modulen numerische Konstanten verwendet werden, w
 \cite[S.41]{ABOP:04}
 \end{defParametrischeLSysteme}
 
-Beispiel:
+Eine Produktion kann auf ein parametrisches Wort angewendet werden wenn das Zeichen, das dem Wort vorausgeht, und die Anzahl der Parameter mit dem Zeichen und der Anzahl der Parameter im Vorgänger der Produktionsregel übereinstimmen. \cite[S.42]{ABOP:04}
+
+Beispiel: Gegeben sei folgendes, parametrisches L-System:
+
+\begin{equation}
+\begin{array}{llll}
+\omega & : A(1,1) \\
+p_1 & : A(x,y) &\rightarrow& A(x+1, y*2)\text{ }B(y) \\
+p_2 &  : B(x) &\rightarrow& B(x+1)\text{ }C 
+\end{array}
+\label{eq:ProdParamLSystem}
+\end{equation} 
+
+Das Alphabet $V$ und die Menge der Variablen $\Sigma$ gehen implizit aus der Angabe der Produktionsregeln hervor. Die Entwicklung des L-Systems läuft anhand Abbildung \ref{fig:ParamLSystemBeispiel} ab. 
+
+\begin{figure} [hbtp]
+	\centering
+	\includegraphics[height=0.4\textheight]{images/ParamLSystemBeispiel.png}
+	\caption{n-fache Ableitung des Axioms $A(1,1)$ anhand der Produktionsregeln aus Gleichung \ref{eq:ProdParamLSystem}. Die Ersetzung des Zeichens $C$ erfolgt anhand der impliziten Identitätsproduktion. Eigene Abbildung.}
+	\label{fig:ParamLSystemBeispiel}
+\end{figure}
 
 \section{Grafische Interpretation von L-Systemen}
 
-Um die Ergebnisse von L-Systemen zu visualisieren, muss eine grafische Interpretation der resultierenden Zeichenketten festgelegt werden. Im Folgenden wird die verwendete Visualisierungsmethode, Turtle-Interpretation, vorgestellt.
+Um die Ergebnisse von L-Systemen in Form von 3D-Objekten zu visualisieren, muss eine grafische Interpretation der resultierenden Zeichenketten festgelegt werden. Im Folgenden wird die verwendete Visualisierungsmethode, Turtle-Interpretation, vorgestellt.
 
 \subsection{Turtle-Interpretation}
 
