@@ -1,6 +1,6 @@
 \chapter{Lindenmayer-Systeme}
 
-Vorstellung der verwendeten Konzepte.
+Vorstellung der verwendeten Konzepte. Sämtliche Visualisierungen von L-Systemen wurden mithilfe des Unreal Engine 4 Projekts erstellt.
 
 \section{Kontextfreie Grammatik}
 
@@ -52,7 +52,6 @@ Die Ableitung eines Wortes entspricht der Ersetzung aller Buchstaben anhand der 
 	Das Wort $w_n$ ist die n-te Ableitung des Wortes $w_0$ wenn eine Folge von Wörtern $w_0, w_1, ..., w_n$ mit Ableitungen $w_0 \Rightarrow w_1 \Rightarrow ... \Rightarrow w_n$ existiert. \cite[S.4]{ABOP:04} 
 \end{defAbleitung}
 
-\paragraph{Anabaena}
 
 Beispiel: Das Wachstum der Blaualgen-Gattung \glqq Anabaena\grqq{} kann durch ein L-System simuliert werden. Die Buchstaben $a$ und $b$ beschreiben die Größe und Teilungsbereitschaft einer Algenzelle, während die Indizes $l$ und $r$ die Polarität einer Zelle darstellen. Es gelten folgende Produktionsregeln:
 \begin{equation}
@@ -104,7 +103,7 @@ p_2 &  : B(x) &\rightarrow& B(x+1)\text{ }C
 \label{eq:ProdParamLSystem}
 \end{equation} 
 
-Das Alphabet $V$ und die Menge der Variablen $\Sigma$ gehen implizit aus der Angabe der Produktionsregeln hervor. Die Entwicklung des L-Systems läuft anhand Abbildung \ref{fig:ParamLSystemBeispiel} ab. 
+Das Alphabet $V$ und die Menge der Variablen $\Sigma$ gehen implizit aus der Angabe der Produktionsregeln hervor und werden in zukünftigen L-System-Gleichungen nicht angegeben. Die Entwicklung des L-Systems läuft anhand Abbildung \ref{fig:ParamLSystemBeispiel} ab. 
 
 \begin{figure} [hbtp]
 	\centering
@@ -119,7 +118,7 @@ Um die Ergebnisse von L-Systemen in Form von dreidimensionalen Objekten zu visua
 
 \subsection{Turtle-Interpretation}
 
-Die Turtle-Interpretation im zweidimensionalen Raum entspricht der Vorstellung einer Turtle\footnote{\glqq Turtle\grqq{} -- englisch für \glqq Schildkröte\grqq.} auf einem Blatt Papier. Die Turtle besitzt eine Position $\overrightarrow{P}$ welche durch die kartesischen Koordinaten $(p_1,p_2)$ beschrieben wird sowie einen Einheitsvektor $\overrightarrow{H}$ mit kartesischen Koordinaten $(h_1, h_2)$. $\overrightarrow{P}$ beschreibt die Position der Turtle auf der Ebene und $\overrightarrow{H}$ entspricht der Blickrichtung (Heading) der Turtle. Der Zustand $(\overrightarrow{P},\overrightarrow{H})$ einer Turtle wird somit vollständig durch die Position und Blickrichtung definiert. \cite[S.2]{Turtle:04} Auf der Turtle können drei Aktionen durchgeführt werden, die durch die folgenden Symbole dargestellt werden:
+Die Turtle-Interpretation im zweidimensionalen Raum entspricht der Vorstellung einer Turtle\footnote{\glqq Turtle\grqq{} -- englisch für \glqq Schildkröte\grqq.} auf einem Blatt Papier. Die Turtle besitzt eine Position $\overrightarrow{P}$ welche durch die kartesischen Koordinaten $(p_1,p_2)$ beschrieben wird sowie einen Einheitsvektor $\overrightarrow{H}$ mit kartesischen Koordinaten $(h_1, h_2)$. $\overrightarrow{P}$ beschreibt die Position der Turtle auf der Ebene und $\overrightarrow{H}$ entspricht der Blickrichtung (Heading) der Turtle. Der Zustand $(\overrightarrow{P},\overrightarrow{H})$ einer Turtle wird somit vollständig durch die Position und Blickrichtung definiert. \cite[S.2]{Turtle:04} Die Turtle kann drei Aktionen durchführen, welche durch die folgenden Symbole dargestellt werden:
 
 \begin{description}[labelindent]
 	\item[$F(a)$] Die Turtle bewegt sich um $a>0$ in die Richtung der aktuellen Blickrichtung. Die neue Position ist  $\overrightarrow{P'} = (p_1',p_2')$ mit:
@@ -174,43 +173,97 @@ p_1 & : F \rightarrow F+F-F-FF+F+F-F
 \label{eq:ProdKochKurve}
 \end{equation} 
 
-
-Für eine bessere Übersicht wurde die Angabe der Parameter weggelassen. Die Turtle interpretiert $F$ als $F(l)$, $-$ als $-(d)$ und $+$ als $+(d)$ mit festgelegter Strichlänge $l$ und Drehwinkel $d$. Die Entwicklung des L-Systems läuft anhand Abbildung \ref{fig:KochkurveAbleitung} ab.
+Für eine bessere Übersicht wurde die Angabe der Parameter weggelassen. Die Turtle interpretiert $F$ als $F(l)$, $-$ als $-(d)$ und $+$ als $+(d)$ mit festgelegter Strichlänge $l$ und Drehwinkel $d$. \label{desc:TurtleWithoutParams} Die Entwicklung des L-Systems läuft, als Turtle-Interpretation visualisiert, wie in Abbildung \ref{fig:KochkurveAbleitung} ab.
 
 \begin{figure} [hbtp]
 	\centering
-	\begin{subfigure}[t]{.35\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
 		\includegraphics[width=\linewidth]{images/KochkurveN0L400.png}
 		\caption{$n=0$, $l=400$, $d=90\degree$}
 		\label{fig:KochkurveN0L400}
 	\end{subfigure}
 	\hspace{.1\textwidth}
-	\begin{subfigure}[t]{.35\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/KochkurveN1L100.png}
 		\caption{$n=1$, $l=100$, $d=90\degree$}
 		\label{fig:KochkurveN1L100}
 	\end{subfigure}
 	\medskip
-	\begin{subfigure}[t]{.35\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
 		\includegraphics[width=\linewidth]{images/KochkurveN2L25.png}
 		\caption{$n=2$, $l=25$, $d=90\degree$}
 		\label{fig:KochkurveN2L25}
 	\end{subfigure}
 	\hspace{.1\textwidth}
-	\begin{subfigure}[t]{.35\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/KochkurveN3L6_25.png}
 		\caption{$n=3$, $l=6.25$, $d=90\degree$}
 		\label{fig:KochkurveN3L6_25}
 	\end{subfigure}
-	\caption{n-fache Ableitung des Axioms $\omega$ anhand der Produktionsregel $p_1$ aus Gleichung \ref{eq:ProdKochKurve}, visualisiert mithilfe der Turtle-Interpretation. Eigene Abbildung.}
+	\caption{n-fache Ableitung des Axioms $\omega$ anhand der Produktionsregel $p_1$ aus Gleichung \ref{eq:ProdKochKurve}, visualisiert mithilfe der Turtle-Interpretation. Die im Parameter $l$ verwendete Einheit entspricht der in der Unreal Engine 4 verwendeten Längeneinheit $cm$. Eigene Abbildung.}
 	\label{fig:KochkurveAbleitung}
 \end{figure}
 
 \subsection{Verzweigte L-Systeme}
-asd
 
-\subsection{Erweiterung in den dreidimensionalen Raum}
-\section{L-Systeme für Baumstrukturen}
-asd
+Die bisherigen Definitionen von L-Systemen und die korrespondierende Turtle-Interpretation lässt lediglich die Bildung von Grafiken zu, die einen einzelnen, zusammenhängenden Polygonzug erlauben. Um L-Systeme zu bilden, deren Visualisierungen Baumstrukturen ähneln muss die bisherige Turtle-Interpretation um die Möglichkeit erweitert werden, Verzweigungen zu verarbeiten. \cite[S.24]{ABOP:04} 
+
+Folgende Operationen werden eingeführt:
+
+\begin{description}[labelindent]
+	\item[$\text{[}$] Der aktuelle Zustand der Turtle in Form ihrer Position und Rotation wird auf einem Kellerspeicher abgelegt. \\
+	
+	\item[$ \text{]} $] Der oberste Zustand der Turtle wird vom Kellerspeicher genommen. Die aktuelle Position und Rotation der Turtle wird auf die im Zustand gespeicherte Position und Rotation gesetzt. Es wird keine Linie zwischen der alten und neuen Position gezeichnet.
+\end{description}
+	\cite[S.24]{ABOP:04} 
+
+Diese Erweiterung erlaubt es mehrere Linien zu zeichnen, die von einem einzigen Punkt ausgehen -- die Visualisierung von Abzweigungen ist somit möglich. Die Operatoren [ und ] markieren den Anfang und das Ende eines Zweiges.
+
+Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich simple, Baum- oder Strauch-ähnliche Strukturen bilden. Die Turtle-Interpretation folgt der in \ref{desc:TurtleWithoutParams} beschriebenen Interpretation mit fester Strichlänge $l$ und festem Drehwinkel $d$.
+
+
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.4\textwidth}
+		\includegraphics[width=\linewidth]{images/Branching1_N4L18D25.png}
+		\caption{$n=4$, $l=18$, $d=25\degree$\\ \\
+			$\begin{array}{ll}
+				\omega & : F \\
+				p_1 & : F \rightarrow FF-[-F+F+F]+[+F-F-F]
+			\end{array}
+			\label{eq:ProdBranching1}$\\
+			\cite[S.25]{ABOP:04}
+		}
+		\label{fig:Branching1L18D25}
+	\end{subfigure}
+	\hspace{.1\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/Branching2_N5L15D25.png}
+		\caption{$n=5$, $l=15$, $d=25\degree$\\ \\
+			$\begin{array}{ll}
+				\omega & : F \\
+				p_1 & : F \rightarrow F[-F]F[+F][F]
+			\end{array}
+			\label{eq:ProdBranching2}$\\
+			\cite[S.78]{PCGiG:16}
+		}
+		\label{fig:Branching2L15D25}
+	\end{subfigure}
+
+	\caption{n-fache Ableitung der Axiome anhand der Produktionsregeln, visualisiert mithilfe der Turtle-Interpretation. Eigene Abbildung.}
+	\label{fig:KochkurveAbleitung}
+\end{figure}
+
+\subsection{Erweiterung der Turtle-Interpretation in den dreidimensionalen Raum}
+
+Die bisherige Definition eines Turtle-Zustands mithilfe einer zweidimensionalen Position und einer Blickrichtung genügt nicht, um Visualisierungen von L-Systemen in Form von dreidimensionalen Objekten zu ermöglichen. Sowohl die Zustands-Definition als auch die interpretierten Operationen müssen angepasst und erweitert werden.
+
+Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{P}$ sowie drei Einheitsvektoren $\overrightarrow{H}$, $\overrightarrow{U}$ und $\overrightarrow{L}$, welche die Orientierung der Turtle im Raum in kartesischen Koordinaten beschreiben. Die Orientierungsvektoren sind orthogonal zueinander.
+
+\begin{description}[5cm]
+		\item[\boldmath$\overrightarrow{H}$]Entspricht der Blickrichtung (engl.: Heading) der Turtle. test test test test test test test test test test test test test test test test test test test \\
+		\item[\boldmath$\overrightarrow{U}$]Entspricht der Blickrichtung (engl.: Heading) der Turtle. test test test test test test test test test test test test test test test test test test test
+\end{description}
