@@ -115,13 +115,102 @@ Das Alphabet $V$ und die Menge der Variablen $\Sigma$ gehen implizit aus der Ang
 
 \section{Grafische Interpretation von L-Systemen}
 
-Um die Ergebnisse von L-Systemen in Form von 3D-Objekten zu visualisieren, muss eine grafische Interpretation der resultierenden Zeichenketten festgelegt werden. Im Folgenden wird die verwendete Visualisierungsmethode, Turtle-Interpretation, vorgestellt.
+Um die Ergebnisse von L-Systemen in Form von dreidimensionalen Objekten zu visualisieren, muss eine grafische Interpretation der resultierenden Zeichenketten festgelegt werden. Im Folgenden wird die verwendete Visualisierungsmethode, Turtle-Interpretation, vorgestellt.
 
 \subsection{Turtle-Interpretation}
 
-Die Turtle-Interpretation entspricht einer 
+Die Turtle-Interpretation im zweidimensionalen Raum entspricht der Vorstellung einer Turtle\footnote{\glqq Turtle\grqq{} -- englisch für \glqq Schildkröte\grqq.} auf einem Blatt Papier. Die Turtle besitzt eine Position $\overrightarrow{P}$ welche durch die kartesischen Koordinaten $(p_1,p_2)$ beschrieben wird sowie einen Einheitsvektor $\overrightarrow{H}$ mit kartesischen Koordinaten $(h_1, h_2)$. $\overrightarrow{P}$ beschreibt die Position der Turtle auf der Ebene und $\overrightarrow{H}$ entspricht der Blickrichtung (Heading) der Turtle. Der Zustand $(\overrightarrow{P},\overrightarrow{H})$ einer Turtle wird somit vollständig durch die Position und Blickrichtung definiert. \cite[S.2]{Turtle:04} Auf der Turtle können drei Aktionen durchgeführt werden, die durch die folgenden Symbole dargestellt werden:
+
+\begin{description}[labelindent]
+	\item[$F(a)$] Die Turtle bewegt sich um $a>0$ in die Richtung der aktuellen Blickrichtung. Die neue Position ist  $\overrightarrow{P'} = (p_1',p_2')$ mit:
+	\begin{equation}
+	\begin{array}{ll}
+	p_1' & = p_1 + h_1 * a\\
+	p_2' & = p_2 + h_2 * a
+	\end{array}
+	\end{equation} 
+	Zwischen der alten Position $\overrightarrow{P}$ und der neuen Position $\overrightarrow{P'}$ wird eine Linie gezeichnet.
+	
+	\item[$+(a)$]  Die Turtle dreht sich um den Winkel $a$ nach links. Die neue Blickrichtung ist $\overrightarrow{H'} = (h_1', h_2')$ mit:
+	\begin{equation}
+	(h_1', h_2') = (h_1, h_2) *
+	\begin{pmatrix}
+	cos(a) & sin(a)\\
+	-sin(a) & cos(a)
+	\end{pmatrix}
+	\end{equation} 
+	
+	\item[$-(a)$]  Die Turtle dreht sich um den Winkel $a$ nach rechts. Die neue Blickrichtung ist $\overrightarrow{H'} = (h_1', h_2')$ mit:
+	\begin{equation}
+	(h_1', h_2') = (h_1, h_2) *
+	\begin{pmatrix}
+	cos(-a) & sin(-a)\\
+	-sin(-a) & cos(-a)
+	\end{pmatrix}
+	\end{equation} 
+	
+\end{description}
+\cite[S.4,46]{Turtle:04} \cite[S.7]{ABOP:04}
+Die Symbole \glqq+\grqq{} und \glqq-\grqq{} werden sowohl im Alphabet eines L-Systems als auch bei arithmetischen Operationen in Parameterangaben verwendet, ihre Bedeutung ist abhängig vom Kontext, in welchem sie angewendet werden. \cite[S.46]{ABOP:04}
+
+Die grafische Turtle-Interpretation einer Zeichenkette, die durch ein L-System zurückgegeben wird, sind somit die Linien, die auf Grundlage der definierten Symbole gezeichnet werden. 
+
+Beispiel: Mithilfe von L-Systemen und einer Turtle-Interpretation können Fraktale, in diesem Beispiel sogenannte Koch-Kurven visualisiert werden. Diese Kurven bestehen aus einem Initiator -- einer einfachen, zweidimensionalen Form -- und einem Generator, der einem offenen Polygonzug entspricht. In jedem Ableitungsschritt, angefangen bei dem Initiator, wird jede gerade Linie durch den Generator ersetzt. \cite[S.39]{Mandelbrot:16} 
+
+Dieses Verhalten kann nun auf ein L-System abgebildet werden: Der Initiator entspricht dem Axiom und der Generator einer Produktionsregel des L-Systems. Der in Abbildung \ref{fig:InitiatorGenerator} dargestellte Initiator und Generator entsprechen der Turtle-Interpretation des folgenden L-Systems:
+
+\begin{figure} [hbtp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{images/InitiatorGenerator.png}
+	\caption{Links: Initiator der Koch-Kurve in Form eines einfachen Quadrats. Rechts: Generator der Koch-Kurve in Form eines offenen Polygonzugs. Eigene Abbildung.}
+	\label{fig:InitiatorGenerator}
+\end{figure}
+
+\begin{equation}
+\begin{array}{llll}
+\omega & : F-F-F-F \\
+p_1 & : F \rightarrow F+F-F-FF+F+F-F
+\end{array}
+\label{eq:ProdKochKurve}
+\end{equation} 
+
+
+Für eine bessere Übersicht wurde die Angabe der Parameter weggelassen. Die Turtle interpretiert $F$ als $F(l)$, $-$ als $-(d)$ und $+$ als $+(d)$ mit festgelegter Strichlänge $l$ und Drehwinkel $d$. Die Entwicklung des L-Systems läuft anhand Abbildung \ref{fig:KochkurveAbleitung} ab.
+
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.35\textwidth}
+		\includegraphics[width=\linewidth]{images/KochkurveN0L400.png}
+		\caption{$n=0$, $l=400$, $d=90\degree$}
+		\label{fig:KochkurveN0L400}
+	\end{subfigure}
+	\hspace{.1\textwidth}
+	\begin{subfigure}[t]{.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/KochkurveN1L100.png}
+		\caption{$n=1$, $l=100$, $d=90\degree$}
+		\label{fig:KochkurveN1L100}
+	\end{subfigure}
+	\medskip
+	\begin{subfigure}[t]{.35\textwidth}
+		\includegraphics[width=\linewidth]{images/KochkurveN2L25.png}
+		\caption{$n=2$, $l=25$, $d=90\degree$}
+		\label{fig:KochkurveN2L25}
+	\end{subfigure}
+	\hspace{.1\textwidth}
+	\begin{subfigure}[t]{.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/KochkurveN3L6_25.png}
+		\caption{$n=3$, $l=6.25$, $d=90\degree$}
+		\label{fig:KochkurveN3L6_25}
+	\end{subfigure}
+	\caption{n-fache Ableitung des Axioms $\omega$ anhand der Produktionsregel $p_1$ aus Gleichung \ref{eq:ProdKochKurve}, visualisiert mithilfe der Turtle-Interpretation. Eigene Abbildung.}
+	\label{fig:KochkurveAbleitung}
+\end{figure}
 
 \subsection{Verzweigte L-Systeme}
 asd
+
+\subsection{Erweiterung in den dreidimensionalen Raum}
 \section{L-Systeme für Baumstrukturen}
 asd

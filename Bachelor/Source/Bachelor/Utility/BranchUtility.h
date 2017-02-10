@@ -24,7 +24,9 @@ public:
 
 	static float RecursiveCalculateAllBranchRadii(FBranch* Parent, float RadiusZero, float BranchingRadiusParameter);
 
-	static void CalcAllBranchConnectionNormals(FBranch* Current);
+	static void CalcConnectionNormals(FBranch* Current);
+
+	static void CalcTreeLikeConnectionNormals(FBranch* Current);
 
 	static int CalcNumOfBranchSections(float CurrentRadius, float MaxRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch);
 

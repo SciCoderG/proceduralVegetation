@@ -23,7 +23,12 @@ void UMeshConstructor::GenerateTreeMesh(FTreeConstructionData* TreeConstructionD
 	TArray<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranchesAsArray(TreeConstructionData->RootBranch);
 	UE_LOG(LogTemp, Warning, TEXT("Number of Branches: %d"), allBranches.Num());
 
-	
+	if (TreeConstructionData->MakeFractalMesh) {
+		GenerateFractalMesh(TreeConstructionData, allBranches);
+	}
+	else {
+		UBranchUtility::CalcTreeLikeConnectionNormals(TreeConstructionData->RootBranch);
+	}
 
 	float rootMaxRadius = TreeConstructionData->BranchRadiusZero;
 	if (TreeConstructionData->DoBranchRadiusCalculations) {
@@ -38,17 +43,11 @@ void UMeshConstructor::GenerateTreeMesh(FTreeConstructionData* TreeConstructionD
 			currentBranch->EndRadius = rootMaxRadius;
 		}
 	}
-
+	
 	float zRotationAngleInRad = TreeConstructionData->ZRotationAnglePerBranch * PI / 180.0f;
 	UBranchUtility::CalcPerBranchDepthZRotAngle(TreeConstructionData->RootBranch, zRotationAngleInRad);
 
-	if (TreeConstructionData->MakeFractalMesh) {
-		GenerateFractalMesh(TreeConstructionData, allBranches);
-		allBranches.RemoveAt(0);
-	}
-	else {
-		UBranchUtility::CalcTreeLikeConnectionNormals(TreeConstructionData->RootBranch);
-	}
+	
 	
 	int vertexCounter = 0;
 	int meshSectionCount = 0;
@@ -74,26 +73,15 @@ void UMeshConstructor::GenerateTreeMesh(FTreeConstructionData* TreeConstructionD
 	vertexCounter += allMeshData->Vertices.Num();
 	allMeshData->Reset();
 
-	if (NULL != TreeConstructionData->TreeMaterial) {
-		for (int i = 0; i < TreeConstructionData->Mesh->GetNumSections(); ++i) {
-			TreeConstructionData->Mesh->SetMaterial(i, TreeConstructionData->TreeMaterial);
-		}
-	}
-
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d Vertices"), vertexCounter);
 	UE_LOG(LogTemp, Warning, TEXT("Generated %d MeshSections"), TreeConstructionData->Mesh->GetNumSections());
 }
 
 void UMeshConstructor::GenerateFractalMesh(FTreeConstructionData* TreeConstructionData, const TArray<FBranch*>& AllBranches) {
 	UBranchUtility::CalcConnectionNormals(TreeConstructionData->RootBranch);
-	int i = 0;
 	for (FBranch* currentBranch : AllBranches) {
-		currentBranch->BranchDepth = i++;
-		currentBranch->Start -= currentBranch->StartConnectionNormal * currentBranch->StartRadius;
-		currentBranch->End += currentBranch->EndConnectionNormal * currentBranch->EndRadius;
-		currentBranch->ZRotationAngle = TreeConstructionData->ZRotationAnglePerBranch;
+		currentBranch->BranchDepth++;
 	}
-
 }
 
 void UMeshConstructor::GenerateBranchMesh(FMeshData* AllMeshData, FBranch* Origin, TArray<FBranch*>& AllBranches, float RootRadius,

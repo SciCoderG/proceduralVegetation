@@ -73,7 +73,7 @@ float UBranchUtility::RecursiveCalculateAllBranchRadii(FBranch* Parent, float Ra
 
 void UBranchUtility::CalcConnectionNormals(FBranch* Current) {
 	Current->StartConnectionNormal = Current->End - Current->Start;
-	Current->StartConnectionNormal = Current->StartConnectionNormal.GetUnsafeNormal();
+	Current->StartConnectionNormal = Current->StartConnectionNormal.GetSafeNormal();
 	Current->EndConnectionNormal = Current->StartConnectionNormal;
 
 	for (FBranch* childBranch : Current->ChildBranches) {

@@ -32,6 +32,10 @@ public:
 
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
+		UMaterialInterface* GeneratedTreeMaterial;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		UProceduralMeshComponent* Mesh;
 

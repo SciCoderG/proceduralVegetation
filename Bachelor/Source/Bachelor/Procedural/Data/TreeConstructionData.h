@@ -18,6 +18,7 @@ public:
 		Mesh = NULL;
 		AllMeshData = NULL;
 		RootBranch = NULL;
+		TreeMaterial = NULL;
 
 		TrunkRadiusMultiplier = 1.41f;
 		MinNumberOfSectionsPerBranch = 3;
@@ -27,6 +28,7 @@ public:
 		BranchRadiusGrowthParameter = 2.5f;
 		DoBranchRadiusCalculations = true;
 		ZRotationAnglePerBranch = 120;
+		MakeFractalMesh = false;
 	}
 
 	UProceduralMeshComponent* Mesh;
@@ -43,6 +45,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
 		float BranchRadiusGrowthParameter;
 	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		UMaterialInterface* TreeMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 		float ZRotationAnglePerBranch;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
@@ -51,5 +56,7 @@ public:
 		int MaxNumberOfSectionsPerBranch;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 		int MaxNumberOfVerticesPerMeshSection;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		bool MakeFractalMesh;
 };
 

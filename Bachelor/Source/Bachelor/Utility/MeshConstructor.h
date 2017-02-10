@@ -24,5 +24,6 @@ public:
 
 	static void GenerateBranchMesh(FMeshData* AllMeshData, FBranch* Origin,
 		TArray<FBranch*>& AllBranches, float RootRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch);
-	
+
+	static void GenerateFractalMesh(FTreeConstructionData* TreeConstructionData, const TArray<FBranch*>& AllBranches);
 };
