@@ -261,9 +261,43 @@ Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich simple, B
 
 Die bisherige Definition eines Turtle-Zustands mithilfe einer zweidimensionalen Position und einer Blickrichtung genügt nicht, um Visualisierungen von L-Systemen in Form von dreidimensionalen Objekten zu ermöglichen. Sowohl die Zustands-Definition als auch die interpretierten Operationen müssen angepasst und erweitert werden.
 
-Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{P}$ sowie drei Einheitsvektoren $\overrightarrow{H}$, $\overrightarrow{U}$ und $\overrightarrow{L}$, welche die Orientierung der Turtle im Raum in kartesischen Koordinaten beschreiben. Die Orientierungsvektoren sind orthogonal zueinander.
+Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{P}$ sowie drei Einheitsvektoren $\overrightarrow{H}$, $\overrightarrow{U}$ und $\overrightarrow{L}$, welche die Orientierung der Turtle im Raum in kartesischen Koordinaten beschreiben. Die Orientierungsvektoren sind orthogonal zueinander und bilden somit das lokale Koordinatensystem der Turtle.
 
 \begin{description}[5cm]
-		\item[\boldmath$\overrightarrow{H}$]Entspricht der Blickrichtung (engl.: Heading) der Turtle. test test test test test test test test test test test test test test test test test test test \\
-		\item[\boldmath$\overrightarrow{U}$]Entspricht der Blickrichtung (engl.: Heading) der Turtle. test test test test test test test test test test test test test test test test test test test
+		\item[\boldmath$\overrightarrow{H}$]Entspricht der Blickrichtung (Heading) der Turtle. Eine Rotation um diesen Vektor entspricht der Rotationsmatrix \\
+		\begin{equation}
+		\begin{pmatrix}
+		cos(d) & sin(d) & 0 \\
+		-sin(d)& cos(d) & 0 \\
+		0 & 0 & 1
+		\end{pmatrix}	
+		\label{eq:rotH}
+		\end{equation} 
+		\item[\boldmath$\overrightarrow{U}$]Entspricht dem Vektor, der im lokalen Koordinatensystem der Turtle nach oben zeigt (Up).\\
+		\begin{equation}
+		\begin{pmatrix}
+		cos(d) & sin(d) & 0 \\
+		-sin(d)& cos(d) & 0 \\
+		0 & 0 & 1
+		\end{pmatrix}	
+		\label{eq:rotU}
+		\end{equation} 
+		\item[\boldmath$\overrightarrow{L}$]Entspricht dem Vektor, der im lokalen Koordinatensystem der Turtle nach links zeigt (Left).
+\end{description}
+
+\cite[S.19]{ABOP:04}
+
+
+
+\begin{description}[5cm]
+	\item[\boldmath$+(d)$ und $-(d)$]  Die Turtle dreht sich um den \\
+	
+	\item[\boldmath$/(d)$ und $\backslash(d)$]test \\
+	
+	\item[\boldmath
+	$
+	\begin{array}{cc}
+	+(d)\\-(d)
+	\end{array}
+	$] Entspricht dem Vektor, der im lokalen Koordinatensystem der Turtle nach links zeigt (Left).
 \end{description}
