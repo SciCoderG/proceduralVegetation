@@ -65,6 +65,6 @@ void ACylindricalColonizationSpace::InitValues() {
 }
 
 float ACylindricalColonizationSpace::GetMaxDistanceFromCenter() {
-	return 0.f;
+	return FMath::Sqrt(CylinderHeight * CylinderHeight + CylinderRadius * CylinderRadius); // a^2 + b^2 = c^2
 }
 
