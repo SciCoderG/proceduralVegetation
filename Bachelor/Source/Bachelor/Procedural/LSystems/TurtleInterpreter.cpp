@@ -128,22 +128,14 @@ void ATurtleInterpreter::PopTurtleState() {
 
 void ATurtleInterpreter::SetVertical() {
 	FVector turtleWorldLeft = CurrentRotation.RotateVector(-FVector::RightVector).GetSafeNormal();
-	FVector turtleWorldProjX = turtleWorldLeft.ProjectOnToNormal(-FVector::ForwardVector);
+	FVector turtleWorldProjX = turtleWorldLeft.ProjectOnToNormal(FVector::UpVector);
 	FVector turtleWorldProjY = turtleWorldLeft.ProjectOnToNormal(-FVector::RightVector);
 
 	FVector turtleWorldProjHorizontal = turtleWorldProjX + turtleWorldProjY;
 	turtleWorldProjHorizontal = turtleWorldProjHorizontal.GetSafeNormal();
 
-	FQuat rotationToHorizontalPlane = FQuat::FindBetweenNormals(turtleWorldProjHorizontal, turtleWorldLeft);
-	CurrentRotation *= rotationToHorizontalPlane;
-	CurrentRotation.Normalize();
-	/*
-	FRotator turtleRotator = FRotator(CurrentRotation);
-	turtleRotator.Roll = 0;
-	CurrentRotation = turtleRotator.Quaternion();
-	*/
-
-	
+	float angleToRoll = FMath::Acos(FVector::DotProduct(turtleWorldLeft, turtleWorldProjHorizontal));
+	RollLeft(angleToRoll);
 }
 
 void ATurtleInterpreter::ConstructBranch(float length) {

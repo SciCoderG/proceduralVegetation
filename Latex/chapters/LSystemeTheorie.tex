@@ -11,12 +11,17 @@ Eine formale Definition eines auf Zeichenketten arbeitenden Ersetzungssystems wi
 \newtheorem{defKontextfreieGrammatik}{Kontextfreie Grammatik:}[chapter]
 \begin{defKontextfreieGrammatik}
 	Eine kontextfreie Grammatik G ist ein Tupel G = $(V, N, P, \omega)$ bestehend aus:
-	\begin{enumerate}
-		\item $V$ -- einer nichtleeren, endlichen Menge von Buchstaben (Alphabet).
-		\item $N$ -- einer endlichen Menge von Variablen.
-		\item $P$ -- einer endlichen Menge von Produktionsregeln in der Form $P: A \rightarrow \alpha$ mit $A \in N$ und $\alpha \in (V \cup N )^*$.
-		\item $\omega \in N$ -- dem Axiom, Startsymbol der Grammatik.
-	\end{enumerate}
+	
+	\begin{description}[labelindent]
+		\item[\boldmath$V$] Einer nichtleeren, endlichen Menge von Buchstaben (Alphabet).\\
+		
+		\item[\boldmath$N$] Einer endlichen Menge von Variablen.\\
+		
+		\item[\boldmath$P$] Einer endlichen Menge von Produktionsregeln in der Form $P: A \rightarrow \alpha$ mit $A \in N$ und $\alpha \in (V \cup N )^*$.\\
+		
+		\item[\boldmath$\omega \in N$] Dem Axiom, Startsymbol der Grammatik.\\
+		
+	\end{description}
 	\cite[S.343]{ThI:14}
 \end{defKontextfreieGrammatik}
 
@@ -35,14 +40,18 @@ Diese Arbeit beschränkt sich auf die Behandlung deterministischer, kontextfreie
 Ein D0L-System kann wie folgt definiert werden:
 \newtheorem{defD0LSystem}{D0L-System:}[chapter]
 \begin{defD0LSystem}
-	Ein D0L-System ist ein Tupel G = $(V, P, \omega)$, bestehend aus
-	\begin{enumerate}
-		\item $V$ -- einem nichtleeren, endlichen Alphabet.
-		\item $P$ -- einer endlichen Menge von Produktionsregeln in der Form $P: a \rightarrow b$ mit $a \in V$ und $b \in V^*$. $a$ wird als Vorgänger, $b$ als Nachfolger bezeichnet. Ist für einen Buchstaben $x \in V$ keine explizite Produktionsregel angegeben, wird die Identitätsproduktion $P: x \rightarrow x$ angenommen -- der Buchstabe wird durch sich selbst ersetzt.
-		\item $\omega \in V^+$ -- dem Axiom, Startsymbol der Grammatik.
-	\end{enumerate}
-Die Menge $V^+$ ist die Menge aller nichtleeren Wörter über $V$. \cite[S.4]{ABOP:04} 
+	Ein D0L-System ist ein Tupel G = $(V, P, \omega)$, bestehend aus:
+	
+	\begin{description}[labelindent]
+		\item[\boldmath$V$] Einem nichtleeren, endlichen Alphabet.\\
+		
+		\item[\boldmath$P$] Einer endlichen Menge von Produktionsregeln in der Form $P: a \rightarrow b$ mit $a \in V$ und $b \in V^*$. $a$ wird als Vorgänger, $b$ als Nachfolger bezeichnet. Ist für einen Buchstaben $x \in V$ keine explizite Produktionsregel angegeben, wird die Identitätsproduktion $P: x \rightarrow x$ angenommen -- der Buchstabe wird durch sich selbst ersetzt.\\
+		
+		\item[\boldmath$\omega \in V^+$]  Dem Axiom, Startsymbol der Grammatik.		
+	\end{description}
+\cite[S.4]{ABOP:04} 
 \end{defD0LSystem}
+Die Menge $V^+$ ist die Menge aller nichtleeren Wörter über $V$.  
 
 Die Ableitung eines Wortes entspricht der Ersetzung aller Buchstaben anhand der Produktionsregeln. Ein Wort kann mehrmals abgeleitet werden. 
 
@@ -67,8 +76,8 @@ p_4 &  : b_l &\rightarrow& a_l
 Die Entwicklung einer Anfangszelle $a_r$ (Axiom $\omega : a_r$) läuft daraufhin wie in Abbildung \ref{fig:AnabaenaAbleitung} dargestellt ab.
 \begin{figure} [hbtp]
 	\centering
-	\includegraphics[height=0.3\textheight]{images/AnabaenaAbleitung.png}
-	\caption{n-fache Ableitung der Anfangszelle $a_r$ anhand der Produktionsregeln $p_1 ... p_4$ aus Gleichung \ref{eq:ProdAnabaena}. Eigene Abbildung anhand \cite[S.4]{ABOP:04}}
+	\includegraphics[height=0.25\textheight]{images/AnabaenaAbleitung.png}
+	\caption{n-fache Ableitung der Anfangszelle $a_r$ anhand der Produktionsregeln $p_1 ... p_4$ aus Gleichung \ref{eq:ProdAnabaena}. Eigene Abbildung auf Basis von \cite[S.4]{ABOP:04}.}
 	\label{fig:AnabaenaAbleitung}
 \end{figure}
 
@@ -80,13 +89,16 @@ Während in der Definition von Modulen numerische Konstanten verwendet werden, w
 
 \newtheorem{defParametrischeLSysteme}{Parametrisches L-System:}[section]
 \begin{defParametrischeLSysteme}
-	Ein Parametrisches L-System ist ein Tupel G = $(V, \Sigma, P, \omega)$, bestehend aus
-	\begin{enumerate}
-		\item $V$ -- einem nichtleeren, endlichen Alphabet.
-		\item $\Sigma$ -- einer Menge der Variablen.
-		\item $P$ -- einer endlichen Menge von Produktionsregeln $P : (V\times \Sigma^*) \rightarrow (V\times E(\Sigma))^*$
-		\item $\omega \in M^+$ mit $M =(V \times \Re^*)$ -- einem Axiom in Form eines nichtleeren, parametrischen Wortes.
-	\end{enumerate}
+	Ein Parametrisches L-System ist ein Tupel G = $(V, \Sigma, P, \omega)$, bestehend aus:
+	\begin{description}[labelindent]
+		\item[\boldmath$V$] Einem nichtleeren, endlichen Alphabet.\\
+		
+		\item[\boldmath$\Sigma$] Einer Menge der Variablen.\\
+		
+		\item[\boldmath$P$] Einer endlichen Menge von Produktionsregeln $P : (V\times \Sigma^*) \rightarrow (V\times E(\Sigma))^*$\\
+		
+		\item[\boldmath$\omega \in M^+$] mit $M =(V \times \Re^*)$ -- einem Axiom in Form eines nichtleeren, parametrischen Wortes.
+	\end{description}
 \cite[S.41]{ABOP:04}
 \end{defParametrischeLSysteme}
 
@@ -107,7 +119,7 @@ Das Alphabet $V$ und die Menge der Variablen $\Sigma$ gehen implizit aus der Ang
 
 \begin{figure} [hbtp]
 	\centering
-	\includegraphics[height=0.4\textheight]{images/ParamLSystemBeispiel.png}
+	\includegraphics[height=0.3\textheight]{images/ParamLSystemBeispiel.png}
 	\caption{n-fache Ableitung des Axioms $A(1,1)$ anhand der Produktionsregeln aus Gleichung \ref{eq:ProdParamLSystem}. Die Ersetzung des Zeichens $C$ erfolgt anhand der impliziten Identitätsproduktion. Eigene Abbildung.}
 	\label{fig:ParamLSystemBeispiel}
 \end{figure}
@@ -118,45 +130,46 @@ Um die Ergebnisse von L-Systemen in Form von dreidimensionalen Objekten zu visua
 
 \subsection{Turtle-Interpretation}
 
-Die Turtle-Interpretation im zweidimensionalen Raum entspricht der Vorstellung einer Turtle\footnote{\glqq Turtle\grqq{} -- englisch für \glqq Schildkröte\grqq.} auf einem Blatt Papier. Die Turtle besitzt eine Position $\overrightarrow{P}$ welche durch die kartesischen Koordinaten $(p_1,p_2)$ beschrieben wird sowie einen Einheitsvektor $\overrightarrow{H}$ mit kartesischen Koordinaten $(h_1, h_2)$. $\overrightarrow{P}$ beschreibt die Position der Turtle auf der Ebene und $\overrightarrow{H}$ entspricht der Blickrichtung (Heading) der Turtle. Der Zustand $(\overrightarrow{P},\overrightarrow{H})$ einer Turtle wird somit vollständig durch die Position und Blickrichtung definiert. \cite[S.2]{Turtle:04} Die Turtle kann drei Aktionen durchführen, welche durch die folgenden Symbole dargestellt werden:
+Die Turtle-Interpretation im zweidimensionalen Raum entspricht der Vorstellung einer Turtle\footnote{\glqq Turtle\grqq{} -- englisch für \glqq Schildkröte\grqq.} auf einem Blatt Papier. Die Turtle besitzt eine Position $\overrightarrow{P}$ sowie einen Einheitsvektor $\overrightarrow{H}$ in kartesischen Koordinaten. $\overrightarrow{P}$ beschreibt die Position der Turtle auf der Ebene und $\overrightarrow{H}$ entspricht der Blickrichtung (Heading) der Turtle. Der Zustand $(\overrightarrow{P},\overrightarrow{H})$ einer Turtle wird somit vollständig durch die Position und Blickrichtung definiert. \cite[S.2]{Turtle:04} Die Turtle kann drei Aktionen durchführen, welche durch die folgenden Symbole dargestellt werden:
 
 \begin{description}[labelindent]
-	\item[$F(a)$] Die Turtle bewegt sich um $a>0$ in die Richtung der aktuellen Blickrichtung. Die neue Position ist  $\overrightarrow{P'} = (p_1',p_2')$ mit:
+	\item[\boldmath$F(l)$] Die Turtle bewegt sich um $l>0$ in die Richtung der aktuellen Blickrichtung. Die neue Position ist  $\overrightarrow{P'}$ mit:
 	\begin{equation}
 	\begin{array}{ll}
-	p_1' & = p_1 + h_1 * a\\
-	p_2' & = p_2 + h_2 * a
+	\overrightarrow{P'} & = \overrightarrow{P} + \overrightarrow{H} * l
 	\end{array}
 	\end{equation} 
-	Zwischen der alten Position $\overrightarrow{P}$ und der neuen Position $\overrightarrow{P'}$ wird eine Linie gezeichnet.
+	Zwischen der alten Position $\overrightarrow{P}$ und der neuen Position $\overrightarrow{P'}$ wird eine Linie gezeichnet.\\
 	
-	\item[$+(a)$]  Die Turtle dreht sich um den Winkel $a$ nach links. Die neue Blickrichtung ist $\overrightarrow{H'} = (h_1', h_2')$ mit:
+	\item[\boldmath$+(d)$]  Die Turtle dreht sich um den Winkel $d$ nach links. Die neue Blickrichtung ist $\overrightarrow{H'}$ mit:
 	\begin{equation}
-	(h_1', h_2') = (h_1, h_2) *
+	\overrightarrow{H'} = 
+	\setlength\arraycolsep{10pt}
 	\begin{pmatrix}
-	cos(a) & sin(a)\\
-	-sin(a) & cos(a)
+	cos(d) & -sin(d)\\
+	sin(d) & cos(d)
 	\end{pmatrix}
+	* \overrightarrow{H}
 	\end{equation} 
 	
-	\item[$-(a)$]  Die Turtle dreht sich um den Winkel $a$ nach rechts. Die neue Blickrichtung ist $\overrightarrow{H'} = (h_1', h_2')$ mit:
+	\item[\boldmath$-(d)$]  Die Turtle dreht sich um den Winkel $d$ nach rechts. Die neue Blickrichtung ist $\overrightarrow{H'}$ mit:
 	\begin{equation}
-	(h_1', h_2') = (h_1, h_2) *
+	\overrightarrow{H'} = 
+	\setlength\arraycolsep{10pt}
 	\begin{pmatrix}
-	cos(-a) & sin(-a)\\
-	-sin(-a) & cos(-a)
+	cos(d) & sin(d)\\
+	-sin(d) & cos(d)
 	\end{pmatrix}
+	* \overrightarrow{H}
 	\end{equation} 
 	
 \end{description}
 \cite[S.4,46]{Turtle:04} \cite[S.7]{ABOP:04}
-Die Symbole \glqq+\grqq{} und \glqq-\grqq{} werden sowohl im Alphabet eines L-Systems als auch bei arithmetischen Operationen in Parameterangaben verwendet, ihre Bedeutung ist abhängig vom Kontext, in welchem sie angewendet werden. \cite[S.46]{ABOP:04}
+Die Symbole \glqq+\grqq{} und \glqq-\grqq{} werden sowohl im Alphabet eines L-Systems als auch bei arithmetischen Operationen in Parameterangaben verwendet, ihre Bedeutung ist abhängig vom Kontext, in dem sie angewendet werden. \cite[S.46]{ABOP:04}
 
 Die grafische Turtle-Interpretation einer Zeichenkette, die durch ein L-System zurückgegeben wird, sind somit die Linien, die auf Grundlage der definierten Symbole gezeichnet werden. 
 
-Beispiel: Mithilfe von L-Systemen und einer Turtle-Interpretation können Fraktale, in diesem Beispiel sogenannte Koch-Kurven visualisiert werden. Diese Kurven bestehen aus einem Initiator -- einer einfachen, zweidimensionalen Form -- und einem Generator, der einem offenen Polygonzug entspricht. In jedem Ableitungsschritt, angefangen bei dem Initiator, wird jede gerade Linie durch den Generator ersetzt. \cite[S.39]{Mandelbrot:16} 
-
-Dieses Verhalten kann nun auf ein L-System abgebildet werden: Der Initiator entspricht dem Axiom und der Generator einer Produktionsregel des L-Systems. Der in Abbildung \ref{fig:InitiatorGenerator} dargestellte Initiator und Generator entsprechen der Turtle-Interpretation des folgenden L-Systems:
+Beispiel: Mithilfe von L-Systemen und einer Turtle-Interpretation können Fraktale, in diesem Beispiel sogenannte Koch-Kurven, visualisiert werden. Diese Kurven bestehen aus einem Initiator -- einer einfachen, zweidimensionalen Form -- und einem Generator, der einem offenen Polygonzug entspricht. In jedem Ableitungsschritt, angefangen bei dem Initiator, wird jede gerade Linie durch den Generator ersetzt. \cite[S.39]{Mandelbrot:16} 
 
 \begin{figure} [hbtp]
 	\centering
@@ -164,6 +177,8 @@ Dieses Verhalten kann nun auf ein L-System abgebildet werden: Der Initiator ents
 	\caption{Links: Initiator der Koch-Kurve in Form eines einfachen Quadrats. Rechts: Generator der Koch-Kurve in Form eines offenen Polygonzugs. Eigene Abbildung.}
 	\label{fig:InitiatorGenerator}
 \end{figure}
+
+Dieses Verhalten kann nun auf ein L-System abgebildet werden: Der Initiator entspricht dem Axiom und der Generator einer Produktionsregel des L-Systems. Der in Abbildung \ref{fig:InitiatorGenerator} dargestellte Initiator und Generator entsprechen der Turtle-Interpretation des folgenden L-Systems:
 
 \begin{equation}
 \begin{array}{llll}
@@ -213,20 +228,20 @@ Die bisherigen Definitionen von L-Systemen und die korrespondierende Turtle-Inte
 Folgende Operationen werden eingeführt:
 
 \begin{description}[labelindent]
-	\item[$\text{[}$] Der aktuelle Zustand der Turtle in Form ihrer Position und Rotation wird auf einem Kellerspeicher abgelegt. \\
+	\item[\textbf{[}] Der aktuelle Zustand der Turtle in Form ihrer Position und Rotation wird auf einem Kellerspeicher abgelegt. \\
 	
-	\item[$ \text{]} $] Der oberste Zustand der Turtle wird vom Kellerspeicher genommen. Die aktuelle Position und Rotation der Turtle wird auf die im Zustand gespeicherte Position und Rotation gesetzt. Es wird keine Linie zwischen der alten und neuen Position gezeichnet.
+	\item[\textbf{]}] Der oberste Zustand der Turtle wird vom Kellerspeicher genommen. Die aktuelle Position und Rotation der Turtle wird auf die im Zustand gespeicherte Position und Rotation gesetzt. Es wird keine Linie zwischen der alten und neuen Position gezeichnet.
 \end{description}
 	\cite[S.24]{ABOP:04} 
 
-Diese Erweiterung erlaubt es mehrere Linien zu zeichnen, die von einem einzigen Punkt ausgehen -- die Visualisierung von Abzweigungen ist somit möglich. Die Operatoren [ und ] markieren den Anfang und das Ende eines Zweiges.
+Diese Erweiterung erlaubt es mehrere Linien zu zeichnen, die von einem einzigen Punkt ausgehen -- die Visualisierung von Abzweigungen ist somit möglich. Die Operatoren \textbf{[} und \textbf{]} markieren den Anfang und das Ende eines Zweiges.
 
 Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich simple, Baum- oder Strauch-ähnliche Strukturen bilden. Die Turtle-Interpretation folgt der in \ref{desc:TurtleWithoutParams} beschriebenen Interpretation mit fester Strichlänge $l$ und festem Drehwinkel $d$.
 
 
 \begin{figure} [hbtp]
 	\centering
-	\begin{subfigure}[t]{.4\textwidth}
+	\begin{subfigure}[t]{.35\textwidth}
 		\includegraphics[width=\linewidth]{images/Branching1_N4L18D25.png}
 		\caption{$n=4$, $l=18$, $d=25\degree$\\ \\
 			$\begin{array}{ll}
@@ -239,7 +254,7 @@ Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich simple, B
 		\label{fig:Branching1L18D25}
 	\end{subfigure}
 	\hspace{.1\textwidth}
-	\begin{subfigure}[t]{.4\textwidth}
+	\begin{subfigure}[t]{.35\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/Branching2_N5L15D25.png}
 		\caption{$n=5$, $l=15$, $d=25\degree$\\ \\
@@ -254,50 +269,137 @@ Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich simple, B
 	\end{subfigure}
 
 	\caption{n-fache Ableitung der Axiome anhand der Produktionsregeln, visualisiert mithilfe der Turtle-Interpretation. Eigene Abbildung.}
-	\label{fig:KochkurveAbleitung}
+	\label{fig:BranchingLSystems}
 \end{figure}
 
 \subsection{Erweiterung der Turtle-Interpretation in den dreidimensionalen Raum}
 
 Die bisherige Definition eines Turtle-Zustands mithilfe einer zweidimensionalen Position und einer Blickrichtung genügt nicht, um Visualisierungen von L-Systemen in Form von dreidimensionalen Objekten zu ermöglichen. Sowohl die Zustands-Definition als auch die interpretierten Operationen müssen angepasst und erweitert werden.
 
-Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{P}$ sowie drei Einheitsvektoren $\overrightarrow{H}$, $\overrightarrow{U}$ und $\overrightarrow{L}$, welche die Orientierung der Turtle im Raum in kartesischen Koordinaten beschreiben. Die Orientierungsvektoren sind orthogonal zueinander und bilden somit das lokale Koordinatensystem der Turtle.
+Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{P}$ sowie eine $3\times3$ Rotationsmatrix $\boldsymbol{R}$, welche die Orientierung der Turtle im Raum beschreibt. Die Einheitsvektoren $H$, $L$ und $U$  sind orthogonal zueinander und bilden das lokale Koordinatensystem der Turtle.
 
 \begin{description}[5cm]
-		\item[\boldmath$\overrightarrow{H}$]Entspricht der Blickrichtung (Heading) der Turtle. Eine Rotation um diesen Vektor entspricht der Rotationsmatrix \\
+		\item[\boldmath$\overrightarrow{H}$]Die Blickrichtung (Heading-Vektor) der Turtle. Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{H}}$:\\
 		\begin{equation}
+		R_{\overrightarrow{H}}(d) = 
+		\setlength\arraycolsep{10pt}
 		\begin{pmatrix}
-		cos(d) & sin(d) & 0 \\
-		-sin(d)& cos(d) & 0 \\
-		0 & 0 & 1
+		1	 	& 0			& 0 \\
+		0		& cos(d)	& sin(d) \\
+		0 		& -sin(d)	& cos(d)
 		\end{pmatrix}	
 		\label{eq:rotH}
 		\end{equation} 
-		\item[\boldmath$\overrightarrow{U}$]Entspricht dem Vektor, der im lokalen Koordinatensystem der Turtle nach oben zeigt (Up).\\
+		
+		\item[\boldmath$\overrightarrow{L}$] Der Vektor, der im lokalen Koordinatensystem der Turtle nach links zeigt (Left-Vektor). Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{L}}$:\\
 		\begin{equation}
+		R_{\overrightarrow{L}}(d) = 
+		\setlength\arraycolsep{10pt}
 		\begin{pmatrix}
-		cos(d) & sin(d) & 0 \\
-		-sin(d)& cos(d) & 0 \\
-		0 & 0 & 1
+		cos(d) 	& 0		 	& sin(d) \\
+		0		& 1			& 0 \\
+		-sin(d)	& 0 		&  cos(d)
+		\end{pmatrix}	
+		\label{eq:rotL}
+		\end{equation} 
+		
+		\item[\boldmath$\overrightarrow{U}$]Der Vektor, der im lokalen Koordinatensystem der Turtle nach oben zeigt (Up-Vektor). Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{U}}$:\\
+		\begin{equation}
+		R_{\overrightarrow{U}}(d) = 
+		\setlength\arraycolsep{10pt}
+		\begin{pmatrix}
+		cos(d) 	& -sin(d) 	& 0 \\
+		sin(d)	& cos(d) 	& 0 \\
+		0 		& 0 		& 1
 		\end{pmatrix}	
 		\label{eq:rotU}
 		\end{equation} 
-		\item[\boldmath$\overrightarrow{L}$]Entspricht dem Vektor, der im lokalen Koordinatensystem der Turtle nach links zeigt (Left).
+		
+	
 \end{description}
+\cite[S.19]{ABOP:04} \cite[S.69]{Deussen:05} \\
 
-\cite[S.19]{ABOP:04}
+Die erweiterte Turtle-Interpretation verarbeitet folgende Symbole:
 
-
-
-\begin{description}[5cm]
-	\item[\boldmath$+(d)$ und $-(d)$]  Die Turtle dreht sich um den \\
-	
-	\item[\boldmath$/(d)$ und $\backslash(d)$]test \\
-	
-	\item[\boldmath
-	$
-	\begin{array}{cc}
-	+(d)\\-(d)
+\begin{description}[labelindent]
+	\item[\boldmath$F(l)$]  Die bewegt sich um $l>0$ in Blickrichtung $\overrightarrow{H}$. Die neue Position ist $\overrightarrow{P'}$ mit:
+	\begin{equation}
+	\begin{array}{ll}
+	\overrightarrow{P'} & = \overrightarrow{P} + \boldsymbol{R} * \overrightarrow{H} * l
 	\end{array}
-	$] Entspricht dem Vektor, der im lokalen Koordinatensystem der Turtle nach links zeigt (Left).
+	\end{equation} 
+	Zwischen der alten Position $P$ und der neuen Position $P'$ wird eine Linie gezeichnet. \\
+	
+	\item[\boldmath$+(d)$]  Die Turtle dreht sich nach links um den Winkel $d$. Die neue Rotationsmatrix entspricht $\boldsymbol{R'}$ mit:\\
+	\begin{equation}
+	\begin{array}{ll}
+	\boldsymbol{R'} & =  \boldsymbol{R} * R_{\overrightarrow{U}}(d)
+	\end{array}
+	\end{equation} 
+	
+	\item[\boldmath$-(d)$]  Die Turtle dreht sich nach rechts um den Winkel $d$. Die neue Rotationsmatrix entspricht $\boldsymbol{R'}$ mit:\\
+	\begin{equation}
+	\begin{array}{ll}
+	\boldsymbol{R'} & =  \boldsymbol{R} * R_{\overrightarrow{U}}(-d)
+	\end{array}
+	\end{equation} 
+	
+	\item[\boldmath$\&(d)$]  Die Turtle neigt sich nach unten um den Winkel $d$. Die neue Rotationsmatrix entspricht $\boldsymbol{R'}$ mit:\\
+	\begin{equation}
+	\begin{array}{ll}
+	\boldsymbol{R'} & =  \boldsymbol{R} * R_{\overrightarrow{L}}(d)
+	\end{array}
+	\end{equation}
+	
+	\item[\boldmath$\wedge(d)$]  Die Turtle neigt sich nach oben um den Winkel $d$. Die neue Rotationsmatrix entspricht $\boldsymbol{R'}$ mit:\\
+	\begin{equation}
+	\begin{array}{ll}
+	\boldsymbol{R'} & =  \boldsymbol{R} * R_{\overrightarrow{L}}(-d)
+	\end{array}
+	\end{equation}
+	
+	\item[\boldmath$\backslash(d)$]  Die Turtle rollt sich nach links um den Winkel $d$. Die neue Rotationsmatrix entspricht $\boldsymbol{R'}$ mit:\\
+	\begin{equation}
+	\begin{array}{ll}
+	\boldsymbol{R'} & =  \boldsymbol{R} * R_{\overrightarrow{H}}(d)
+	\end{array}
+	\end{equation}
+	
+	\item[\boldmath$/(d)$]  Die Turtle rollt sich nach rechts um den Winkel $d$. Die neue Rotationsmatrix entspricht $\boldsymbol{R'}$ mit:\\
+	\begin{equation}
+	\begin{array}{ll}
+	\boldsymbol{R'} & =  \boldsymbol{R} * R_{\overrightarrow{H}}(-d)
+	\end{array}
+	\end{equation}
 \end{description}
+\cite[S.19]{ABOP:04} \cite[S.69]{Deussen:05}
+
+Mithilfe der Turtle-Interpretation im dreidimensionalen Raum können nun L-Systeme visualisiert werden, die Baumstrukturen ähneln. Ein Beispiel dafür ist das L-System aus Gleichung \ref{eq:3DTreeP61B_Prod}.
+
+\begin{equation}
+	\begin{array}{llll}
+	\omega :&  /(45)\text{ }A \\
+	p_1 :&  A &\rightarrow & F(50)\text{ }[\&(a)F(50)A]\text{ }/(d)\text{ }[\&(a)F(50)A]\text{ }/(d)\text{ }[\&(a)F(50)A] \\
+	p_2 :& F(l) &\rightarrow & F(l*l_r)
+	\end{array}
+	\label{eq:3DTreeP61B_Prod}
+\end{equation}
+
+	\cite[S.60]{ABOP:04} 
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.7\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/3DTreeP61B_Angle_18_95.png}
+		\caption{$n=8$, $d=137.5\degree$, $a=18.95\degree$, $l_r=1.3$}
+		\label{fig:3DTreeP61B_Angle_18_95}
+	\end{subfigure}
+	\begin{subfigure}[t]{.7\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/3DTreeP61B_Angle_36.png}
+		\caption{$n=8$, $d=137.5\degree$, $a=36.0\degree$, $l_r=1.3$}
+		\label{fig:3DTreeP61B_Angle_36}
+	\end{subfigure}
+	\caption{n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:3DTreeP61B_Prod}, visualisiert mithilfe der Turtle-Interpretation. Eigene Abbildung.}
+	\label{fig:BranchingLSystems}
+\end{figure}
