@@ -9,7 +9,7 @@ Mithilfe einer Erweiterung in den dreidimensionalen Raum und Nachbearbeitung der
 
 \section{Aufbau}
 
-Der Algorithmus verarbeitet eine Menge von Einflusspunkten $S$ und baut darauf basierend einen gerichteten Baum $G = \langle V,E\rangle$ auf. Folgende Begriffe werden in diesem Zusammenhang verwendet: 
+Der Algorithmus verarbeitet eine Menge von Einflusspunkten $S$ und baut darauf basierend einen gerichteten Baum-Graphen $G = \langle V,E\rangle$ auf. Folgende Begriffe werden in diesem Zusammenhang verwendet: 
 
 \begin{description}[labelindent]
 	\item[\boldmath$V$] Die Menge der Knotenpunkte. Jeder Knotenpunkt entspricht einem Punkt $\overrightarrow{p_v}$ im dreidimensionalen Raum. \cite[S.358]{ThI:14}\\
@@ -35,34 +35,47 @@ Der Algorithmus benötigt die folgenden Eingaben:
 \end{description}
 \cite[Abschn. 2]{SpaceColonizationAlgorithm:07}
 \section{Ablauf}
-Zu Beginn des Algorithmus werden $N$ Einflusspunkte in einem vorgegebenen Bereich generiert. Dieser Einflussbereich signalisiert die Verfügbarkeit von Raum, in dem der Baum wachsen kann.  
+Zu Beginn des Algorithmus werden $N$ Einflusspunkte in einem vorgegebenen Bereich generiert. Dieser Einflussbereich signalisiert die Verfügbarkeit von Raum, in dem der Baum wachsen kann.  \cite[Abschn. 2]{SpaceColonizationAlgorithm:07}
 
-Daraufhin wird der Baum iterativ aufgebaut und durchläuft in jeder Iteration die folgenden Schritte:
+Daraufhin wird der Baum iterativ aufgebaut und durchläuft in jeder Iteration die folgenden Schritte: 
 
 \begin{description}[labelindent]
-	\item[\boldmath$1.$] Für jeden Einflusspunkt wird der am nächsten liegende Knotenpunkt $v\in V$ bestimmt und einer zugeordneten Menge $S(v)$ hinzugefügt. $S(v)$ beinhaltet die Einflusspunkte, die einen Einfluss auf den Knotenpunkt ausüben.\\
+	\item[\boldmath$1.$] Für jeden Einflusspunkt in $S$ wird der am nächsten liegende Knotenpunkt $v\in V$ bestimmt. Befindet sich $v$ innerhalb des Einflussradius $d_i$ um den Einflusspunkt herum, wird dieser einer zugeordneten Menge $S(v)$ hinzugefügt. $S(v)$ beinhaltet somit alle Einflusspunkte, die einen Einfluss auf den Knotenpunkt ausüben. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \label{alg:SCA_1}\\
 	
-	\item[\boldmath$2.$] Befinden sich Elemente in $S(v)$, wird ein neuer Knotenpunkt $v'$ als Nachfolger von $v$ erstellt. Alle Punkte in $S(v)$ beeinflussen $v'$ in gleichem Maße, die neue Position $\overrightarrow{p_{v'}}$ des Knotenpunkts berechnet sich somit wie folgt:
+	\item[\boldmath$2.$] Befinden sich Elemente in $S(v)$, wird ein neuer Knotenpunkt $v'$ den Nachfolgern von $v$ hinzugefügt und $v$ als Vorgänger von $v'$ eingetragen.  Alle Punkte in $S(v)$ beeinflussen $v'$ in gleichem Maße, die neue Position $\overrightarrow{p_{v'}}$ des Knotenpunkts berechnet sich somit wie folgt:
 	
 	\begin{equation}
 	\begin{array}{ll}
-	\overrightarrow{p_{v'}} & = \overrightarrow{p_v} + D * \dfrac{\overrightarrow{n} }{\lVert\overrightarrow{n}\rVert} \text{  mit  } \overrightarrow{n} = \sum\limits_{s \in S(v)}\dfrac{p_s - p_v}{\lVert p_s - p_v \rVert}
+	\overrightarrow{p_{v'}} & = \overrightarrow{p_v} + D * \dfrac{\overrightarrow{n} }{\lVert\overrightarrow{n}\rVert} \text{  mit  } \overrightarrow{n} = \sum\limits_{s \in S(v)}\dfrac{\overrightarrow{p_s} - \overrightarrow{p_v}}{\lVert \overrightarrow{p_s} - \overrightarrow{p_v} \rVert}
 	\end{array}
 	\end{equation} 
 	
-	\item[\boldmath$3.$] testestes testestes testestes testestes testestes testestes testestes testestes testestes 
+	\cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \label{alg:SCA_2}\\
+	
+	\item[\boldmath$3.$] Für jeden Einflusspunkt wird überprüft, ob sich ein Knotenpunkt innerhalb des Minimalradius $d_k$ befindet. Existiert ein solcher Knotenpunkt, wird der Einflusspunkt aus der Menge der Einflusspunkte $S$ entfernt. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \label{alg:SCA_3}
 \end{description}
+
+TODO: Ablauf des Algorithmus. als Bilder.
+
 
 \section{Modellierung von Baumstrukturen}
 
-Erweiterung des Space Colonization Algorithmus in den dreidimensionalen Raum
+Der Space Colonization Algorithmus liefert einen Baum-Graphen, der Knotenpunkte enthält, welche eine Position im dreidimensionalen Raum darstellen. Um diesen Graphen zu visualisieren muss der 
 
-Ablauf der Prozedur:
-Generierung der Form
-Verarbeitung der Anziehungspunkte
-Abzweigungswinkel abflachen
-Visualisierung mithilfe von Zylindern
-Berechnung der Zylinderringbreite
+Visualisierung der Ergebnisse.
+
+
+\begin{description}[labelindent]
+	\item[\boldmath$1.$] Generierung der Form \\
+	
+	\item[\boldmath$2.$] Verarbeitung der Anziehungspunkte\\
+	
+	\item[\boldmath$3.$] Abzweigungswinkel abflachen \\
+	
+	\item[\boldmath$4.$]Visualisierung mithilfe von Zylindern \\
+	
+	\item[\boldmath$5.$]Berechnung der Zylinderringbreite
+\end{description}
 
 
 Was wird normalerweise noch vorgeschlagen, hier aber nicht verwirklicht?
