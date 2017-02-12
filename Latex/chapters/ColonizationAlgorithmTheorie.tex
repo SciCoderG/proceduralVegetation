@@ -1,9 +1,74 @@
 \chapter{Space Colonization Algorithmus}
 
-\section{Space Colonization Algorithmus im zweidimensionalen Raum}
+TODO: Zusammenfassung Space Colonization Algorithm.
 
-Der Space Colonization Algorithmus wurde ursprünglich zur Modelierung und Visualisierung von Blattvenen vorgeschlagen. Dieser basiert auf der Wirkung des Pflanzenhormons 
+\section{Ursprung}
+Der Space Colonization Algorithmus wurde ursprünglich zur Modellierung und Visualisierung von Blattvenen vorgeschlagen und basiert auf der Wirkung des Pflanzenhormons Auxin. Dieser Hormonstoff entsteht im Blatt und wird von bereits existierenden Blattvenen angezogen, der resultierende Hormonstrom führt zur Bildung von neuen Venen im Blatt. Die Simulation dieses Vorgangs führt zu realitätsnahen Venenmustern. \cite[Abschn. 2.5]{LeafVenation:05}
+
+Mithilfe einer Erweiterung in den dreidimensionalen Raum und Nachbearbeitung der Resultate kann eine Vielfalt von Baum- und Strauchstrukturen generiert werden. \cite[Abschn. 1]{SpaceColonizationAlgorithm:07}
+
+\section{Aufbau}
+
+Der Algorithmus verarbeitet eine Menge von Einflusspunkten $S$ und baut darauf basierend einen gerichteten Baum $G = \langle V,E\rangle$ auf. Folgende Begriffe werden in diesem Zusammenhang verwendet: 
+
+\begin{description}[labelindent]
+	\item[\boldmath$V$] Die Menge der Knotenpunkte. Jeder Knotenpunkt entspricht einem Punkt $\overrightarrow{p_v}$ im dreidimensionalen Raum. \cite[S.358]{ThI:14}\\
+	
+	\item[\boldmath$E$] Die Menge der Kanten, welche die Vorgänger-Nachfolger-Beziehungen zwischen den Knotenpunkten darstellt. Eine Kante $e \in E$ wird als Tupel $e = (v_1, v_2)$ mit $v_1, v_2 \in V$ dargestellt. Jeder Knoten besitzt maximal einen Vorgänger und eine endliche Menge von Nachfolgern.\cite[S.358]{ThI:14}\\
+	
+	\item[\boldmath$Wurzel$] Eine Wurzel ist ein Knoten $v \in V$ ohne einen Vorgänger. Der Baum besitzt genau eine Wurzel. \cite[S.358]{ThI:14}\\
+	
+	\item[\boldmath$Grad$] Der Grad eines Knotens ist definiert als die Anzahl seiner Nachfolger. \cite[S.29]{AlgoDat:14}\\
+	
+	\item[\boldmath$Tiefe$] Die Tiefe eines Knotens ist definiert als die Länge der Folge von Vorgängern, die durchlaufen werden muss, bis die Wurzel erreicht wurde. Die Wurzel besitzt die Tiefe $0$. \cite[S.30]{AlgoDat:14}
+	
+\end{description}
+Der Algorithmus benötigt die folgenden Eingaben:
+
+\begin{description}[labelindent]
+	\item[\boldmath$d_i$] Der Einflussradius. Einflusspunkte prägen den Aufbau des Baums nur, wenn sich Knotenpunkte innerhalb dieses Radius befinden.\\
+	
+	\item[\boldmath$d_k$] Der Minimalradius. Befindet sich ein Knotenpunkt innerhalb des Minimalradius um einen Einflusspunkt, wird dieser aus der Menge der Einflusspunkte $S$ entfernt.\\
+	
+	\item[\boldmath$D$] Die Schrittweite. Jeder neu generierte Knotenpunkt wird in diesem Abstand zu seinem Vorgänger positioniert.
+
+\end{description}
+\cite[Abschn. 2]{SpaceColonizationAlgorithm:07}
+\section{Ablauf}
+Zu Beginn des Algorithmus werden $N$ Einflusspunkte in einem vorgegebenen Bereich generiert. Dieser Einflussbereich signalisiert die Verfügbarkeit von Raum, in dem der Baum wachsen kann.  
+
+Daraufhin wird der Baum iterativ aufgebaut und durchläuft in jeder Iteration die folgenden Schritte:
+
+\begin{description}[labelindent]
+	\item[\boldmath$1.$] Für jeden Einflusspunkt wird der am nächsten liegende Knotenpunkt $v\in V$ bestimmt und einer zugeordneten Menge $S(v)$ hinzugefügt. $S(v)$ beinhaltet die Einflusspunkte, die einen Einfluss auf den Knotenpunkt ausüben.\\
+	
+	\item[\boldmath$2.$] Befinden sich Elemente in $S(v)$, wird ein neuer Knotenpunkt $v'$ als Nachfolger von $v$ erstellt. Alle Punkte in $S(v)$ beeinflussen $v'$ in gleichem Maße, die neue Position $\overrightarrow{p_{v'}}$ des Knotenpunkts berechnet sich somit wie folgt:
+	
+	\begin{equation}
+	\begin{array}{ll}
+	\overrightarrow{p_{v'}} & = \overrightarrow{p_v} + D * \dfrac{\overrightarrow{n} }{\lVert\overrightarrow{n}\rVert} \text{  mit  } \overrightarrow{n} = \sum\limits_{s \in S(v)}\dfrac{p_s - p_v}{\lVert p_s - p_v \rVert}
+	\end{array}
+	\end{equation} 
+	
+	\item[\boldmath$3.$] testestes testestes testestes testestes testestes testestes testestes testestes testestes 
+\end{description}
+
+\section{Modellierung von Baumstrukturen}
+
+Erweiterung des Space Colonization Algorithmus in den dreidimensionalen Raum
+
+Ablauf der Prozedur:
+Generierung der Form
+Verarbeitung der Anziehungspunkte
+Abzweigungswinkel abflachen
+Visualisierung mithilfe von Zylindern
+Berechnung der Zylinderringbreite
 
 
-\section{Erweiterung in den dreidimensionalen Raum}
+Was wird normalerweise noch vorgeschlagen, hier aber nicht verwirklicht?
+Knoten-Dezimation
+Curve Subdivision für sanftere Kurven
+\section{Erweiterungen}
 
+Vorgeschlagene Erweiterungen: Limitierungen der Abzweigungen, Limitierung der Knotentiefe, Wachstumsgeschwindigkeit in Abhängigkeit der Knotentiefe
+Kurvenreduktion
