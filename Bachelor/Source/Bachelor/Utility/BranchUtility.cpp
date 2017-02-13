@@ -135,6 +135,38 @@ void UBranchUtility::CalcPerBranchDepthZRotAngle(FBranch* Current, float Rotatio
 	}
 }
 
+void UBranchUtility::ReduceGrownBranchesByMaxDotProduct(FBranch* Parent, float MaxDotProduct) {
+	int numChildBranches = Parent->ChildBranches.Num();
+	if (numChildBranches < 1) {
+		return;
+	}
+	while (numChildBranches == 1) {
+		FBranch* singleChild = Parent->ChildBranches[0];
+
+		FVector parentDirection = Parent->End - Parent->Start;
+		parentDirection = parentDirection.GetSafeNormal();
+
+		FVector childDirection = singleChild->End - singleChild->Start;
+		childDirection = childDirection.GetSafeNormal();
+
+		if (FVector::DotProduct(parentDirection, childDirection) > MaxDotProduct) {
+			MergeParentAndChild(Parent, singleChild);
+
+			numChildBranches = singleChild->ChildBranches.Num();
+
+			delete singleChild;
+		}
+		else {
+			ReduceGrownBranchesByMaxDotProduct(singleChild, MaxDotProduct);
+			return;
+		}
+	}
+
+	for (FBranch* childBranch : Parent->ChildBranches) {
+		ReduceGrownBranchesByMaxDotProduct(childBranch, MaxDotProduct);
+	}
+}
+
 void UBranchUtility::RecursiveReduceGrownBranches(FBranch* Parent) {
 	ElongateGrownBranches(Parent);
 
@@ -147,7 +179,6 @@ void UBranchUtility::RecursiveDeleteAllBranches(FBranch* Parent) {
 	delete Parent;
 }
 
-
 void UBranchUtility::ElongateGrownBranches(FBranch* Parent) {
 	if (Parent->ChildBranches.Num() < 1) {
 		return;
@@ -156,13 +187,9 @@ void UBranchUtility::ElongateGrownBranches(FBranch* Parent) {
 	int numChildBranches = Parent->ChildBranches.Num();
 	while (numChildBranches == 1) {
 		FBranch* singleChild = Parent->ChildBranches[0];
+		
+		MergeParentAndChild(Parent, singleChild);
 
-		Parent->ChildBranches.Reset();
-		for (FBranch* newChildBranch : singleChild->ChildBranches) {
-			Parent->ChildBranches.Add(newChildBranch);
-			newChildBranch->ParentBranch = Parent;
-		}
-		Parent->End = singleChild->End;
 		numChildBranches = singleChild->ChildBranches.Num();
 
 		delete singleChild;
@@ -191,4 +218,13 @@ void UBranchUtility::SmoothOutBranchingAngles(FBranch* Current) {
 		childBranch->Start = Current->End;
 		SmoothOutBranchingAngles(childBranch);
 	}
+}
+
+void UBranchUtility::MergeParentAndChild(FBranch* Parent, FBranch* Child) {
+	Parent->ChildBranches.Reset();
+	for (FBranch* newChildBranch : Child->ChildBranches) {
+		Parent->ChildBranches.Add(newChildBranch);
+		newChildBranch->ParentBranch = Parent;
+	}
+	Parent->End = Child->End;
 }

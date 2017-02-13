@@ -29,6 +29,7 @@ public:
 		DoBranchRadiusCalculations = true;
 		ZRotationAnglePerBranch = 120;
 		MakeFractalMesh = false;
+		MaxDotProductBetweenParentAndChild = .95f;
 	}
 
 	UProceduralMeshComponent* Mesh;
@@ -56,6 +57,8 @@ public:
 		int MaxNumberOfSectionsPerBranch;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 		int MaxNumberOfVerticesPerMeshSection;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		float MaxDotProductBetweenParentAndChild;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 		bool MakeFractalMesh;
 };

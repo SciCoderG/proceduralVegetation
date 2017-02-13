@@ -352,6 +352,14 @@ void ASpaceColonizationPlant::TryCreatingNewBranch(FBranch* Parent, FVector Norm
 	SCOPE_CYCLE_COUNTER(STAT_TryCreatingNewBranch);
 	FBranch* newBranch = new FBranch();
 	newBranch->BranchDepth = Parent->BranchDepth;
+	
+	FVector parentNormal = (Parent->End - Parent->Start).GetSafeNormal();
+	float absParentToGrowDirectionDot = FVector::DotProduct(parentNormal, NormalizedGrowthDirection);
+	if (absParentToGrowDirectionDot < -0.95f) {
+		Parent->DidNotGrowCounter++;
+		return;
+	}
+
 	if (Parent->ChildBranches.Num() > 0) {
 		newBranch->BranchDepth += 1;
 	}

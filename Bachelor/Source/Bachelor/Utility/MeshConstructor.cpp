@@ -20,10 +20,12 @@ void UMeshConstructor::GenerateTreeMesh(FTreeConstructionData* TreeConstructionD
 	}
 	allMeshData->Reset();
 
+	if (TreeConstructionData->MaxDotProductBetweenParentAndChild > 0.f && TreeConstructionData->MaxDotProductBetweenParentAndChild < 1.0f) {
+		UBranchUtility::ReduceGrownBranchesByMaxDotProduct(TreeConstructionData->RootBranch, TreeConstructionData->MaxDotProductBetweenParentAndChild);
+	}
+
 	TArray<FBranch*> allBranches = UBranchUtility::RecursiveGetAllBranchesAsArray(TreeConstructionData->RootBranch);
 	UE_LOG(LogTemp, Warning, TEXT("Number of Branches: %d"), allBranches.Num());
-
-	
 
 	float rootMaxRadius = TreeConstructionData->BranchRadiusZero;
 	if (TreeConstructionData->DoBranchRadiusCalculations) {

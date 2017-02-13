@@ -32,6 +32,8 @@ public:
 
 	static void CalcPerBranchDepthZRotAngle(FBranch* Current, float RotationAngleIncrement);
 
+	static void ReduceGrownBranchesByMaxDotProduct(FBranch* Parent, float MaxDotProduct);
+
 	static void RecursiveReduceGrownBranches(FBranch* Parent);
 	
 	static void RecursiveDeleteAllBranches(FBranch* Parent);
@@ -41,4 +43,5 @@ public:
 private:
 	static void ElongateGrownBranches(FBranch* Parent);
 
+	static void MergeParentAndChild(FBranch* Parent, FBranch* Child);
 };

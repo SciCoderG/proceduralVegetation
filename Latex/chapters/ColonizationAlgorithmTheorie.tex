@@ -56,38 +56,133 @@ Daraufhin wird der Baum iterativ aufgebaut und durchläuft in jeder Iteration di
 	\item[\boldmath$3.$] Für jeden Einflusspunkt wird überprüft, ob sich ein Knotenpunkt innerhalb des Minimalradius $d_k$ befindet. Existiert ein solcher Knotenpunkt, wird der Einflusspunkt aus der Menge der Einflusspunkte $S$ entfernt. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \label{alg:SCA_3}
 \end{description}
 
-TODO: Ablauf des Algorithmus. als Bilder.
+Diese Schritte werden solange ausgeführt, bis alle Einflusspunkte entfernt wurden, sich kein Knotenpunkt im Einflussradius eines Einflusspunktes befindet oder bis eine vorgegebene Maximalanzahl von Iterationen durchgeführt wurde. Abbildung \ref{fig:SCA_Basic} zeigt eine beispielhafte Anwendung des Algorithmus.
+
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Basic1.png}
+		\caption{ Ausgangssituation. }
+		\label{subfig:SCA_Basic1}
+	\end{subfigure}
+	\hspace{.03\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Basic2.png}
+		\caption{Schritt 1: Blaue Kreise entsprechen dem Einflussradius.}
+		\label{subfig:SCA_Basic2}
+	\end{subfigure}
+	\hspace{.03\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Basic3.png}
+		\caption{Schritt 2: Bestimmung von $\overrightarrow{n}$ (roter Pfeil).}
+		\label{subfig:SCA_Basic3}
+	\end{subfigure}
+
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Basic4.png}
+		\caption{Schritt 2: Platzierung des neuen Knotenpunkts.}
+		\label{subfig:SCA_Basic4}
+	\end{subfigure}
+	\hspace{.03\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Basic5.png}
+		\caption{Schritt 3: Rote Kreise entsprechen dem Minimalradius.}
+		\label{subfig:SCA_Basic5}
+	\end{subfigure}
+	\hspace{.03\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Basic6.png}
+		\caption{Ausgangssituation der nächsten Iteration.}
+		\label{subfig:SCA_Basic6}
+	\end{subfigure}
+
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Basic7.png}
+		\caption{Einflusspunkte beeinflussen unterschiedliche Knotenpunkte.}
+		\label{subfig:SCA_Basic7}
+	\end{subfigure}
+	\hspace{.03\textwidth}
+	\begin{subfigure}[t]{.3\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Basic8.png}
+		\caption{Eine Verzweigung entsteht.}
+		\label{subfig:SCA_Basic8}
+	\end{subfigure}
+	\caption{Beispielhafte Anwendung des Space Colonization Algorithmus. Blaue Punkte entsprechen Einflusspunkten, weiße Punkte entsprechen Knotenpunkten. Der unterste Knotenpunkt stellt die Wurzel dar. Eigene Abbildungen auf Grundlage von \cite[Abb. 2]{SpaceColonizationAlgorithm:07}.}\label{fig:SCA_Basic}
+	
+\end{figure}
 
 
 \section{Modellierung von Baumstrukturen}
-
-Der Space Colonization Algorithmus liefert einen Baum-Graphen, der Knotenpunkte enthält, welche Positionen im dreidimensionalen Raum darstellen. Um diese Knotenpunkte in Form von baumähnlichen Strukturen zu visualisieren, wird die Prozedur erweitert. Der gesamte Generierung der Baumstrukturen läuft nun wie folgt ab:
+\label{sec:ModellierungBaumstrukturen}
+Der Space Colonization Algorithmus liefert einen Baum-Graphen, der Knotenpunkte enthält, welche Positionen im dreidimensionalen Raum darstellen. Um diese Knotenpunkte in Form von baumähnlichen Strukturen zu visualisieren, wird die Prozedur erweitert. Die Modellierung der Baumstrukturen läuft wie folgt ab:
 
 \begin{description}[labelindent]
-	\item[\boldmath$1.$] Der Einflussbereich wird mit der vorgegeben Anzahl von Einflusspunkten gefüllt. 
-	TODO: Bild
-	\\
-	
-	\item[\boldmath$2.$] Der Baum-Graph wird wie in Abschnitt \ref{sec:SCA_Ablauf} beschrieben iterativ generiert.
-	TODO: Bild
-	\\
-	
-	\item[\boldmath$3.$] Die Nachfolger jedes Knotenpunkts werden einander angenähert, um eine Verringerung der Abzweigungswinkel zwischen den verbindenden Kanten zu erreichen. Dies führt zu einer insgesamt geschmeidigeren Baumstruktur.
-	TODO: Bild
-	\\
-	
-	\item[\boldmath$4.$] Die Kanten, welche die Knotenpunkte verbinden, werden mithilfe von Zylindern visualisiert. 
-	TODO: Bild
-	\\
-	
+	\item[\boldmath$1.$] Der Einflussbereich wird mit der vorgegeben Anzahl von Einflusspunkten gefüllt. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \\
 
+	\item[\boldmath$2.$] Der Baum-Graph wird wie in Abschnitt \ref{sec:SCA_Ablauf} beschrieben iterativ generiert. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \\
+
+	\item[\boldmath$3.$] Die Nachfolger jedes Knotenpunkts werden einander angenähert, um eine Verringerung der Abzweigungswinkel zwischen den verbindenden Kanten zu erreichen. Dies führt zu einer insgesamt realistischeren Baumstruktur. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \\
+	
+	\item[\boldmath$4.$] Die Kanten, welche die Knotenpunkte verbinden, werden mithilfe von Zylindern visualisiert, um die Aststruktur eines Baumes zu simulieren. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} 
+	
 \end{description}
 
+Die Berechnung der Zylinderbreiten erfolgt anhand von Murrays Regel, die besagt, dass der Radius $r_v$ eines Astes auf Grundlage der Radien $r_{n_1}...r_{n_m}$ der nachfolgenden, von ihm abzweigenden Äste wie folgt berechnet werden kann: 
 
-Was wird normalerweise noch vorgeschlagen, hier aber nicht verwirklicht?
-Knoten-Dezimation
-Curve Subdivision für sanftere Kurven
+\begin{equation}
+\begin{array}{ll}
+r_{v}^g & = r_{n_1}^g + r_{n_2}^g + ... + r_{n_m}^g 
+\end{array}
+\end{equation} 
+
+Diese Berechnung kann rekursiv auf dem Baum-Graphen ausgeführt werden, indem für jeden Knotenpunkt der Radius aus den Radien seiner Nachfolger berechnet wird. Besitzt ein Knotenpunkt keine Nachfolger, wird ein festgelegter Radius $r_0$ zurückgegeben. \cite[Abschn. 3.5]{LeafVenation:05} Der Wert $g$ kann frei gewählt werden.
+
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Extended1.png}
+		\caption{$N=2000$ Einflusspunkte, zufällig in einem Ring mit dem Radius $r = 500$ verteilt.}
+		\label{subfig:SCA_Extended1}
+	\end{subfigure}
+	\hspace{.1\textwidth}
+	\begin{subfigure}[t]{.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Extended2.png}
+		\caption{Ergebnis des Space Colonization Algorithmus mit einem Einflussradius $d_i = 100$, Minimalradius $d_k = 20$ und Schritteweite $D = 15$.}
+		\label{subfig:SCA_Extended2}
+	\end{subfigure}
+	\begin{subfigure}[t]{.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Extended3.png}
+		\caption{Verringerung der Abzweigungswinkel.}
+		\label{subfig:SCA_Extended3}
+	\end{subfigure}
+	\hspace{.1\textwidth}
+	\begin{subfigure}[t]{.35\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/SCA_Extended4.png}
+		\caption{Modellierung des Ergebnis mithilfe von Zylindern mit $r_0 = 1$ und $g=2$.}
+		\label{subfig:SCA_Extended4}
+	\end{subfigure}
+	\caption{Modellierung einer zweidimensionalen Baumstruktur entsprechend der in Abschnitt \ref{sec:ModellierungBaumstrukturen} beschriebenen Schritte.  Eigene Abbildungen.}
+	\label{fig:SCA_Extended}
+\end{figure}
+
+Die von Runions u.a. \cite{SpaceColonizationAlgorithm:07} vorgeschlagene Kurven-Unterteilung \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} wurde in dieser Arbeit nicht behandelt, da durch Angabe der Schrittweite $D$ eine ausreichende visuelle Qualität erzielt werden kann.
+
+Abbildung \ref{fig:SCA_Extended} zeigt die Modellierung einer zweidimensionalen Baumstruktur.
+
 \section{Erweiterungen}
+
 
 Vorgeschlagene Erweiterungen: Limitierungen der Abzweigungen, Limitierung der Knotentiefe, Wachstumsgeschwindigkeit in Abhängigkeit der Knotentiefe
 Kurvenreduktion
