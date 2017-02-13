@@ -35,6 +35,7 @@ Der Algorithmus benötigt die folgenden Eingaben:
 \end{description}
 \cite[Abschn. 2]{SpaceColonizationAlgorithm:07}
 \section{Ablauf}
+\label{sec:SCA_Ablauf}
 Zu Beginn des Algorithmus werden $N$ Einflusspunkte in einem vorgegebenen Bereich generiert. Dieser Einflussbereich signalisiert die Verfügbarkeit von Raum, in dem der Baum wachsen kann.  \cite[Abschn. 2]{SpaceColonizationAlgorithm:07}
 
 Daraufhin wird der Baum iterativ aufgebaut und durchläuft in jeder Iteration die folgenden Schritte: 
@@ -60,21 +61,26 @@ TODO: Ablauf des Algorithmus. als Bilder.
 
 \section{Modellierung von Baumstrukturen}
 
-Der Space Colonization Algorithmus liefert einen Baum-Graphen, der Knotenpunkte enthält, welche eine Position im dreidimensionalen Raum darstellen. Um diesen Graphen zu visualisieren muss der 
-
-Visualisierung der Ergebnisse.
-
+Der Space Colonization Algorithmus liefert einen Baum-Graphen, der Knotenpunkte enthält, welche Positionen im dreidimensionalen Raum darstellen. Um diese Knotenpunkte in Form von baumähnlichen Strukturen zu visualisieren, wird die Prozedur erweitert. Der gesamte Generierung der Baumstrukturen läuft nun wie folgt ab:
 
 \begin{description}[labelindent]
-	\item[\boldmath$1.$] Generierung der Form \\
+	\item[\boldmath$1.$] Der Einflussbereich wird mit der vorgegeben Anzahl von Einflusspunkten gefüllt. 
+	TODO: Bild
+	\\
 	
-	\item[\boldmath$2.$] Verarbeitung der Anziehungspunkte\\
+	\item[\boldmath$2.$] Der Baum-Graph wird wie in Abschnitt \ref{sec:SCA_Ablauf} beschrieben iterativ generiert.
+	TODO: Bild
+	\\
 	
-	\item[\boldmath$3.$] Abzweigungswinkel abflachen \\
+	\item[\boldmath$3.$] Die Nachfolger jedes Knotenpunkts werden einander angenähert, um eine Verringerung der Abzweigungswinkel zwischen den verbindenden Kanten zu erreichen. Dies führt zu einer insgesamt geschmeidigeren Baumstruktur.
+	TODO: Bild
+	\\
 	
-	\item[\boldmath$4.$]Visualisierung mithilfe von Zylindern \\
+	\item[\boldmath$4.$] Die Kanten, welche die Knotenpunkte verbinden, werden mithilfe von Zylindern visualisiert. 
+	TODO: Bild
+	\\
 	
-	\item[\boldmath$5.$]Berechnung der Zylinderringbreite
+
 \end{description}
 
 
