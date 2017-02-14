@@ -1,23 +1,56 @@
 \chapter{Implementierung}
 
-\section{Baumstruktur}
+
+Die Implementierung des Projekts lässt sich in vier Bereiche unterteilen: Die Baumrepräsentation enthält Daten, die von den L-System und Space Colonization Implementierungen generiert werden. Diese Daten werden an das Modellgenerierungssystem übergeben, welches die Modelldaten für eine grafische Darstellung in der Unreal Engine 4 produziert.
+
+
+\section{Baumrepräsentation}
+
+Der Space Colonization Algorithmus generiert einen Baum-Graphen, auf Grundlage dessen die Modellgenerierung durchgeführt wird. Auch die Aktionen, welche von einer Turtle ausgeführt werden, können, wie in Abschnitt \ref{subsec:TurtleInterpretationImplementation} beschrieben, in einem Baum-Graphen gespeichert werden. Die implementierte Baumrepräsentation kann daher von beiden Systemen verwendet werden und ermöglicht es, diese mit demselben Modellgenerierungssystem zu visualisieren.
+
+Die Baumstruktur wird durch eine Datenklasse repräsentiert, jedes Objekt dieser Klasse beschreibt einen Knoten sowie die Kante, welche vom Vorgänger zu dem Knoten führt. Die Datenklasse bietet Zugriff auf die folgenden Informationen:
+
+\begin{description}
+	\item \textbf{Vorgänger und Nachfolger:} Mithilfe eines Verweises auf den Vorgänger und eine Liste der Nachfolger eines Knotens kann der Baum-Graph vollständig repräsentiert werden. Weiterhin ermöglicht dies die Implementierung einer Reihe von rekursiven Funktionen zur Anpassung von Modelldaten.\\
+	
+	\item \textbf{Modell-Informationen:} Kanten werden, wie in Abschnitt \ref{subsec:ZylinderMeshes} beschrieben, mithilfe von Zylindern visualisiert. Um die Generierung von Modelldaten zu vereinfachen, bietet die Datenklasse Zugriff auf Start- und Endposition, Start- und Endradius, Start- und Endnormale sowie einen Rotationswinkel. 
+	
+	Weiterhin wird die Zweigtiefe des repräsentierten Knoten gespeichert, welche sowohl für die Modellgenerierung als auch den Ablauf des Space Colonization Algorithmus verwendet wird.\\
+	
+	\item \textbf{Wachstums-Daten:} Die Wachstums-Daten bestehen aus einer Wachstumsrichtung, einem Einfluss-Zähler und dem \glqq Kein Wachstum\grqq-Zähler ($NG$-Counter), welche für den Ablauf des Space Colonization Algorithmus benötigt werden.	
+\end{description}
 
 \section{L-Systeme}
 
-\subsection{L-System-Plant}
+Die Implementierung der L-Systeme wird durch einen Akteur verwirklicht, der im Level platziert werden kann. Nach Start des Levels wird das angegebene Axiom anhand der Produktionsregeln abgeleitet, der entstehende Baum-Graph 
 
-\subsection{Turtle-Graphic-Interpreter}
+\subsection{Parameterübergabe}
 
-\subsection{Performanz}
+\subsection{Ableitung}
 
-\section{Space-Colonization-Algorithmus}
+\subsection{Turtle Interpretation} \label{subsec:TurtleInterpretationImplementation}
 
-\subsection{Colonization Space}
+\section{Space-Colonization Algorithmus}
 
-\subsection{Space-Colonization-Plant}
+\subsection{Parameterübergabe}
+
+\subsection{Einflussbereich}
+
+\subsection{Ablauf des Algorithmus}
 
 
-\section{Mesh-Generierung}
+\section{Modellgenerierung}
 
+\subsection{Parameterübergabe}
 
+\subsection{Procedural Mesh Component}
 
+\subsection{Generierung der Zylinder-Meshes} \label{subsec:ZylinderMeshes}
+
+Die Startposition entspricht der Endposition des Vorgängers und markiert den Anfang der Kante, die zu dem Knoten führt, der durch das Datenobjekt beschrieben wird. Die Endposition beschreibt die Position des Knotens und markiert das Ende der Kante, die zu dem Knoten führt. 
+
+Der Startradius bestimmt den Radius des Start-Zylinderrings, Startposition und Startnormale beschreiben die Ebene, auf welcher der Zylinderring generiert wird. Der Endradius entspricht dem Radius des End-Zylinderrings, Endposition und Startnormale beschreiben die Ebene, auf welcher der Ring erstellt wird.
+
+\subsection{Operationen auf der Baumstruktur}
+
+Was kann mit BranchUtility gemacht werden?
