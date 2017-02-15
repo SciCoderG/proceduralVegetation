@@ -1,6 +1,6 @@
-\chapter{Lindenmayer-Systeme}
+\chapter{Lindenmayer-Systeme} \label{ch:LSysteme}
 
-TODO: Vorstellung der verwendeten Konzepte. Sämtliche Visualisierungen von L-Systemen wurden mithilfe des Unreal Engine 4 Projekts erstellt.
+Es werden die Regeln für die Definition von Lindenmayer-Systemen -- kurz: L-Systeme -- festgelegt und die verwendete Methode zur Visualisierung der Ergebnisse von L-Systemen besprochen. 
 
 \section{Kontextfreie Grammatik}
 
@@ -83,7 +83,7 @@ Die Entwicklung einer Anfangszelle $a_r$ (Axiom $\omega : a_r$) läuft daraufhin
 
 \subsection{Parametrische L-Systeme}
 
-Parametrische L-Systeme stellen eine Erweiterung der D0L-Systeme dar. Die Buchstaben eines verwendeten Alphabets $V$ werden um zugeordnete Parameter aus der Menge der reelen Zahlen ergänzt. Ein solches parametrisches Wort $V \times \Re^*$ besteht aus einem Zeichen $A \in V$ und Parametern $a_1,...,a_n \in \Re$ und wird als $A(a_1,...,a_n)$ dargestellt. Ein parametrisches Wort ohne Parameter mit dem Zeichen $A \in V$  wird schlicht als $A$ dargestellt. \cite[S.41]{ABOP:04}
+Parametrische L-Systeme stellen eine Erweiterung der D0L-Systeme dar. Die Buchstaben eines verwendeten Alphabets $V$ werden um zugeordnete Parameter aus der Menge der reelen Zahlen ergänzt. Ein solches parametrisches Wort $V \times \mathbb{R}^*$ besteht aus einem Zeichen $A \in V$ und Parametern $a_1,...,a_n \in \mathbb{R}$ und wird als $A(a_1,...,a_n)$ dargestellt. Ein parametrisches Wort ohne Parameter mit dem Zeichen $A \in V$  wird schlicht als $A$ dargestellt. \cite[S.41]{ABOP:04}
 
 Während in der Definition von Modulen numerische Konstanten verwendet werden, werden bei der Angabe eines L-Systems Variablen verwendet. Ist $\Sigma$ eine Menge von Variablen, dann ist $E(\Sigma)$ ein arithmetischer Ausdruck, in dem Variablen, Konstanten und arithmetische Operatoren auf eine zulässige Weise kombiniert werden. \cite[S.41]{ABOP:04}
 
@@ -97,7 +97,7 @@ Während in der Definition von Modulen numerische Konstanten verwendet werden, w
 		
 		\item[\boldmath$P$] Einer endlichen Menge von Produktionsregeln $P : (V\times \Sigma^*) \rightarrow (V\times E(\Sigma))^*$\\
 		
-		\item[\boldmath$\omega \in M^+$] mit $M =(V \times \Re^*)$ -- einem Axiom in Form eines nichtleeren, parametrischen Wortes.
+		\item[\boldmath$\omega \in M^+$] mit $M =(V \times \mathbb{R}^*)$ -- einem Axiom in Form eines nichtleeren, parametrischen Wortes.
 	\end{description}
 \cite[S.41]{ABOP:04}
 \end{defParametrischeLSysteme}
@@ -130,7 +130,9 @@ Um die Ergebnisse von L-Systemen in Form von dreidimensionalen Objekten zu visua
 
 \subsection{Turtle-Interpretation}
 
-Die Turtle-Interpretation im zweidimensionalen Raum entspricht der Vorstellung einer Turtle\footnote{\glqq Turtle\grqq{} -- englisch für \glqq Schildkröte\grqq.} auf einem Blatt Papier. Die Turtle besitzt eine Position $\overrightarrow{p}$ sowie einen Einheitsvektor $\overrightarrow{H}$ in kartesischen Koordinaten. $\overrightarrow{p}$ beschreibt die Position der Turtle auf der Ebene und $\overrightarrow{H}$ entspricht der Blickrichtung (Heading) der Turtle. Der Zustand $(\overrightarrow{p},\overrightarrow{H})$ einer Turtle wird somit vollständig durch die Position und Blickrichtung definiert. \cite[S.2]{Turtle:04} Die Turtle kann drei Aktionen durchführen, welche durch die folgenden Symbole dargestellt werden:
+Die Turtle-Interpretation im zweidimensionalen Raum entspricht der Vorstellung einer Turtle\footnote{\glqq Turtle\grqq{} -- englisch für \glqq Schildkröte\grqq.} auf einem Blatt Papier. Die Turtle besitzt eine Position $\overrightarrow{p}$ sowie einen Einheitsvektor $\overrightarrow{H}$ in kartesischen Koordinaten. $\overrightarrow{p}$ beschreibt die Position der Turtle auf der Ebene und $\overrightarrow{H}$ entspricht der Blickrichtung (Heading) der Turtle. Der Zustand einer Turtle wird somit vollständig durch die Position und Blickrichtung definiert und wird als Tupel $(\overrightarrow{p},\overrightarrow{H})$ angegeben. \cite[S.2]{Turtle:04} Die Ausgangsposition entspricht dem Ursprung des lokalen Koordinatensystems der Turtle. 
+
+Es können drei Aktionen durchführt werden, welche durch die folgenden Symbole dargestellt werden:
 
 \begin{description}[labelindent]
 	\item[\boldmath$F(l)$] Die Turtle bewegt sich um $l>0$ in die Richtung der aktuellen Blickrichtung. Die neue Position ist  $\overrightarrow{p_{neu}}$ mit:
@@ -192,26 +194,26 @@ Für eine bessere Übersicht wurde die Angabe der Parameter weggelassen. Die Tur
 
 \begin{figure} [hbtp]
 	\centering
-	\begin{subfigure}[t]{.3\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
 		\includegraphics[width=\linewidth]{images/KochkurveN0L400.png}
 		\caption{$n=0$, $l=400$, $d=90\degree$}
 		\label{fig:KochkurveN0L400}
 	\end{subfigure}
 	\hspace{.1\textwidth}
-	\begin{subfigure}[t]{.3\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/KochkurveN1L100.png}
 		\caption{$n=1$, $l=100$, $d=90\degree$}
 		\label{fig:KochkurveN1L100}
 	\end{subfigure}
 	\medskip
-	\begin{subfigure}[t]{.3\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
 		\includegraphics[width=\linewidth]{images/KochkurveN2L25.png}
 		\caption{$n=2$, $l=25$, $d=90\degree$}
 		\label{fig:KochkurveN2L25}
 	\end{subfigure}
 	\hspace{.1\textwidth}
-	\begin{subfigure}[t]{.3\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/KochkurveN3L6_25.png}
 		\caption{$n=3$, $l=6.25$, $d=90\degree$}
@@ -221,14 +223,14 @@ Für eine bessere Übersicht wurde die Angabe der Parameter weggelassen. Die Tur
 	\label{fig:KochkurveAbleitung}
 \end{figure}
 
-\subsection{Verzweigte L-Systeme}
+\subsection{Verzweigte L-Systeme} \label{subsec:BranchingLSystems}
 
 Die bisherigen Definitionen von L-Systemen und die korrespondierende Turtle-Interpretation lässt lediglich die Bildung von Grafiken zu, die einen einzelnen, zusammenhängenden Polygonzug erlauben. Um L-Systeme zu bilden, deren Visualisierungen Baumstrukturen ähneln muss die bisherige Turtle-Interpretation um die Möglichkeit erweitert werden, Verzweigungen zu verarbeiten. \cite[S.24]{ABOP:04} 
 
 Folgende Operationen werden eingeführt:
 
 \begin{description}[labelindent]
-	\item[\textbf{[}] Der aktuelle Zustand der Turtle in Form ihrer Position und Rotation wird auf einem Kellerspeicher abgelegt. \\
+	\item[\textbf{[}] Der aktuelle Zustand der Turtle in Form ihrer Position und Rotation wird auf einem Kellerspeicher (Stack) abgelegt. \\
 	
 	\item[\textbf{]}] Der oberste Zustand der Turtle wird vom Kellerspeicher genommen. Die aktuelle Position und Rotation der Turtle wird auf die im Zustand gespeicherte Position und Rotation gesetzt. Es wird keine Linie zwischen der alten und neuen Position gezeichnet.
 \end{description}
@@ -236,28 +238,12 @@ Folgende Operationen werden eingeführt:
 
 Diese Erweiterung erlaubt es mehrere Linien zu zeichnen, die von einem einzigen Punkt ausgehen -- die Visualisierung von Abzweigungen ist somit möglich. Die Operatoren \textbf{[} und \textbf{]} markieren den Anfang und das Ende eines Zweiges. \cite[S.24]{ABOP:04} 
 
-Die Aktionen der Turtle können für die Modellgenerierung als axialer Baum gespeichert werden. \cite[S.21]{ABOP:04}  Ein Baum, in der Graphentheorie, ist ein kreisfreier Graph $G = \langle V,E\rangle$ mit gerichteten Kanten, für den folgende Begriffe festgelegt werden:
-
-\begin{description}[labelindent]
-	\item[\boldmath$V$] Die Menge der Knotenpunkte. Jeder Knotenpunkt entspricht einem Punkt $\overrightarrow{p_v}$ im dreidimensionalen Raum. \cite[S.358]{ThI:14}\\
-	
-	\item[\boldmath$E$] Die Menge der Kanten, welche die Vorgänger-Nachfolger-Beziehungen zwischen den Knotenpunkten darstellt. Eine Kante $e \in E$ wird als Tupel $e = (v_1, v_2)$ mit $v_1, v_2 \in V$ dargestellt. Jeder Knoten besitzt maximal einen Vorgänger und eine endliche Menge von Nachfolgern.\cite[S.358]{ThI:14}\\
-	
-	\item[\boldmath$Wurzel$] Eine Wurzel ist ein Knoten $v \in V$ ohne einen Vorgänger. Der Baum besitzt genau eine Wurzel. \cite[S.358]{ThI:14}\\
-	
-	\item[\boldmath$Grad$] Der Grad eines Knotens ist definiert als die Anzahl seiner Nachfolger. \cite[S.29]{AlgoDat:14}\\
-	
-	\item[\boldmath$Tiefe$] Die Tiefe eines Knotens ist definiert als die Länge der Folge von Vorgängern, die durchlaufen werden muss, bis die Wurzel erreicht wurde. Die Wurzel besitzt die Tiefe $0$. \cite[S.30]{AlgoDat:14}
-\end{description}
-
-Ein axialer Baum ist eine Anpassung des graphentheoretischen Baums an den aus der Botanik stammenden Begriff 
-
 Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich die in Abbildung \ref{fig:BranchingLSystems} gezeigten Strukturen bilden. Die Turtle-Interpretation folgt der in \ref{desc:TurtleWithoutParams} beschriebenen Interpretation mit fester Strichlänge $l$ und festem Drehwinkel $d$.
 
 
 \begin{figure} [hbtp]
 	\centering
-	\begin{subfigure}[t]{.35\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
 		\includegraphics[width=\linewidth]{images/Branching1_N4L18D25.png}
 		\caption{$n=4$, $l=18$, $d=25\degree$\\ \\
 			$\begin{array}{ll}
@@ -269,8 +255,8 @@ Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich die in Ab
 		}
 		\label{fig:Branching1L18D25}
 	\end{subfigure}
-	\hspace{.1\textwidth}
-	\begin{subfigure}[t]{.35\textwidth}
+	\hspace{.15\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/Branching2_N5L15D25.png}
 		\caption{$n=5$, $l=15$, $d=25\degree$\\ \\
@@ -290,11 +276,11 @@ Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich die in Ab
 
 \subsection{Erweiterung der Turtle-Interpretation in den dreidimensionalen Raum}
 
-Die bisherige Definition eines Turtle-Zustands mithilfe einer zweidimensionalen Position und einer Blickrichtung genügt nicht, um Visualisierungen von L-Systemen in Form von dreidimensionalen Objekten zu ermöglichen. Sowohl die Zustands-Definition als auch die interpretierten Operationen müssen angepasst und erweitert werden.
+Die bisherige Definition eines Turtle-Zustands mithilfe einer zweidimensionalen Position und einer Blickrichtung genügt nicht, um Visualisierungen von L-Systemen in Form von dreidimensionalen Baumstrukturen zu ermöglichen. Sowohl die Zustands-Definition als auch die interpretierten Operationen müssen angepasst und erweitert werden.
 
-Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{p}$ sowie eine $3\times3$ Rotationsmatrix $\boldsymbol{R}$, welche die Orientierung der Turtle im Raum beschreibt. Die Einheitsvektoren $H$, $L$ und $U$  sind orthogonal zueinander und bilden das lokale Koordinatensystem der Turtle.
+Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{p}$ sowie eine $3\times3$ Rotationsmatrix $\boldsymbol{R}$, welche die Orientierung der Turtle im Raum beschreibt. Der Zustand wird als Tupel $(\overrightarrow{p}, \boldsymbol{R})$ angegeben. Die Einheitsvektoren $H$, $L$ und $U$  sind orthogonal zueinander und bilden das lokale Koordinatensystem der Turtle. 
 
-\begin{description}[5cm]
+\begin{description}[labelindent]
 		\item[\boldmath$\overrightarrow{H}$]Die Blickrichtung (Heading-Vektor) der Turtle. Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{H}}$:\\
 		\begin{equation}
 		R_{\overrightarrow{H}}(d) = 
@@ -343,6 +329,7 @@ Die erweiterte Turtle-Interpretation verarbeitet folgende Symbole:
 	\begin{array}{ll}
 	\overrightarrow{p_{neu}} & = \overrightarrow{p} + \boldsymbol{R} * \overrightarrow{H} * l
 	\end{array}
+	\label{eq:Turtle3D_F}
 	\end{equation} 
 	Zwischen der alten Position $p$ und der neuen Position $p_{neu}$ wird eine Linie gezeichnet. \\
 	
@@ -404,18 +391,58 @@ Mithilfe der Turtle-Interpretation im dreidimensionalen Raum können nun L-Syste
 	\cite[S.60]{ABOP:04} 
 \begin{figure} [hbtp]
 	\centering
-	\begin{subfigure}[t]{.7\textwidth}
+	\begin{subfigure}[t]{.8\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/3DTreeP61B_Angle_18_95.png}
 		\caption{$n=8$, $d=137.5\degree$, $a=18.95\degree$, $l_r=1.3$}
 		\label{fig:3DTreeP61B_Angle_18_95}
 	\end{subfigure}
-	\begin{subfigure}[t]{.7\textwidth}
+	\begin{subfigure}[t]{.8\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/3DTreeP61B_Angle_36.png}
 		\caption{$n=8$, $d=137.5\degree$, $a=36.0\degree$, $l_r=1.3$}
 		\label{fig:3DTreeP61B_Angle_36}
 	\end{subfigure}
-	\caption{Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:3DTreeP61B_Prod}, visualisiert mithilfe der Turtle-Interpretation. Eigene Abbildung.}
+	\caption{Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:3DTreeP61B_Prod}, visualisiert mithilfe der Turtle-Interpretation. Eigene Abbildungen.}
 	\label{fig:BranchingLSystems3D}
 \end{figure}
+
+\section{Anpassungen für Baumstrukturen}
+
+Die Darstellung von verzweigten L-Systemen mithilfe von Zeichenketten ermöglicht eine Repräsentation in Textform und erlaubt die einfache Definition von Produktionsregeln. Um jedoch eine effiziente Nachbearbeitung und Visualisierung der Ergebnisse eines L-Systems zu ermöglichen, müssen die Aktionen einer Turtle als graphentheoretischer Baum festgehalten werden. Weiterhin wird der Begriff des Tropismus und dessen Einfluss auf die Modellierung von Baumstrukturen eingeführt.
+
+\subsection{Graphentheoretische Bäume}
+
+Ein Baum, in der Graphentheorie, ist ein kreisfreier Graph $G = \langle V,E\rangle$ für den folgende Begriffe festgelegt werden:
+
+\begin{description}[labelindent]
+	\item[\boldmath$V$] Die Menge der Knoten. Jeder Knoten entspricht einem Punkt $\overrightarrow{p_v}$ im dreidimensionalen Raum. \cite[S.358]{ThI:14}\\
+	
+	\item[\boldmath$E$] Die Menge der Kanten, welche die Vorgänger-Nachfolger-Beziehungen zwischen den Knoten darstellt. Eine Kante $e \in E$ wird als Tupel $e = (v_1, v_2)$ mit $v_1, v_2 \in V$ dargestellt. $v_1$ wird als Vorgänger von $v_2$ und $v_2$ als Nachfolger von $v_1$ bezeichnet. Jeder Knoten besitzt maximal einen Vorgänger und eine endliche Menge von Nachfolgern. \cite[S.358]{ThI:14} \cite[S.29]{AlgoDat:14}\\
+	
+	\item[\boldmath$Wurzel$] Eine Wurzel ist ein Knoten $v \in V$ ohne einen Vorgänger. Der Baum besitzt genau eine Wurzel. \cite[S.358]{ThI:14}\\
+	
+	\item[\boldmath$Grad$] Der Grad eines Knotens ist definiert als die Anzahl seiner Nachfolger. \cite[S.29]{AlgoDat:14}\\
+	
+	\item[\boldmath$Tiefe$] Die Tiefe eines Knotens ist definiert als die Länge der Folge von Vorgängern, die durchlaufen werden muss, bis die Wurzel erreicht wurde. Die Wurzel besitzt die Tiefe $0$. \cite[S.30]{AlgoDat:14}
+\end{description}
+
+Ein Baum ist grundsätzlich ein rein topologisches Objekt, mithilfe der Zuordnung von Punkten zu Knoten kann jedoch eine geometrische Vorstellung des Aufbaus bewirkt werden. \cite[S.23]{ABOP:04}
+
+ Um den Aufbau eines Baumes $G = \langle V,E \rangle$ mithilfe der Turtle-Interpretation zu ermöglichen, muss der Turtle-Zustand um einen Knotenpunkt $v \in V$ ergänzt werden. Der Zustand wird als Tupel $\overrightarrow{p}, v, \boldsymbol{R}$ angegeben. 
+ 
+ Die Turtle-Interpretation beginnt mit der Erstellung der Wurzel am Ursprung des lokalen Bezugssystems. Die Verarbeitung folgender Symbole muss erweitert werden:
+
+\begin{description}[labelindent]
+		\item[\boldmath$F(l)$]  Die neue Position $\overrightarrow{p_{neu}}$ der Turtle wird entsprechend Gleichung \ref{eq:Turtle3D_F} berechnet. An diesem Punkt wird ein Knoten $v_{neu}$ und eine Kante $(v,v_{neu})$ erstellt sowie $v$ als Vorgänger von $v_{neu}$ und $v_{neu}$ als Nachfolger von $v$ eingetragen. $v$ entspricht dem aktuellen Zustandsknoten der Turtle. Der neue Turtle-Zustand ist $(\overrightarrow{p_{neu}}, v_{neu}, \boldsymbol{R})$.  \\
+	
+	\item[\boldmath$\textbf{[}$] Zusätzlich zu der Position und Rotation der Turtle wird auch der aktuelle Knoten auf einem Kellerspeicher abgelegt.\\
+	
+	\item[\boldmath$\textbf{]}$] Der oberste Zustand der Turtle wird vom Kellerspeicher genommen. Zusätzlich zur Position und Rotation wird auch der Zustandsknoten der Turtle auf den gespeicherten Knoten gesetzt.\\
+\end{description}
+
+Die Kanten zwischen Knoten wurden durch die Turtle-Interpretation bisher als Linien visualisiert und können als Astsegmente von echten Baumstrukturen verstanden werden. \cite[S.23]{ABOP:04} Die Repräsentation von Turtle-Aktionen als graphentheoretischer Baum ermöglicht jedoch die in Abschnitt \ref{sec:Modellgenerierung} beschriebene Generierung und Nachbearbeitung von Modelldaten.
+
+\subsection{Tropismus}
+
+

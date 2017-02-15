@@ -148,7 +148,6 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 	FVector turtleForwardVec = CurrentRotation.RotateVector(FVector::UpVector);
 
 	if (Tropism.SizeSquared() > 0.001f) {
-		
 		FVector rotationAxis = FVector::CrossProduct(turtleForwardVec, Tropism);
 		float angleTowardTropism = BendingByTropismParameter * rotationAxis.Size();
 		FQuat rotation = FQuat(rotationAxis.GetSafeNormal(), angleTowardTropism);
@@ -158,7 +157,6 @@ void ATurtleInterpreter::ConstructBranch(float length) {
 	}
 	
 	newBranch->End = newBranch->Start + length * turtleForwardVec;
-
 	newBranch->BranchDepth = TurtleStateStack.Num();
 
 	CurrentPosition = newBranch->End;

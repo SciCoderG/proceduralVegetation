@@ -100,6 +100,7 @@ void ALSystemPlant::ConstructDataMaps() {
 void ALSystemPlant::ReplaceConstantIDsByValues() {
 	for (FLSConstantData constantData : LSystemData.Constants) {
 		FString constantToString = FString::SanitizeFloat(constantData.ConstantValue);
+		LSystemData.Axiom = LSystemData.Axiom.Replace(*constantData.ID, *constantToString, ESearchCase::CaseSensitive);
 		for (int i = 0; i < LSystemData.Productions.Num(); ++i) {
 			FProductionData* production = &LSystemData.Productions[i];
 			production->ProductionResult = production->ProductionResult.Replace(*constantData.ID, *constantToString, ESearchCase::CaseSensitive);
