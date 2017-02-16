@@ -6,7 +6,7 @@ Die Implementierung des Projekts lässt sich in vier Bereiche unterteilen: Die B
 
 \section{Baumrepräsentation}
 
-Der Space Colonization Algorithmus generiert einen Baum-Graphen, auf Grundlage dessen die Modellgenerierung durchgeführt wird. Auch die Aktionen, welche von einer Turtle ausgeführt werden, können, wie in Abschnitt \ref{subsec:TurtleInterpretationImplementation} beschrieben, in einem Baum-Graphen gespeichert werden. Die implementierte Baumrepräsentation kann daher von beiden Systemen verwendet werden und ermöglicht es, diese mit demselben Modellgenerierungssystem zu visualisieren.
+Sowohl L-Systeme als auch der Space Colonization Algorithmus generieren einen graphentheoretischen Baum, auf Grundlage dessen die Modellgenerierung durchgeführt wird. Die implementierte Baumrepräsentation kann daher von beiden Systemen verwendet werden und ermöglicht es, diese mit demselben Modellgenerierungssystem zu visualisieren.
 
 Die Baumstruktur wird durch eine Datenklasse repräsentiert, jedes Objekt dieser Klasse beschreibt einen Knoten sowie die Kante, welche vom Vorgänger zu dem Knoten führt. Die Datenklasse bietet Zugriff auf die folgenden Informationen:
 
@@ -20,9 +20,11 @@ Die Baumstruktur wird durch eine Datenklasse repräsentiert, jedes Objekt dieser
 	\item \textbf{Wachstums-Daten:} Die Wachstums-Daten bestehen aus einer Wachstumsrichtung, einem Einfluss-Zähler und dem \glqq Kein Wachstum\grqq-Zähler ($NG$-Counter), welche für den Ablauf des Space Colonization Algorithmus benötigt werden.	
 \end{description}
 
+Ein Objekt der Datenklasse kann als Astsegment eines biologischen Baumes angesehen werden und wird durch das Modellgenerierungssystem als solches visualisiert.
+
 \section{L-Systeme}
 
-Die Implementierung von L-Systemen wird durch einen Unreal-Akteur verwirklicht, der im Level platziert werden kann. Nach Start des Levels wird das angegebene Axiom anhand der Produktionsregeln abgeleitet und die sich ergebende Zeichenkette von der Turtle-Implementierung interpretiert.
+Die Implementierung einer L-System-Baumstruktur wird durch einen Unreal-Akteur verwirklicht, der im Level platziert werden kann. Nach Start des Levels wird das angegebene Axiom anhand der Produktionsregeln abgeleitet und die sich ergebende Zeichenkette von der Turtle-Implementierung interpretiert.
 
 \subsection{Parameter}
 
@@ -35,7 +37,9 @@ Dem L-System-Akteur werden die folgenden Parameter über die Editor-UI übergebe
 	
 	\item \textbf{Konstanten:} Eine Konstante besteht aus der Angabe eines Identifikationssymbols und eines Wertes in $\mathbb{R}$. Konstanten können im Axiom und in den Nachfolgern der Produktionen verwendet werden.\\	
 	
-	\item \textbf{Produktionen:} Jede Produktion besteht aus Angabe eines Vorgängers, eine Liste von Parametern und einem Nachfolger. Der Vorgänger und jeder Parameter entspricht einem einzelnen Symbol, der Nachfolger wird als Zeichenkette eingetragen. Die Parametersymbole können nur innerhalb des Nachfolgers verwendet werden. Der Vorgänger und die Liste der Parameter bilden das parametrische Wort, welches bei einer Ableitung durch den Nachfolger ersetzt wird.
+	\item \textbf{Produktionen:} Jede Produktion besteht aus Angabe eines Vorgängers, eine Liste von Parametern und einem Nachfolger. Der Vorgänger und jeder Parameter entspricht einem einzelnen Symbol, der Nachfolger wird als Zeichenkette eingetragen. Die Parametersymbole können nur innerhalb des Nachfolgers verwendet werden. Der Vorgänger und die Liste der Parameter bilden das parametrische Wort, welches bei einer Ableitung durch den Nachfolger ersetzt wird. \\
+	
+	\item \textbf{Tropismus:} Der Einfluss von Tropismus in Form eines dreidimensionalen Vektors und eines Biegsamkeitswertes.
 \end{description}
 \begin{figure} [hbtp]
 	\centering
@@ -44,6 +48,8 @@ Dem L-System-Akteur werden die folgenden Parameter über die Editor-UI übergebe
 	\label{fig:LS_ExampleUE4UI}
 \end{figure}
 Für das Axiom und die Produktionen gelten die in Kapitel \ref{ch:LSysteme} festgelegten Regeln für die Definition von L-Systemen. Weiterhin gelten die üblichen Regeln für die Angabe von arithmetischen Operationen. Die Verwendung von Klammern ist jedoch auf die Angabe von Parametern eines parametrischen Wortes beschränkt, ihre Verwendung zur Beeinflussung der Auswertungsreihenfolge eines arithmetischen Ausdrucks wird nicht unterstützt.
+
+Die Parameter für eine Anpassung der Visualisierung der Turtle-Interpretationen werden in Abschnitt \ref{subsec:Modellgenerierung_Parameter} erläutert.
 
 Ein Beispiel für die korrekte Eingabe eines L-Systems über die Editor-UI wird in Abbildung \ref{fig:LS_ExampleUE4UI} gezeigt.
 
@@ -57,30 +63,48 @@ Nachdem die vorgegebene Anzahl von Ableitungen durchgeführt wurde, wird die res
 
 \subsection{Turtle Interpretation} \label{subsec:TurtleInterpretationImplementation}
 
-
-
-Was passiert hier?
-
-Erweiterung der Turtle Interpretation, um 
-
-
-
-Die Aktionen der Turtle für die Modellgenerierung als Baum gespeichert werden. \cite[S.21]{ABOP:04} 
+Die Turtle-Implementierung bekommt die aus den Ableitungen resultierende Zeichenkette übergeben. Diese wird daraufhin sequentiell abgearbeitet und entsprechend den in Abschnitt \ref{sec:LS_Baumstrukturen} vorgestellten Konzepten interpretiert. Der resultierende Baum wird für die Konstruktion des Modells an das Modellgenerierungssystem weitergegeben.
 
 \section{Space-Colonization Algorithmus}
 
-\subsection{Parameterübergabe}
+Die Implementierung einer Space-Colonization-Baumstruktur stellt sich aus der Platzierung von mindestens einem Akteur für die Repräsentation des Einflussbereichs und einem Akteur für die Umsetzung des Algorithmus zusammen.
+
+\subsection{Parameter}
+
+Dem Space-Colonization-Akteur werden Parameter des ursprünglichen Algorithmus sowie die Eingaben für in Abschnitt \ref{sec:SCA_Erweiterungen} besprochene Erweiterungen über die Editor-UI übergeben. Zu den ursprünglichen Parametern gehören der Minimalradius, Einflussradius, Schrittweite, ein Tropismusvektor sowie die Anzahl der durchzuführenden Iterationen. Zu den erweiterten Parametern gehören der maximale Grad, die maximale Zweigtiefe, die maximale Anzahl von \glqq Kein Wachstum\grqq{}-Iterationen, der Kurvenreduktionswert und eine Abfrage, ob gewichtetes Wachstum durchgeführt werden soll.
+
+Weiterhin müssen die zugeordneten Einflussbereich-Akteure angegeben werden -- damit der Algorithmus durchgeführt werden kann, muss mindestens einer dieser Akteure mit mindestens einem Einflusspunkt eingetragen werden.
 
 \subsection{Einflussbereich}
 
+
+
+Pro Einflussbereich:
+
+Anzahl von Einfluss punkten
+
+Random Seed
+
+Zwei Arten von Einflussbereichen: Kugel- und Zylinder-förmig.
+
+Angabe mehrerer Einflussbereiche möglich
+
+
 \subsection{Ablauf des Algorithmus}
 
+test
 
 \section{Modellgenerierung} \label{sec:Modellgenerierung}
 
-\subsection{Parameterübergabe}
+test
+
+\subsection{Parameter} \label{subsec:Modellgenerierung_Parameter}
+
+Wichtig: Sowohl SCA als auch LS übergeben Werte wie Branch Radius Zero etc.
 
 \subsection{Procedural Mesh Component}
+
+test
 
 \subsection{Generierung der Zylinder-Meshes} \label{subsec:ZylinderMeshes}
 

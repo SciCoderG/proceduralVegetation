@@ -93,7 +93,7 @@ Während in der Definition von Modulen numerische Konstanten verwendet werden, w
 	\begin{description}[labelindent]
 		\item[\boldmath$V$] Einem nichtleeren, endlichen Alphabet.\\
 		
-		\item[\boldmath$\Sigma$] Einer Menge der Variablen.\\
+		\item[\boldmath$\Sigma$] Einer Menge von Variablen.\\
 		
 		\item[\boldmath$P$] Einer endlichen Menge von Produktionsregeln $P : (V\times \Sigma^*) \rightarrow (V\times E(\Sigma))^*$\\
 		
@@ -278,7 +278,7 @@ Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich die in Ab
 
 Die bisherige Definition eines Turtle-Zustands mithilfe einer zweidimensionalen Position und einer Blickrichtung genügt nicht, um Visualisierungen von L-Systemen in Form von dreidimensionalen Baumstrukturen zu ermöglichen. Sowohl die Zustands-Definition als auch die interpretierten Operationen müssen angepasst und erweitert werden.
 
-Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{p}$ sowie eine $3\times3$ Rotationsmatrix $\boldsymbol{R}$, welche die Orientierung der Turtle im Raum beschreibt. Der Zustand wird als Tupel $(\overrightarrow{p}, \boldsymbol{R})$ angegeben. Die Einheitsvektoren $H$, $L$ und $U$  sind orthogonal zueinander und bilden das lokale Koordinatensystem der Turtle. 
+Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{p}$ sowie eine $3\times3$ Rotationsmatrix $\boldsymbol{R}$, welche die Orientierung der Turtle im Raum beschreibt. Der Zustand wird als Tupel $(\overrightarrow{p}, \boldsymbol{R})$ angegeben. $\boldsymbol{R}$ entspricht zu Anfang einer Identitätsmatrix. Die Einheitsvektoren $H$, $L$ und $U$  sind orthogonal zueinander und bilden das lokale Koordinatensystem der Turtle. 
 
 \begin{description}[labelindent]
 		\item[\boldmath$\overrightarrow{H}$]Die Blickrichtung (Heading-Vektor) der Turtle. Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{H}}$:\\
@@ -391,23 +391,23 @@ Mithilfe der Turtle-Interpretation im dreidimensionalen Raum können nun L-Syste
 	\cite[S.60]{ABOP:04} 
 \begin{figure} [hbtp]
 	\centering
-	\begin{subfigure}[t]{.8\textwidth}
+	\begin{subfigure}[t]{.7\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/3DTreeP61B_Angle_18_95.png}
 		\caption{$n=8$, $d=137.5\degree$, $a=18.95\degree$, $l_r=1.3$}
-		\label{fig:3DTreeP61B_Angle_18_95}
+		\label{subfig:3DTreeP61B_Angle_18_95}
 	\end{subfigure}
-	\begin{subfigure}[t]{.8\textwidth}
+	\begin{subfigure}[t]{.7\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/3DTreeP61B_Angle_36.png}
 		\caption{$n=8$, $d=137.5\degree$, $a=36.0\degree$, $l_r=1.3$}
-		\label{fig:3DTreeP61B_Angle_36}
+		\label{subfig:3DTreeP61B_Angle_36}
 	\end{subfigure}
 	\caption{Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:3DTreeP61B_Prod}, visualisiert mithilfe der Turtle-Interpretation. Eigene Abbildungen.}
 	\label{fig:BranchingLSystems3D}
 \end{figure}
 
-\section{Anpassungen für Baumstrukturen}
+\section{Anpassungen für Baumstrukturen}\label{sec:LS_Baumstrukturen}
 
 Die Darstellung von verzweigten L-Systemen mithilfe von Zeichenketten ermöglicht eine Repräsentation in Textform und erlaubt die einfache Definition von Produktionsregeln. Um jedoch eine effiziente Nachbearbeitung und Visualisierung der Ergebnisse eines L-Systems zu ermöglichen, müssen die Aktionen einer Turtle als graphentheoretischer Baum festgehalten werden. Weiterhin wird der Begriff des Tropismus und dessen Einfluss auf die Modellierung von Baumstrukturen eingeführt.
 
@@ -445,4 +445,33 @@ Die Kanten zwischen Knoten wurden durch die Turtle-Interpretation bisher als Lin
 
 \subsection{Tropismus}
 
+Tropismus ist die Tendenz einer Pflanze in eine bestimmte Richtung zu wachsen, beispielsweise aufgrund einer Lichtquelle oder der Beugung durch Gravitation.\cite[Abschn. 3]{SpaceColonizationAlgorithm:07} Der Einfluss von Tropismus wird als ein dreidimensionaler Vektor $\overrightarrow{T}$ angegeben. Die Bewegung $F(l)$ der Turtle wird wie folgt erweitert:
 
+\begin{description}[labelindent]
+	\item[\boldmath$F(l)$]  Die Turtle bewegt sich um $l>0$ in Blickrichtung $\overrightarrow{H}$. Die neue Position ist $\overrightarrow{p_{neu}}$ mit:
+	\begin{equation}
+	\begin{array}{ll}
+	\overrightarrow{p_{neu}} & = \overrightarrow{p} + l * \dfrac{\overrightarrow{H_{rot}} + e * \overrightarrow{T} }{\lVert \overrightarrow{H_{rot}} + e * \overrightarrow{T} \rVert} 
+	\end{array}
+	\end{equation} 
+	
+	\begin{equation}
+	\begin{array}{ll}
+	\text{ und } \overrightarrow{H_{rot}} & = \boldsymbol{R} * \overrightarrow{H}
+	\end{array}
+	\end{equation} 
+	
+\end{description}
+
+wobei $e$ der Anfälligkeit des Baums für die Beugung durch Tropismus entspricht. \cite[S.58]{ABOP:04} \cite[Abschn. 3]{SpaceColonizationAlgorithm:07}
+\begin{figure} [hbtp]
+	\centering
+	\includegraphics[width=.6\textwidth]{images/3DTreeP61B_Angle_18_95_Tropism.png}
+	\label{fig:3DTreeP61B_Angle_18_95_Tropism}
+	\caption{.\\
+		$n=8$, $d=137.5\degree$, $a=36.0\degree$, $l_r=1.3$, $\protect\overrightarrow{T} =\protect\begin{pmatrix}
+		0 \\ 1 \\ -0.5
+		\protect\end{pmatrix}$, $e = 0.27$\\
+		Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:3DTreeP61B_Prod}, visualisiert mithilfe der erweiterten Turtle-Interpretation. Zeigt den Einfluss von Tropismus auf den in Abbildung \ref{subfig:3DTreeP61B_Angle_36} dargestellten Baum.  Eigene Abbildung.}
+	\label{fig:BranchingLSystems3D_Tropism}
+\end{figure}

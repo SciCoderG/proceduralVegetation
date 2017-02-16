@@ -1,6 +1,6 @@
 \chapter{Space Colonization Algorithmus}
 
-TODO: Zusammenfassung Space Colonization Algorithm.
+Es werden die benötigten Eingaben und der Ablauf des Space Colonization Algorithmus festgelegt. Die Prozedur zur Generierung von Baumstrukturen wird vorgestellt und die implementierten Erweiterungen des ursprünglichen Algorithmus werden erläutert.
 
 \section{Ursprung}
 Der Space Colonization Algorithmus wurde ursprünglich zur Modellierung und Visualisierung von Blattvenen vorgeschlagen und basiert auf der Wirkung des Pflanzenhormons Auxin. Dieser Hormonstoff entsteht im Blatt und wird von bereits existierenden Blattvenen angezogen, der resultierende Hormonstrom führt zur Bildung von neuen Venen im Blatt. Die Simulation dieses Vorgangs führt zu realitätsnahen Venenmustern. \cite[Abschn. 2.5]{LeafVenation:05}
@@ -20,7 +20,7 @@ Der Algorithmus benötigt die folgenden Eingaben:
 	
 	\item[\boldmath$D$] Die Schrittweite. Jeder neu generierte Knotenpunkt wird in diesem Abstand zu seinem Vorgänger positioniert. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \\
 	
-	\item[\boldmath$\overrightarrow{T}$] Der Tropismusvektor. Tropismus ist die Tendenz einer Pflanze in eine bestimmte Richtung zu wachsen, beispielsweise aufgrund einer Lichtquelle oder der Beugung durch Gravitation.\cite[Abschn. 3]{SpaceColonizationAlgorithm:07} 
+	\item[\boldmath$\overrightarrow{T}$] Der Tropismusvektor. 
 
 \end{description}
 
@@ -182,7 +182,7 @@ Die von Runions u.a. \cite{SpaceColonizationAlgorithm:07} vorgeschlagene Kurven-
 
 Abbildung \ref{fig:SCA_Extended} zeigt die Modellierung einer zweidimensionalen Baumstruktur.
 
-\section{Erweiterungen}
+\section{Erweiterungen} \label{sec:SCA_Erweiterungen}
 
 Die folgenden Erweiterungen des ursprünglichen Algorithmus wurden implementiert.
 
@@ -234,7 +234,7 @@ Um mehr Kontrolle über die vom Space Colonization Algorithmus generierte Baumst
 	
 	\item[\boldmath$max_{Z}$] Die maximale Zweigtiefe eines Knotens. Bevor ein neuer Knotenpunkt $v'$ als Nachfolger eines Knotenpunkts $v$ erstellt wird, wird seine Zweigtiefe $Z(v')$ berechnet. Übersteigt diese $max_{Z}$, wird der Knotenpunkt $v'$ nicht erstellt.\\
 	
-	\item[\boldmath$max_{NG}$] Die maximale Anzahl von Durchläufen, in welchen einem Knotenpunkt kein neuer Nachfolger hinzugefügt wurde.\footnote{$NG$ steht für \glqq No Grow\grqq{} oder \glqq Did not grow\grqq, englisch für \glqq kein Wachstum\grqq.} Hat ein Knoten diesen Wert erreicht, wird er in Schritt 1 des Algorithmus \ref{alg:SCA_1} nicht weiter darauf untersucht, ob er sich innerhalb des Einflussradius eines Einflusspunktes befindet. Der Wert von $max_{NG}$ eines Knotenpunkts wird auf $0$ zurückgesetzt, falls diesem ein neuer Nachfolger hinzugefügt wurde.
+	\item[\boldmath$max_{NG}$] Die maximale Anzahl von Iterationen, in welchen einem Knotenpunkt kein neuer Nachfolger hinzugefügt wurde.\footnote{$NG$ steht für \glqq No Grow\grqq{} oder \glqq Did not grow\grqq, englisch für \glqq kein Wachstum\grqq.} Hat ein Knoten diesen Wert erreicht, wird er in Schritt 1 des Algorithmus \ref{alg:SCA_1} nicht weiter darauf untersucht, ob er sich innerhalb des Einflussradius eines Einflusspunktes befindet. Der Wert von $max_{NG}$ eines Knotenpunkts wird auf $0$ zurückgesetzt, falls diesem ein neuer Nachfolger hinzugefügt wurde.
 	
 	Durch die vorsichtige Wahl von $max_{NG}$ können Positionsvergleiche vermieden werden ohne den resultierenden Baum zu verändern.
 \end{description}
