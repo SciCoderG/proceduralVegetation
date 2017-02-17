@@ -128,13 +128,33 @@ Folgende Operationen werden vor Beginn der Modelldatengenerierung auf dem graphe
 
 \subsection{Generierung der Zylinder-Meshes} \label{subsec:ZylinderMeshes}
 
-Grundlegend: Zylinder besteht aus zwei Ringen
+Moderne Grafik-APIs stellen dreidimensionale Modelle in Form von geometrischen Primitiven -- in diesem Fall Dreiecke -- dar. Je drei Vertizes -- Punkte in der Welt -- bilden ein Dreieck, dessen Oberfläche mithilfe eines übergebenen Materials gefärbt wird.
+
+Die Vertexe bestehen, zusätzlich zu ihren Positionen, aus :
+
+\begin{description}
+	\item \textbf{Normalenvektoren}, welche die Richtung darstellen, von der aus das Dreieck sichtbar ist und für Beleuchtungsberechnungen benötigt werden. \cite{ModelingByNumbers1A:13} 
+	\item \textbf{Tangentenvektoren}, welche orthogonal zu den Normalenvektoren stehen und für erweiterte Beleuchtungsberechnungen benötigt werden.
+	\item \textbf{Texturkoordinaten}, welche für das korrekte Auftragen von Texturen auf das Modell benötigt werden. \cite{ModelingByNumbers1A:13} 
+\end{description}
+
+
+Der Mantel eines Zylinder kann durch die Verbindung von zwei Kreisen generiert werden. Da ein Kreis theoretisch aus unendlich vielen Punkten besteht, muss eine gewisse Genauigkeit bei der Darstellung von runden Modellen festgelegt werden -- ein Kreis wird aus einer festgelegten Anzahl von Segmenten generiert. Mithilfe einer Kreiszentrums, 
+
+\begin{figure} [hbtp]
+	\centering
+	\includegraphics[height=0.35\textheight]{images/Ring6Sections.png}
+	\caption{Beispiel für einen Kreis mit einer Genauigkeit von sechs Segmenten. $d = \frac{360\degree}{6}$. Die blauen Punkte entsprechen den Positionen, die grünen Pfeile den Normalen und die roten Pfeile den Tangenten der Vertizes. Eigene Abbildung}
+	\label{fig:Ring6Sections}
+\end{figure}
+
+
 
 Ring wird mithilfe eines Radius, einem Ringzentrum und einer Ringnormale beschrieben.
 
 Die Ring-Modelldaten werden aus einem Rotationswinkel um die lokalen Z-Achse und einer vorgegebenen Anzahl von Segmenten erstellt. --> Positionen, Normalen, Tangenten und Texturdaten können berechnet werden.
 
-Die beiden Ringe werden miteinander verbunden -> index daten korrekt berechnen
+Die beiden Ringe werden miteinander verbunden -> Indexdaten korrekt berechnen
 
 Erweiterung der Zylinder auf eine Beschreibung durch mehr als zwei Ringe, um weniger Vertexe generieren zu müssen --> Verwendung der Zweigtiefe um "Äste" zu erstellen
 

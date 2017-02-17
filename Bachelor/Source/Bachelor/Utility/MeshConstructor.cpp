@@ -46,7 +46,9 @@ void UMeshConstructor::GenerateTreeMesh(FTreeConstructionData* TreeConstructionD
 
 	if (TreeConstructionData->MakeFractalMesh) {
 		GenerateFractalMesh(TreeConstructionData, allBranches);
-		allBranches.RemoveAt(0);
+		if (allBranches.Num() > 1) {
+			allBranches.RemoveAt(0);
+		}
 	}
 	else {
 		UBranchUtility::CalcTreeLikeConnectionNormals(TreeConstructionData->RootBranch);
