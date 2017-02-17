@@ -56,7 +56,6 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 
 	WeightedGrowth = true;
 
-	PolyReductionByCurveReduction = false;
 	SmoothOutBranchingAngles = true;
 
 	MaxNumberOfNotDidNotGrowNums = 2;
@@ -147,7 +146,6 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		spawnedColonizationPlant->MaxGrowthDepth = MaxGrowthDepth;
 		spawnedColonizationPlant->WeightedGrowth = WeightedGrowth;
 		
-		spawnedColonizationPlant->PolyReductionByCurveReduction = PolyReductionByCurveReduction;
 		spawnedColonizationPlant->SmoothOutBranchingAngles = SmoothOutBranchingAngles;
 		spawnedColonizationPlant->MaxNumberOfNotDidNotGrowNums = MaxNumberOfNotDidNotGrowNums;
 	}

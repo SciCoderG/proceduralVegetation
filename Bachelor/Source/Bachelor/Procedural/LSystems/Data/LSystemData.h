@@ -27,5 +27,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parameters")
 		TArray<FProductionData> Productions;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parameters")
+		FVector Tropism;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parameters")
+		float BendingByTropismParameter; 
+
 };
 

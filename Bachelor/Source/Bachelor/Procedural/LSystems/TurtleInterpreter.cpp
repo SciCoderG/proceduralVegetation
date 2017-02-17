@@ -4,6 +4,7 @@
 #include "TurtleInterpreter.h"
 #include "Bachelor/Utility/LSystemInterpreter.h"
 #include "Data/TurtleState.h"
+#include "Data/LSystemData.h"
 #include "Procedural/Branch.h"
 
 
@@ -41,11 +42,11 @@ void ATurtleInterpreter::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 
-void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FVector TropismVec, float BendingByTropismParameterF, FString* LSystemResult) {
+void ATurtleInterpreter::StartInterpretation(FBranch** RootBranch, FLSystemData LSystemData, FString* LSystemResult) {
 
 	this->CurrentBranch = *RootBranch;
-	this->Tropism = TropismVec;
-	this->BendingByTropismParameter = BendingByTropismParameterF;
+	this->Tropism = LSystemData.Tropism;
+	this->BendingByTropismParameter = LSystemData.BendingByTropismParameter;
 	
 	CurrentBranch->End = CurrentBranch->Start + FVector::UpVector * 10;
 

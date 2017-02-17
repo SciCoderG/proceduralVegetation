@@ -7,6 +7,7 @@
 
 struct FBranch;
 struct FTurtleState;
+struct FLSystemData;
 
 DECLARE_STATS_GROUP(TEXT("TurtleInterpreter"), STATGROUP_TurtleInterpreter, STATCAT_Advanced);
 
@@ -29,7 +30,7 @@ public:
 
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
 
-	void StartInterpretation(FBranch** RootBranch, FVector TropismVec, float BendingByTropismParameterF, FString* LSystemResult);
+	void StartInterpretation(FBranch** RootBranch, FLSystemData LSystemData, FString* LSystemResult);
 
 private:
 

@@ -80,9 +80,6 @@ public:
 		FTreeConstructionData TreeConstructionData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
-		bool PolyReductionByCurveReduction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
 		bool SmoothOutBranchingAngles;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|ColonizationSpace|Type")

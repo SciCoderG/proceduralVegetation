@@ -41,9 +41,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		bool SmoothOutBranchingAngles;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		bool PolyReductionByCurveReduction;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthSpaces")
 		TArray<AColonizationSpace* > GrowthSpaces;
 

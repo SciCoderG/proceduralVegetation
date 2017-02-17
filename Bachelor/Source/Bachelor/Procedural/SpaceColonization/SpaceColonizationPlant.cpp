@@ -37,7 +37,6 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	MaxGrowthDepth = 6;
 	WeightedGrowth = true;
 
-	PolyReductionByCurveReduction = false;
 	SmoothOutBranchingAngles = true;
 
 	MaxNumberOfNotDidNotGrowNums = 2;
@@ -68,9 +67,6 @@ void ASpaceColonizationPlant::BeginPlay()
 	if (SmoothOutBranchingAngles) {
 		SCOPE_CYCLE_COUNTER(STAT_SmoothOutBranchingAngles);
 		UBranchUtility::SmoothOutBranchingAngles(RootBranch);
-	}
-	if (PolyReductionByCurveReduction) {
-		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
 	}
 
 	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData);

@@ -36,7 +36,7 @@ ALSystemPlant::ALSystemPlant()
 
 	AllMeshData = new FMeshData();
 
-	BendingByTropismParameter = 0.2f;
+	LSystemData.BendingByTropismParameter = 0.2f;
 
 	InitUtilityValues();
 }
@@ -59,11 +59,7 @@ void ALSystemPlant::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Resulting derivation has a length of: %d"), CurrentDerivation.Len());
 	UClass* turtleInterpreterClass = ATurtleInterpreter::StaticClass();
 	turtleInterpreter = GetWorld()->SpawnActor<ATurtleInterpreter>(turtleInterpreterClass, GetActorLocation(), GetActorRotation(), FActorSpawnParameters());
-	turtleInterpreter->StartInterpretation(&RootBranch, Tropism, BendingByTropismParameter, &CurrentDerivation);
-	
-	if (PolyReductionByCurveReduction) {
-		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
-	}
+	turtleInterpreter->StartInterpretation(&RootBranch, LSystemData, &CurrentDerivation);
 
 	InitUtilityValues();
 	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData); 

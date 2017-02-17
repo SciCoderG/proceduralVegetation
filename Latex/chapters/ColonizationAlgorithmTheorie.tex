@@ -121,8 +121,8 @@ Diese Schritte werden solange ausgeführt, bis alle Einflusspunkte entfernt wurd
 \end{figure}
 
 
-\section{Aufbau der Baumstrukturen}
-\label{sec:ModellierungBaumstrukturen}
+\section{Generierung von Baumstrukturen}
+\label{sec:GenerierungBaumstrukturen}
 Der Space Colonization Algorithmus liefert einen Baum, der Knotenpunkte enthält, welche Positionen im dreidimensionalen Raum darstellen. Um diese Knotenpunkte in Form von baumähnlichen Strukturen zu visualisieren, wird die Prozedur erweitert. Der Aufbau der Baumstruktur läuft wie folgt ab:
 
 \begin{description}[labelindent]
@@ -136,12 +136,33 @@ Der Space Colonization Algorithmus liefert einen Baum, der Knotenpunkte enthält
 	
 \end{description}
 
+Die von Runions u.a. \cite{SpaceColonizationAlgorithm:07} vorgeschlagene Kurven-Unterteilung \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} wurde in dieser Arbeit nicht behandelt, da durch Angabe der Schrittweite $D$ eine ausreichende visuelle Qualität erzielt wurde.
+
+Abbildung \ref{fig:SCA_Extended} zeigt die Modellierung einer zweidimensionalen Baumstruktur.
+
+\paragraph{Verringerung der Abzweiungswinkel} \label{par:VerringerungAbzweigungswinkel}
+
+Die $m$ Nachfolger $v_{1} ... v_{m}$ eines Knotens $v$ werden wie folgt einander angenähert:
+\begin{equation}
+\overrightarrow{m} = \overrightarrow{p_v} + \dfrac{\sum_{i=0}^{m} (\overrightarrow{p_{v_i}} - \overrightarrow{p_v})}{m}
+\end{equation}
+
+wobei $\overrightarrow{m}$ dem arithmetischen Mittelpunkt der Nachfolger entspricht. Die Positionen der Nachfolger werden nun wie folgt dem Mittelpunkt angenähert:
+
+\begin{equation}
+\overrightarrow{p_{v_i}} = \overrightarrow{p_{v_i}} + \dfrac{\overrightarrow{m} -\overrightarrow{p_{v_i}}}{2}
+\end{equation}
+
+
+\paragraph{Berechnung der Zylinderbreiten}
+
 Die Berechnung der Zylinderbreiten erfolgt anhand von Murrays Regel, die besagt, dass der Radius $r$ eines Astes auf Grundlage der Radien $r_{n_1}...r_{n_m}$ der nachfolgenden, von ihm abzweigenden Äste wie folgt berechnet werden kann: 
 
 \begin{equation}
 \begin{array}{ll}
 r^g & = r_{n_1}^g + r_{n_2}^g + ... + r_{n_m}^g 
 \end{array}
+\label{eq:Radiusberechnung}
 \end{equation} 
 
 Diese Berechnung kann rekursiv auf dem Baum ausgeführt werden, indem für jeden Knotenpunkt der Radius aus den Radien seiner Nachfolger berechnet wird. Besitzt ein Knotenpunkt keine Nachfolger, wird ein festgelegter Radius $r_0$ zurückgegeben. \cite[Abschn. 3.5]{LeafVenation:05} Der Wert $g$ kann frei gewählt werden.
@@ -174,13 +195,9 @@ Diese Berechnung kann rekursiv auf dem Baum ausgeführt werden, indem für jeden
 		\caption{Modellierung des Ergebnis mithilfe von Zylindern mit $r_0 = 1$ und $g=2$.}
 		\label{subfig:SCA_Extended4}
 	\end{subfigure}
-	\caption{Modellierung einer zweidimensionalen Baumstruktur entsprechend der in Abschnitt \ref{sec:ModellierungBaumstrukturen} beschriebenen Schritte. Eigene Abbildungen.}
+	\caption{Modellierung einer zweidimensionalen Baumstruktur entsprechend der in Abschnitt \ref{sec:GenerierungBaumstrukturen} beschriebenen Schritte. Eigene Abbildungen.}
 	\label{fig:SCA_Extended}
 \end{figure}
-
-Die von Runions u.a. \cite{SpaceColonizationAlgorithm:07} vorgeschlagene Kurven-Unterteilung \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} wurde in dieser Arbeit nicht behandelt, da durch Angabe der Schrittweite $D$ eine ausreichende visuelle Qualität erzielt wurde.
-
-Abbildung \ref{fig:SCA_Extended} zeigt die Modellierung einer zweidimensionalen Baumstruktur.
 
 \section{Erweiterungen} \label{sec:SCA_Erweiterungen}
 
@@ -243,11 +260,11 @@ Um mehr Kontrolle über die vom Space Colonization Algorithmus generierte Baumst
 
 Gewichtetes Wachstum ist eine Möglichkeit die Schrittweite $D$ in Abhängigkeit von der Zweigtiefe zu erhöhen. Befindet sich ein Knotenpunkt auf der Zweigtiefe $0$, werden neu hinzugefügte Nachfolger im Abstand von $2 * D$ positioniert, befindet er sich auf der maximalen Zweigtiefe, werden neu hinzugefügte Nachfolger im Abstand von $D$ positioniert. Zwischen diesen beiden Zweigtiefen wird die Schrittweite linear interpoliert.
 
-\paragraph{Kurvenreduktion}
+\paragraph{Kurvenreduktion} \label{par:Kurvenreduktion}
  
 Kurvenreduktion in Abhängigkeit des Abzweigungswinkels ermöglicht es die Baumstruktur mithilfe einer verringerten Datenmenge darzustellen. Besitzt ein Knoten $v$ genau einen Nachfolger $v_n$ und einen Vorgänger $v'$, werden die zwei Richtungsvektoren zwischen $v'$ und $v$ sowie $v$ und $v_n$ berechnet:
 \begin{equation}
-\overrightarrow{R_1} = \dfrac{p_v - p_{v'}}{\lVert p_v - p_{v'} \rVert} \text{ und } \overrightarrow{R_2} = \dfrac{p_{v_n} - p_{v}}{\lVert p_{v_n} - p_{v} \rVert}
+\overrightarrow{R_1} = \dfrac{\overrightarrow{p_v} - \overrightarrow{p_{v'}}}{\lVert\overrightarrow{p_v} - \overrightarrow{p_{v'}} \rVert} \text{ und } \overrightarrow{R_2} = \dfrac{\overrightarrow{p_{v_n}} - \overrightarrow{p_{v}}}{\lVert \overrightarrow{p_{v_n}} - \overrightarrow{p_{v}} \rVert}
 \end{equation}
 
-Übersteigt das Skalarprodukt $\langle \overrightarrow{R_1}, \overrightarrow{R_2} \rangle$ einen festgelegten Maximalwert, wird $v$ aus dem Baum entfernt. $v_n$ wird zum Nachfolger von $v'$ und $v'$ zum Vorgänger von $v_n$. 
+Übersteigt das Skalarprodukt $\langle \overrightarrow{R_1}, \overrightarrow{R_2} \rangle$ einen festgelegten Maximalwert $max_K$ zwischen $0$ und $1$, wird $v$ aus dem Baum entfernt. $v_n$ wird zum Nachfolger von $v'$ und $v'$ zum Vorgänger von $v_n$. 

@@ -42,19 +42,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|TreeConstruction")
 		FTreeConstructionData TreeConstructionData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|TreeConstruction")
-		bool SmoothOutBranchingAngles;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|TreeConstruction")
-		bool PolyReductionByCurveReduction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|TreeConstruction")
-		FVector Tropism;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|TreeConstruction")
-		float BendingByTropismParameter;
-
-
 private:
 
 	void InitUtilityValues();

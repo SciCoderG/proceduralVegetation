@@ -8,7 +8,7 @@ Die Implementierung des Projekts lässt sich in vier Bereiche unterteilen: Die B
 
 Sowohl L-Systeme als auch der Space Colonization Algorithmus generieren einen graphentheoretischen Baum, auf Grundlage dessen die Modellgenerierung durchgeführt wird. Die implementierte Baumrepräsentation kann daher von beiden Systemen verwendet werden und ermöglicht es, diese mit demselben Modellgenerierungssystem zu visualisieren.
 
-Die Baumstruktur wird durch eine Datenklasse repräsentiert, jedes Objekt dieser Klasse beschreibt einen Knoten sowie die Kante, welche vom Vorgänger zu dem Knoten führt. Die Datenklasse bietet Zugriff auf die folgenden Informationen:
+Der Baum wird durch eine Datenklasse repräsentiert, jedes Objekt dieser Klasse beschreibt einen Knoten sowie die Kante, welche vom Vorgänger zu dem Knoten führt. Die Datenklasse bietet Zugriff auf die folgenden Informationen:
 
 \begin{description}
 	\item \textbf{Vorgänger und Nachfolger:} Mithilfe eines Verweises auf den Vorgänger und eine Liste der Nachfolger eines Knotens kann der Baum-Graph vollständig repräsentiert werden. Weiterhin ermöglicht dies die Implementierung einer Reihe von rekursiven Funktionen zur Anpassung von Modelldaten.\\
@@ -20,7 +20,7 @@ Die Baumstruktur wird durch eine Datenklasse repräsentiert, jedes Objekt dieser
 	\item \textbf{Wachstums-Daten:} Die Wachstums-Daten bestehen aus einer Wachstumsrichtung, einem Einfluss-Zähler und dem \glqq Kein Wachstum\grqq-Zähler ($NG$-Counter), welche für den Ablauf des Space Colonization Algorithmus benötigt werden.	
 \end{description}
 
-Ein Objekt der Datenklasse kann als Astsegment eines biologischen Baumes angesehen werden und wird durch das Modellgenerierungssystem als solches visualisiert.
+Ein Objekt der Datenklasse kann als Astsegment eines biologischen Baumes angesehen werden und wird durch das Modellgenerierungssystem als solches visualisiert. Im Folgenden wird der Begriff \glqq Zweigobjekt\grqq{} verwendet, um ein Objekt der Baumrepräsentationsklasse zu bezeichnen.
 
 \section{L-Systeme}
 
@@ -71,47 +71,71 @@ Die Implementierung einer Space-Colonization-Baumstruktur stellt sich aus der Pl
 
 \subsection{Parameter}
 
-Dem Space-Colonization-Akteur werden Parameter des ursprünglichen Algorithmus sowie die Eingaben für in Abschnitt \ref{sec:SCA_Erweiterungen} besprochene Erweiterungen über die Editor-UI übergeben. Zu den ursprünglichen Parametern gehören der Minimalradius, Einflussradius, Schrittweite, ein Tropismusvektor sowie die Anzahl der durchzuführenden Iterationen. Zu den erweiterten Parametern gehören der maximale Grad, die maximale Zweigtiefe, die maximale Anzahl von \glqq Kein Wachstum\grqq{}-Iterationen, der Kurvenreduktionswert und eine Abfrage, ob gewichtetes Wachstum durchgeführt werden soll.
+Dem Space-Colonization-Akteur werden Parameter des ursprünglichen Algorithmus sowie die Eingaben für in Abschnitt \ref{sec:SCA_Erweiterungen} besprochene Erweiterungen über die Editor-UI übergeben. Zu den ursprünglichen Parametern gehören der Minimalradius, Einflussradius, Schrittweite, ein Tropismusvektor sowie die Anzahl der durchzuführenden Iterationen. Zu den erweiterten Parametern gehören der maximale Grad, die maximale Zweigtiefe, die maximale Anzahl von \glqq Kein Wachstum\grqq{}-Iterationen und eine Abfrage, ob gewichtetes Wachstum durchgeführt werden soll.
 
 Weiterhin müssen die zugeordneten Einflussbereich-Akteure angegeben werden -- damit der Algorithmus durchgeführt werden kann, muss mindestens einer dieser Akteure mit mindestens einem Einflusspunkt eingetragen werden.
 
-\subsection{Einflussbereich}
+\subsection{Einflussbereiche}
 
+Durch die Platzierung von Einflussbereich-Akteuren kann die Verteilung der Einflusspunkte mithilfe des Unreal-Editors beeinflusst werden. Es sind derzeit zwei Formen von Einflussbereichen wählbar: Eine Kugel- und eine Zylinderform. Die Kugelform benötigt die Eingabe eines Kugelradius während die Zylinderform durch eine Höhe und einen Radius beschrieben wird. 
 
+Einem Space-Colonization-Akteur können mehrere Einflussbereiche zugeordnet werden, um eine bestimmte Baumstruktur zu formen. Jeder Einflussbereich-Akteur wird weiterhin in einem vorgegebenen Abstand von dem Space-Colonization-Akteur platziert.
 
-Pro Einflussbereich:
-
-Anzahl von Einfluss punkten
-
-Random Seed
-
-Zwei Arten von Einflussbereichen: Kugel- und Zylinder-förmig.
-
-Angabe mehrerer Einflussbereiche möglich
-
+Dem Einflussbereich muss eine positive Anzahl von zu generierenden Einflusspunkten und ein Random Seed Wert übergeben werden. Ein Random Seed ist ein Wert, der von einem Zufallsgenerator verwendet wird, um eine Folge von zufälligen Zahlen zu generieren. Bei Verwendung desselben Random Seed wird dieselbe Folge von Zufallszahlen erstellt, was eine Kontrolle über Generierung ermöglicht. Somit wird, wenn auch alle anderen Parameter übereinstimmen, mit demselben Random Seed Wert dieselbe Baumstruktur aufgebaut. 
 
 \subsection{Ablauf des Algorithmus}
 
-test
+Die Einflusspunkte aller dem Space-Colonization-Akteur zugeordneten Einflussbereiche werden diesem zu Beginn der Baum-Generierung übergeben. Daraufhin wird ein Baum entsprechend der in Abschnitt \ref{sec:GenerierungBaumstrukturen} und Abschnitt \ref{sec:SCA_Erweiterungen} vorgestellten Konzepten aufgebaut und für die Konstruktion des Modells an das Modellgenerierungssystem weitergegeben.
 
 \section{Modellgenerierung} \label{sec:Modellgenerierung}
 
-test
-
-\subsection{Parameter} \label{subsec:Modellgenerierung_Parameter}
-
-Wichtig: Sowohl SCA als auch LS übergeben Werte wie Branch Radius Zero etc.
+Das Modellgenerierungssystem erhält einen graphentheoretischen Baum von L-System- und Space-Colonization-Akteuren und generiert ein dreidimensionales Mesh in der von der Unreal Engine geforderten Form. Das Mesh entspricht der Visualisierung der Kanten des Baums in Form von Zylindern und simuliert dadurch vereinfacht die Aststruktur eines biologischen Baumes. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} 
 
 \subsection{Procedural Mesh Component}
 
-test
+Die Procedural Mesh Component ist eine Komponente der Unreal Engine, welche die Darstellung von prozedural generierten Polygonnetzen zulässt. Der Komponente werden Vertexdaten in Form von Listen aus Positions-, Normalen-, Tangenten-, Textur- und Indexdaten übergeben. Das Grafiksystem der Unreal Engine ist daraufhin in der Lage, die Komponente als dreidimensionales Modell im Level darzustellen. \cite{ProceduralMeshComponent:15} Die Vertexdaten werden, basierend auf dem übergebenen Baum und den Parametern, vom Modellgenerierungssytem erstellt.
+
+Jedem L-System-Akteur und Space-Colonization-Akteur ist eine Procedural Mesh Component zugeordnet.
+
+\subsection{Parameter} \label{subsec:Modellgenerierung_Parameter}
+
+Dem Modellgenerierungssystem werden die folgenden Parameter über die Editor-UI übergeben:
+
+\begin{description}
+	\item \textbf{Radius-Daten:} Dies beinhaltet den Blattradius, den Radiuswachstumswert, den Stammbreitenmultiplikator und die Abfrage, ob Radiusberechnungen durchgeführt werden sollen. \\
+	
+	\item \textbf{Genauigkeit:} Dies beinhaltet die minimale und maximale Anzahl von Zylindersektionen sowie den Kurvenreduktionswert. \\
+	
+	\item \textbf{Sonstiges:} Weiterhin wird die Rotation jedes Zylindersegments auf der lokalen Z-Achse, ein Material und eine Abfrage, ob ein fraktales Mesh erstellt werden soll, übergeben. Ein Material beinhaltet Textur- und Shaderinformationen und ist für die Oberflächenbeschaffenheit des generierten Modells verantwortlich.
+\end{description}
+
+\subsection{Operationen auf dem Baum}
+
+Folgende Operationen werden vor Beginn der Modelldatengenerierung auf dem graphentheoretischen Baum durchgeführt:
+
+\begin{description}
+	\item \textbf{Kurvenreduktion:} Die Kurvenreduktion wird, beginnend mit dem Wurzel-Zweigobjekt des Baums, rekursiv ausgeführt. In jedem Schritt wird überprüft ob, entsprechend der Beschreibung in Paragraph \ref{par:Kurvenreduktion}, das aktuelle Zweigobjekt entfernt werden kann. Falls nicht, wird die Kurvenreduktion auf allen Nachfolgern des aktuellen Zweigobjekts durchgeführt. Die Rekursion bricht ab, falls ein Zweigobjekt keine Nachfolger besitzt.
+	
+	Der Parameter \glqq Kurvenreduktionswert\grqq{} entspricht dem Maximalwert des Skalarprodukts $max_K$.\\
+	
+	\item \textbf{Radiusberechnung:} Der Endradius jedes Zweigobjekts wird, beginnend mit dem Wurzel-Zweigobjekt des Baums, rekursiv anhand von Gleichung \ref{eq:Radiusberechnung} berechnet. Der Parameter \glqq Blattradius\grqq{} entspricht $r_0$ und der \glqq Radiuswachstumswert\grqq{} entspricht $g$. 
+	
+	Der Startradius jedes Zweigobjekts wird auf den Wert des Endradius seines Vorgängers gesetzt. Da das Wurzel-Zweigobjekt keinen Vorgänger besitzt, wird der Startradius aus der Multiplikation des Stammbreitenmultiplikator mit dem Endradius des Objekts bestimmt.\\
+	
+	\item \textbf{Verringerung der Abzweigungswinkel:} Die Nachfolger jedes Zweigobjekts werden, entsprechend der Beschreibung in Paragraph \ref{par:VerringerungAbzweigungswinkel}, einander angenähert. Die Verringerung der Abzweigungswinkel wird nur bei einem durch einen Space-Colonization-Akteur generierten Baum durchgeführt.
+\end{description}
+
 
 \subsection{Generierung der Zylinder-Meshes} \label{subsec:ZylinderMeshes}
 
-Die Startposition entspricht der Endposition des Vorgängers und markiert den Anfang der Kante, die zu dem Knoten führt, der durch das Datenobjekt beschrieben wird. Die Endposition beschreibt die Position des Knotens und markiert das Ende der Kante, die zu dem Knoten führt. 
+Grundlegend: Zylinder besteht aus zwei Ringen
 
-Der Startradius bestimmt den Radius des Start-Zylinderrings, Startposition und Startnormale beschreiben die Ebene, auf welcher der Zylinderring generiert wird. Der Endradius entspricht dem Radius des End-Zylinderrings, Endposition und Startnormale beschreiben die Ebene, auf welcher der Ring erstellt wird.
+Ring wird mithilfe eines Radius, einem Ringzentrum und einer Ringnormale beschrieben.
 
-\subsection{Operationen auf der Baumstruktur}
+Die Ring-Modelldaten werden aus einem Rotationswinkel um die lokalen Z-Achse und einer vorgegebenen Anzahl von Segmenten erstellt. --> Positionen, Normalen, Tangenten und Texturdaten können berechnet werden.
 
-Was kann mit BranchUtility gemacht werden?
+Die beiden Ringe werden miteinander verbunden -> index daten korrekt berechnen
+
+Erweiterung der Zylinder auf eine Beschreibung durch mehr als zwei Ringe, um weniger Vertexe generieren zu müssen --> Verwendung der Zweigtiefe um "Äste" zu erstellen
+
+
