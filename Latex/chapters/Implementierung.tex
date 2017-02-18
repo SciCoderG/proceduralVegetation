@@ -106,7 +106,7 @@ Dem Modellgenerierungssystem werden die folgenden Parameter über die Editor-UI 
 	
 	\item \textbf{Genauigkeit:} Dies beinhaltet die minimale und maximale Anzahl von Zylindersektionen sowie den Kurvenreduktionswert. \\
 	
-	\item \textbf{Sonstiges:} Weiterhin wird die Rotation jedes Zylindersegments auf der lokalen Z-Achse, ein Material und eine Abfrage, ob ein fraktales Mesh erstellt werden soll, übergeben. Ein Material beinhaltet Textur- und Shaderinformationen und ist für die Oberflächenbeschaffenheit des generierten Modells verantwortlich.
+	\item \textbf{Sonstiges:} Weiterhin wird ein Startrotationswinkel, ein Material und eine Abfrage, ob ein fraktales Mesh erstellt werden soll, übergeben. Ein Material beinhaltet Textur- und Shaderinformationen und ist für die Oberflächenbeschaffenheit des generierten Modells verantwortlich.
 \end{description}
 
 \subsection{Operationen auf dem Baum}
@@ -121,6 +121,13 @@ Folgende Operationen werden vor Beginn der Modelldatengenerierung auf dem graphe
 	\item \textbf{Radiusberechnung:} Der Endradius jedes Zweigobjekts wird, beginnend mit dem Wurzel-Zweigobjekt des Baums, rekursiv anhand von Gleichung \ref{eq:Radiusberechnung} berechnet. Der Parameter \glqq Blattradius\grqq{} entspricht $r_0$ und der \glqq Radiuswachstumswert\grqq{} entspricht $g$. 
 	
 	Der Startradius jedes Zweigobjekts wird auf den Wert des Endradius seines Vorgängers gesetzt. Da das Wurzel-Zweigobjekt keinen Vorgänger besitzt, wird der Startradius aus der Multiplikation des Stammbreitenmultiplikator mit dem Endradius des Objekts bestimmt.\\
+	
+	\item \textbf{Normalenberechnung:} Die Endnormale $\overrightarrow{n_{e}}$ jedes Zweigobjekts werden mithilfe der Startposition $\overrightarrow{p_{s}}$ und Endposition $\overrightarrow{p_{e}}$ sowie seiner Startnormale $\overrightarrow{n_{s}}$ wie folgt berechnet:
+	\begin{equation}
+		\overrightarrow{n_{e}} = \dfrac{(\overrightarrow{p_{e}} - \overrightarrow{p_{s}}) + \overrightarrow{n_{s}}}{\lVert (\overrightarrow{p_{e}} - \overrightarrow{p_{s}}) + \overrightarrow{n_{s}} \rVert}
+	\end{equation}
+	Die Startnormale entspricht der Endnormale des Vorgängers, im Falle des Wurzel-Zweigobjekts entspricht die Startnormale $\overrightarrow{n_s} = \overrightarrow{p_{e}} - \overrightarrow{p_{e}}$. \\
+	
 	
 	\item \textbf{Verringerung der Abzweigungswinkel:} Die Nachfolger jedes Zweigobjekts werden, entsprechend der Beschreibung in Paragraph \ref{par:VerringerungAbzweigungswinkel}, einander angenähert. Die Verringerung der Abzweigungswinkel wird nur bei einem durch einen Space-Colonization-Akteur generierten Baum durchgeführt.
 \end{description}
@@ -139,23 +146,94 @@ Die Vertexe bestehen, zusätzlich zu ihren Positionen, aus :
 \end{description}
 
 
-Der Mantel eines Zylinder kann durch die Verbindung von zwei Kreisen generiert werden. Da ein Kreis theoretisch aus unendlich vielen Punkten besteht, muss eine gewisse Genauigkeit bei der Darstellung von runden Modellen festgelegt werden -- ein Kreis wird aus einer festgelegten Anzahl von Segmenten generiert. Mithilfe einer Kreiszentrums, 
+Der Mantel eines Zylinder kann durch die Verbindung von zwei Kreisen generiert werden. 
+
+\paragraph{Berechnung der Vertizes auf einem Kreis}
+
+Da ein Kreis theoretisch aus unendlich vielen Punkten besteht, muss eine gewisse Genauigkeit bei der Darstellung von runden Modellen festgelegt werden -- ein Kreis wird aus einer festgelegten Anzahl von Segmenten generiert. Mithilfe eines Mittelpunkts $\overrightarrow{c}$ und  einem Radius $r$ kann ein Kreis im zweidimensionalen Raum beschrieben werden. Die Vertexpositionen $\overrightarrow{v_i}$ werden wie folgt berechnet:
+
+\begin{equation}
+	\overrightarrow{v_i} =\overrightarrow{c} + r * \begin{pmatrix}
+	cos(d)\\
+	sin(d)\\
+	0
+	\end{pmatrix}
+	\text{ mit } d = rot_z + i * \frac{360\degree}{n} \text{ und } i = 0 ... (n-1)
+\end{equation}
+\cite{ModelingByNumbersZylindersA:13}
+
+wobei $n$ der Anzahl der Segmente und $r_z$ einem Startrotationswinkel entspricht.
+
+Mithilfe der Kreisnormalen $\overrightarrow{n_k}$, die orthogonal zur Kreisebene steht und des Kreismittelpunkts $\overrightarrow{c}$ kann die Kreisebene beschrieben werden, auf welcher die Vertizes zu generieren sind. Eine Vertexposition $\overrightarrow{v_i}$ muss um den Kreismittelpunkt rotiert werden, um auf der Kreisebene zu liegen, wobei Rotationsachse $\overrightarrow{R}$ und Rotationswinkel $\alpha$ wie folgt berechnet werden:
+\begin{equation}
+\overrightarrow{R} = \dfrac{(\overrightarrow{v_i} - \overrightarrow{c}) \times \overrightarrow{n_k}}{\lVert (\overrightarrow{v_i} - \overrightarrow{c}) \times \overrightarrow{n_k} \rVert}
+\end{equation}
+
+\begin{equation}
+\alpha = arccos(\langle \overrightarrow{n_k}, \overrightarrow{z} \rangle) \text{ mit } \overrightarrow{z} = \begin{pmatrix}
+0\\
+0\\
+1
+\end{pmatrix}
+\end{equation}
+ wobei $arccos$ dem Arkuskosinus entspricht. \cite{RotationBetweenVectors:16} 
+ Die rotierte Vertexposition $\overrightarrow{v}$ ermöglicht die Berechnung der Vertexnormale $\overrightarrow{n_v}$ und Vertextangente $\overrightarrow{t_v}$:
+ 
+ \begin{equation}
+	 \overrightarrow{n_v} = \dfrac{\overrightarrow{v} - \overrightarrow{c}}{\lVert \overrightarrow{v} - \overrightarrow{c} \rVert} \text{ und } \overrightarrow{t_v} = \overrightarrow{n_v} \times \overrightarrow{n_k}
+ \end{equation}
+\begin{figure} [hbtp]
+	\centering
+	\includegraphics[height=0.25\textheight]{images/Ring6Sections.png}
+	\caption{Beispiel für die Berechnung von Vertexpositionen auf einem Einheitskreis mit einer Genauigkeit von sechs Segmenten. $d = \frac{360\degree}{6} = 60 \degree$. Die blauen Punkte entsprechen den Positionen, die grünen Pfeile den Normalen und die roten Pfeile den Tangenten der Vertizes. Eigene Abbildung.}
+	\label{fig:Ring6Sections}
+\end{figure}
+\paragraph{Verbindung der Kreise}
+Um den Zylindermantel eines Zweigobjekts zu bilden, werden zwei Kreise mithilfe der Start- und Enddaten des Objekts generiert. Jedes Kreissegment eines Kreises wird mit dem entsprechenden Segment des anderen Kreises verbunden und bildet dadurch ein Zylindersegment. Ein Zylindersegment entspricht somit einem Rechteck. Da das Modell jedoch Dreiecksdaten benötigt, wird jedes Rechteck, wie in Abbildung \ref{subfig:Zylinder10SegmenteWireframe} dargestellt, aus zwei Dreiecken gebildet. \cite{ModelingByNumbersZylindersA:13}
+\begin{figure} [hbtp]
+\centering
+\begin{subfigure}[t]{.4\textwidth}
+	\centering
+	\includegraphics[height=.75\linewidth]{images/Zylinder10SegmenteWireframe.png}
+	\caption{Darstellung der Dreiecke, welche bei der Verbindung der Kreise entstehen.}
+	\label{subfig:Zylinder10SegmenteWireframe}
+\end{subfigure}
+\hspace{.1\textwidth}
+\begin{subfigure}[t]{.4\textwidth}
+	\centering
+	\includegraphics[height=.75\linewidth]{images/Zylinder10SegmenteOpaque.png}
+	\caption{Gefärbte Dreiecke mit Beleuchtungsberechnung.}
+	\label{subfig:Zylinder10SegmenteOpaque}
+\end{subfigure}
+\caption{Verbindung zweier Kreise zu einem Zylindermantel. Eigene Abbildungen.}
+\label{fig:Zylinder10Segmente}
+\end{figure}
+
+Wird jedes Zweigobjekt durch die Verbindung von genau zwei Kreisen dargestellt, führt dies zu der Generierung redundanter Vertexdaten. Die Enddaten eines Zweigobjekts und die Startdaten seines Nachfolgers entsprechen einander, die daraus generierten Kreis-Vertizes liegen genau aufeinander. Anstatt nun vier Kreise für die Generierung zweier Zylinder zu verwenden, können die Vertizes des verbindenden Kreises wiederverwendet werden -- es genügen drei Kreise für die Generierung zweier Zylinder.
+
+Die Verbindung der Modelldaten kann für alle Zweigobjekte durchgeführt werden, deren Nachfolger dieselbe Zweigtiefe besitzen und somit eine Folge von zusammenhängenden Zylindermodellen bilden. Für einen Nachfolger mit einer sich unterscheidenden Zweigtiefe wird eine neue Folge von zusammenhängenden Zylindermodellen begonnen. \cite{ModelingByNumbersZylindersA:13}
+
+Ein Beispiel für die Generierung zweier Zylinder mithilfe von drei Kreisen wird in Abbildung \ref{subfig:MultiZylinder10SegmenteWireframe} dargestellt.
 
 \begin{figure} [hbtp]
 	\centering
-	\includegraphics[height=0.35\textheight]{images/Ring6Sections.png}
-	\caption{Beispiel für einen Kreis mit einer Genauigkeit von sechs Segmenten. $d = \frac{360\degree}{6}$. Die blauen Punkte entsprechen den Positionen, die grünen Pfeile den Normalen und die roten Pfeile den Tangenten der Vertizes. Eigene Abbildung}
-	\label{fig:Ring6Sections}
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[height=\linewidth]{images/MultiZylinder10SegmenteWireframe.png}
+		\caption{Darstellung der Dreiecke, welche bei der Verbindung der Kreise entstehen.}
+		\label{subfig:MultiZylinder10SegmenteWireframe}
+	\end{subfigure}
+	\hspace{.1\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
+		\centering
+		\includegraphics[height=\linewidth]{images/MultiZylinder10SegmenteOpaque.png}
+		\caption{Gefärbte Dreiecke mit Beleuchtungsberechnung.}
+		\label{subfig:MultiZylinder10SegmenteOpaque}
+	\end{subfigure}
+	\caption{Verbindung dreier Kreise zu einer Folge zusammenhängender Zylindermodelle. Eigene Abbildungen.}
+	\label{fig:MultiZylinder10Segmente}
 \end{figure}
 
 
-
-Ring wird mithilfe eines Radius, einem Ringzentrum und einer Ringnormale beschrieben.
-
-Die Ring-Modelldaten werden aus einem Rotationswinkel um die lokalen Z-Achse und einer vorgegebenen Anzahl von Segmenten erstellt. --> Positionen, Normalen, Tangenten und Texturdaten können berechnet werden.
-
-Die beiden Ringe werden miteinander verbunden -> Indexdaten korrekt berechnen
-
-Erweiterung der Zylinder auf eine Beschreibung durch mehr als zwei Ringe, um weniger Vertexe generieren zu müssen --> Verwendung der Zweigtiefe um "Äste" zu erstellen
 
 
