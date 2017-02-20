@@ -1,45 +1,76 @@
 \chapter{Ergebnisse}
-In diesem Kapitel werden die Ergebnisse vorgestellt, die mithilfe den Implementierungen von L-Systemen und dem Space-Colonization Algorithmus produziert werden können.
+In diesem Kapitel werden die Ergebnisse vorgestellt, die mithilfe den Implementierungen von L-Systemen und dem Space-Colonization Algorithmus produziert werden können. Deshalb bietet es sich an in vielen Fällen an biologisch motivierte Begriffe zu verwenden -- beispielsweise Kanten als Äste oder Zweige zu bezeichnen -- um eine Verbindung zwischen visueller Repräsentation und graphentheoretischem Hintergrund zu schaffen.
 
 Bei der Erstellung der Abbildungen wurden die Beleuchtungsberechnungen des Grafiksystems der Unreal Engine aktiviert.
 \section{L-System-Akteur}
-L-Systeme ermöglichen es mithilfe bestimmter Produktionsregeln Baumstrukturen zu generieren. Um Regeln zu finden, die realitätsnahe Ergebnisse liefern kann das Abzweigungsverhalten von biologischen Bäumen betrachtet werden.
-\subsection{Monopodial}
-Ein biologischer Baum mit monopodialem Abzweigungsverhalten bildet einen Hauptstamm, der stets weiterwächst, mit davon abzweigenden Nebenästen. \cite[S.21]{Forstbonatik:17} Ein Beispiel für ein solches Wachstum ist das folgende L-System:
+L-Systeme ermöglichen es mithilfe bestimmter Produktionsregeln realitätsnahe Baumstrukturen zu generieren. Im Folgenden werden verschiedene natürliche Wachstumsarten mithilfe von L-Systemen reproduziert und durch die L-System Implementierung visualisiert.
+\subsection{Monopodiales Wachstum}
+Ein biologischer Baum mit monopodialem Wachstumsverhalten bildet einen Hauptstamm, der stets weiterwächst, mit davon abzweigenden Nebenästen. \cite[S.21]{Forstbonatik:17} Ein Beispiel für ein solches Wachstum ist das folgende L-System:
 
 \begin{equation}
 \begin{array}{llll}
-\omega & : F(100)A(100) \\
+\omega & : F(s)A(100) \\
 p_1 & : A(l) &\rightarrow& F(l)\text{ }[\&(a1)\text{ }B(l)]\text{ }/(d1)\text{ }A(l*r1) \\
 p_2 &  : B(l) &\rightarrow& F(l)\text{ }[-(a2)\text{ }B(l*r2)]\text{ }/(d2)\text{ }B(l*r2)
 \end{array}
 \label{eq:ProdMonopodial}
 \end{equation} 
+\cite[S.56]{ABOP:04}
 
-Die Produktionsregel $p_1$ produziert den Hauptstamm, welcher in jeder Ableitung verlängert wird und einen Nebenast produziert, der anhand von $p_2$ ebenfalls entlang einer Hauptachse weiterwächst und weitere Nebenäste produziert. $a_1$ und $a_2$ entsprechen den Abzweigungswinkel neuer Äste von der Hauptachse, während die Winkel $d_1$ und $d_2$ die Rotation um die Hauptachse beschreiben, bevor ein neuer Nebenast produziert wird. $r_1$ und $r_2$ entsprechen Faktoren, welche das Wachstum eines Astes pro Ableitung verkürzen, falls der Wert unter $1$ liegt und verlängern, falls der Wert über $1$ liegt.
+Die Produktionsregel $p_1$ produziert den Hauptstamm, welcher in jeder Ableitung verlängert wird und einen Nebenast produziert, der anhand von $p_2$ ebenfalls entlang einer Hauptachse weiterwächst und weitere Nebenäste produziert. $a_1$ und $a_2$ entsprechen den Abzweigungswinkeln neuer Äste von der Hauptachse, während die Winkel $d_1$ und $d_2$ die Rotation um die Hauptachse beschreiben, bevor ein neuer Nebenast produziert wird. $r_1$ und $r_2$ entsprechen Faktoren, welche das Wachstum eines Astes pro Ableitung verkürzen, falls der Wert unter $1$ liegt und verlängern, falls der Wert über $1$ liegt. $s$ beschreibt die Länge des Stammes, bevor das Wachstum beginnt. \cite[S.57]{ABOP:04}
 
-Abbildung \ref{fig:Monopodial}
+Abbildung \ref{fig:LS_Monopodial} zeigt Beispiele für monopodiale Baumstrukturen, Tabelle \ref{tab:LS_Monopodial} die verwendeten Konstantenwerte. Es findet kein Einfluss durch Tropismus statt.
+\begin{center}
+	\begin{tabulary}{\textwidth}{|C|C|C|C|C|C|C|C|C|}
+		\hline 
+		Abbildung & $n$ & $a_1$ & $a_2$ & $r_1$ & $r_2$ & $d_1$ & $d_2$ & $s$ \\ 
+		\hline 
+		a & 11 & 45.0 & 35.0 & 1.05 & 0.9 & 137.5 & 70.0 & 100.0 \\ 
+		\hline 
+		b & 11 & 60.0 & 20.0 & 1.05 & 0.9 & 137.5 & 70.0 & 100.0 \\ 
+		\hline 
+		c & 11 & 45.0 & 35.0 & 0.95 & 0.9 & 137.5 & 70.0 & 350.0 \\ 
+		\hline 
+		d & 11 & 77.0 & -37.0 & 1.05 & 0.85 & 137.5 & -70.0 & 200.0 \\ 
+		\hline 
+	\end{tabulary} 
+	\captionof{table}{Konstantenwerte der in Abbildung \ref{fig:LS_Monopodial} dargestellten monopodialen Baumstrukturen.} 
+	\label{tab:LS_Monopodial}
+\end{center}
+
 
 \begin{figure} [hbtp]
 	\centering
-	\begin{subfigure}[t]{.7\textwidth}
+	\begin{subfigure}[t]{.45\textwidth}
 		\centering
-		\includegraphics[width=\linewidth]{images/3DTreeP61B_Angle_18_95.png}
-		\caption{$n=8$, $d=137.5\degree$, $a=18.95\degree$, $l_r=1.3$}
-		\label{subfig:3DTreeP61B_Angle_18_95}
+		\includegraphics[width=\linewidth]{images/LS_Monopodial_1.png}
+		\caption{}
+		\label{subfig:LS_Monopodial_1}
 	\end{subfigure}
-	\begin{subfigure}[t]{.7\textwidth}
+	\begin{subfigure}[t]{.45\textwidth}
 		\centering
-		\includegraphics[width=\linewidth]{images/3DTreeP61B_Angle_36.png}
-		\caption{$n=8$, $d=137.5\degree$, $a=36.0\degree$, $l_r=1.3$}
-		\label{subfig:3DTreeP61B_Angle_36}
+		\includegraphics[width=\linewidth]{images/LS_Monopodial_2.png}
+		\caption{}
+		\label{subfig:LS_Monopodial_2}
+	\end{subfigure}	
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Monopodial_3.png}
+		\caption{}
+		\label{subfig:LS_Monopodial_3}
 	\end{subfigure}
-	\caption{Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:ProdMonopodial}, visualisiert mithilfe der implementierten Turtle-Interpretation. Eigene Abbildungen.}
-	\label{fig:Monopodial}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Monopodial_4.png}
+		\caption{}
+		\label{subfig:LS_Monopodial_4}
+	\end{subfigure}
+	\caption{Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:ProdMonopodial}. Eigene Abbildungen.}
+	\label{fig:LS_Monopodial}
 \end{figure}
 
-\subsection{Sympodial}
-Beim sympodialen Wachstum bildet ein Ast Abzweigungen, ohne selbst weiter zu wachsen. 
+\subsection{Sympodiales Wachstum}
+Beim sympodialen Wachstum bildet ein Ast mehrere Abzweigungen in einem Winkel ungleich $0\degree$. Der sich verzweigende Ast wächst daraufhin nicht weiter. \cite[S.21]{Forstbonatik:17} \cite[S.58]{ABOP:04} Das folgende L-System simuliert ein solches Wachstum:
 
 \begin{equation}
 \begin{array}{llll}
@@ -47,24 +78,238 @@ Beim sympodialen Wachstum bildet ein Ast Abzweigungen, ohne selbst weiter zu wac
 p_1 & : A(l) &\rightarrow& F(l)\text{ }[\&(a1)\text{ }B(l*r1)]\text{ }/(180)\text{ }[\&(a2)\text{ }B(l*r2)] \\
 p_2 &  : B(l) &\rightarrow& F(l)\text{ }[+(a1)\text{ }/(d1)\text{ }B(l*r1)]\text{ }[-(a2)\text{ }\backslash(d2)\text{ }B(l*r2)]
 \end{array}
-\label{eq:ProdMonopodial}
+\label{eq:ProdSympodial}
 \end{equation} 
+\cite[S.59]{ABOP:04}
+Die Produktionsregel $p_1$ beschreibt die Bildung der ersten, sich gegenüberliegenden, Abzweigungen, während $p_2$ das Wachstum der abzweigenden Äste beschreibt, welche sich ebenfalls zu zwei Nebenästen aufteilen. $a_1$ und $a_2$ entsprechen den Abzweigungswinkeln, $r_1$ und $r_2$ den Wachstumsfaktoren pro Ableitung der Nebenäste. $d_1$ und $d_2$ beschreiben die Rotation eines Nebenastes um seine eigene Achse, bevor die nächste Abzweigung entsteht.
+
+Abbildung \ref{fig:LS_Sympodial} zeigt Beispiele für sympodiale Baumstrukturen, Tabelle \ref{tab:LS_Sympodial} die verwendeten Konstantenwerte. Es findet kein Einfluss durch Tropismus statt.
+
+\begin{center}
+	\begin{tabulary}{\textwidth}{|C|C|C|C|C|C|C|C|}
+		\hline 
+		Abbildung & $n$ & $a_1$ & $a_2$ & $r_1$ & $r_2$ & $d_1$ & $d_2$ \\ 
+		\hline 
+		a & 10 & 5.0 & 65.0 & 0.9 & 0.75 & 50.0 & 50.0 \\ 
+		\hline 
+		b & 10 & 20.0 & 50.0 & 0.9 & 0.75 & 50.0 & 50.0 \\ 
+		\hline 
+		c & 10 & 35.0 & 35.0 & 1.0 & 0.8 & 50.0 & 50.0 \\ 
+		\hline 
+		d & 10 & 30.0 & 65.0 & 0.95 & 0.9 & 110.0 & 110.0 \\ 
+		\hline 
+	\end{tabulary} 
+	\captionof{table}{Konstantenwerte der in Abbildung \ref{fig:LS_Sympodial} dargestellten monopodialen Baumstrukturen.} 
+	\label{tab:LS_Sympodial}
+\end{center}
+
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Sympodial_1.png}
+		\caption{}
+		\label{subfig:LS_Sympodial_1}
+	\end{subfigure}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Sympodial_2.png}
+		\caption{}
+		\label{subfig:LS_Sympodial_2}
+	\end{subfigure}	
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Sympodial_3.png}
+		\caption{}
+		\label{subfig:LS_Sympodial_3}
+	\end{subfigure}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Sympodial_4.png}
+		\caption{}
+		\label{subfig:LS_Sympodial_4}
+	\end{subfigure}
+	\caption{Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:ProdSympodial}. Eigene Abbildungen.}
+	\label{fig:LS_Sympodial}
+\end{figure}
+
 
 \subsection{Ternäre Verzweigungen}
-test
-\subsection{Tropismus}
-Die Wahl eines Tropismusvektors erweitert diese Regeln und ermöglicht
-\section{Space-Colonization-Akteur}
-test
-\subsection{Ursprüngliche Parameter}
-test
-\subsection{Erweiterte Parameter}
-test
+Eine andere Herangehensweise zur Bestimmung von L-Systemen, welche Baumstrukturen produzieren, ist die Beschreibung von Selbstähnlichkeit, wie sie oft in der Natur zu finden ist. \cite[S.173]{ABOP:04} Das L-System aus Gleichung \ref{eq:ProdTernary} entspricht einem Wachstum, in welchem drei Abzweigungen auf dieselbe Art, mithilfe von Produktion $p_1$, erstellt werden. Kanten aus vorhergehenden Ableitungen werden, wie in Produktion $p_2$ beschrieben, um einen Faktor $l_r$ verlängert. \cite[S.58]{ABOP:04}
 
-\subsection{Probleme}
-Mit SCA: Gleicher Abstand von zwei Einflusspunkten führt zu beinahe unendlicher Hin- und Her-Generierung von Branches.
-\\
-SCA: Random-Verteilung der Punkte.
+\begin{equation}
+\begin{array}{llll}
+\omega & : /(45)A \\
+p_1 & : A &\rightarrow& F(l_s)\text{ }[\&(a)\text{ }F(l_s)\text{ }A]\text{ }/(d1)\text{ }[\&(a)\text{ }F(l_s)\text{ }A]\text{ }/(d2)\text{ }[\&(a)\text{ }F(l_s)\text{ }A] \\
+p_2 &  : F(l) &\rightarrow& F(l * l_r)
+\end{array}
+\label{eq:ProdTernary}
+\end{equation} 
+\cite[S.60]{ABOP:04}
+
+$a$ entspricht dem Abzweigungswinkel von der Ursprungsachse, $d_1$ und $d_2$ der Rotation um die Achse, bevor eine neue Abzweigung produziert wird. $l_s$ ist die Anfangslänge der Kanten. \cite[S.58]{ABOP:04}
+
+Abbildung \ref{fig:LS_Ternary} zeigt verschiedene ternär verzweigte Baumstrukturen, die auf den in Tabelle \ref{tab:LS_Ternary} gelisteten Konstantenwerten aufgebaut sind.
+
+\begin{center}
+	\begin{tabulary}{\textwidth}{|C|C|C|C|C|C|C|}
+		\hline 
+		Abbildung & $n$ & $a$ & $d_1$ & $d_2$ & $l_r$ & $l_s$ \\ 
+		\hline 
+		a & 6 & 19.0 & 95.0 & 132.0 & 1.1 & 50.0 \\ 
+		\hline 
+		b & 8 & 19.0 & 137.5 & 137.5 & 1.2 & 50.0 \\ 
+		\hline 
+		c & 8 & 27.0 & 77.0 & 77.0 & 1.3 & 50.0 \\ 
+		\hline 
+		d & 8 & 31.0 & 120.0 & 190.0 & 1.2 & 50.0 \\ 
+		\hline 
+	\end{tabulary} 
+	\captionof{table}{Konstantenwerte der in Abbildung \ref{fig:LS_Ternary} dargestellten ternär verzweigten Baumstrukturen.} 
+	\label{tab:LS_Ternary}
+\end{center}
+
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Ternary_1.png}
+		\caption{}
+		\label{subfig:LS_Ternary_1}
+	\end{subfigure}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Ternary_2.png}
+		\caption{}
+		\label{subfig:LS_Ternary_2}
+	\end{subfigure}	
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Ternary_3.png}
+		\caption{}
+		\label{subfig:LS_Ternary_3}
+	\end{subfigure}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Ternary_4.png}
+		\caption{}
+		\label{subfig:LS_Ternary_4}
+	\end{subfigure}
+	\caption{Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:ProdTernary}. Eigene Abbildungen.}
+	\label{fig:LS_Ternary}
+\end{figure}
+
+
+\subsection{Tropismus}
+
+Der Einfluss von Tropismus führt, bei Eingabe derselben Werte bei den restlichen Parametern, zu visuell unterschiedlichen Ergebnissen. Dadurch können reale Einflüsse, wie der Einwirkung von Wind, Sonne und Gravitation, simuliert sowie die Wiederverwendbarkeit von L-System Definitionen erhöht werden. 
+
+Abbildung \ref{fig:LS_Ternary_Tropism} zeigt den Einfluss von Tropismus auf Baumstrukturen aus Abbildung \ref{fig:LS_Ternary}, welche ohne die Einwirkung von Tropismus produziert wurden.
+
+
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Ternary_2.png}
+		\caption{$\overrightarrow{T} = \overrightarrow{0}$, $e = 0$ \\ Entspricht Abbildung \ref{subfig:LS_Ternary_2}.}
+		\label{subfig:LS_Ternary_2.2}
+	\end{subfigure}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Ternary_2_Tropism.png}
+		\caption{$\overrightarrow{T} = \protect\begin{pmatrix}
+			0 \\
+			-0.5 \\
+			-1
+			\protect\end{pmatrix}$, $e = 0.5$}
+		\label{subfig:LS_Ternary_2_Tropism}
+	\end{subfigure}	
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Ternary_4.png}
+		\caption{$\overrightarrow{T} = \overrightarrow{0}$, $e = 0$\\ Entspricht Abbildung \ref{subfig:LS_Ternary_4}.}
+		\label{subfig:LS_Ternary_4.2}
+	\end{subfigure}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/LS_Ternary_4_Tropism.png}
+		\caption{$\overrightarrow{T} = \protect\begin{pmatrix}
+			1 \\
+			0 \\
+			1
+			\protect\end{pmatrix}$, $e = 0.3$}
+		\label{subfig:LS_Ternary_4_Tropism}
+	\end{subfigure}
+	\caption{Die n-fache Ableitung des Axioms anhand der Produktionsregeln aus Gleichung \ref{eq:ProdTernary}. Die linken und rechten Abbildungen unterscheiden sich jeweils im Tropismusvektor $\protect\overrightarrow{T}$ und im Biegsamkeitsfaktor $e$. Eigene Abbildungen.}
+	\label{fig:LS_Ternary_Tropism}
+\end{figure}
+
+
+\section{Space-Colonization-Akteur}
+
+Die Space-Colonization Implementierung ermöglicht es durch die Angabe einiger weniger Parameter eine Vielzahl verschiedener Baumstrukturen zu generieren. \cite[S.3]{SpaceColonizationAlgorithm:07} Im Folgenden wird der Einfluss dieser Parameter auf die Ergebnisse untersucht. Es werden jeweils lediglich sich unterscheidende Parameterwerte angegeben.
+
+\subsection{Einflussbereiche}
+
+Die Verteilung und Anzahl der Einflusspunkte hat starke Auswirkungen auf die sich ergebende Baumstruktur. Je weniger Einflusspunkte existieren, desto größer ist die Wirkung jedes Punktes auf die Position der neuen Knotenpunkte und resultiert in einer spärlich bewachsenen Baumkrone mit kantigen, ungleichmäßig verteilten Ästen. Wird die Anzahl der Einflusspunkte erhöht entsteht eine dicht bewachsene Baumkrone mit leicht kurvenförmigen, gleichmäßig verteilten Ästen.
+
+Weiterhin passt sich die generierte Baumstruktur dem Bereich an, in welchem die Einflusspunkte generiert werden. Es können entweder einzelne Bereichprimitive, wie eine Kugel- oder Zylinderform, oder mehrere miteinander verknüpfte Einflussbereiche für verwendet werden.
+
+\begin{figure} [hbtp]
+	\centering
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[height=.25\textheight]{images/SCA_Einfluss_Sphere_Low.png}
+		\caption{Kugelförmig mit Radius $r = 500$, $N = 1000$}
+		\label{subfig:SCA_Einfluss_Sphere_Low}
+	\end{subfigure}
+	\hspace{.05\linewidth}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[height=.25\textheight]{images/SCA_Einfluss_Sphere_High.png}
+		\caption{Kugelförmig mit Radius $r = 500$, $N = 10000$}
+		\label{subfig:SCA_Einfluss_Sphere_High}
+	\end{subfigure}	
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[height=.25\textheight]{images/SCA_Einfluss_Cylinder_Low.png}
+		\caption{Zylinderförmig mit Höhe $h=1000$ und Radius $r_z = 300$, $N = 1000$}
+		\label{subfig:SCA_Einfluss_Cylinder_Low}
+	\end{subfigure}
+	\hspace{.05\linewidth}
+	\begin{subfigure}[t]{.45\textwidth}
+		\centering
+		\includegraphics[height=.25\textheight]{images/SCA_Einfluss_Cylinder_High.png}
+		\caption{Zylinderförmig mit Höhe $h=1000$ und Radius $r_z = 300$, $N = 10000$}
+		\label{subfig:SCA_Einfluss_Cylinder_High}
+	\end{subfigure}
+	\caption{Wirkung der Anzahl der Einflusspunkte $n$ und der Form des Einflussbereichs auf die generierte Baumstruktur. Eigene Abbildungen.}
+	\label{fig:SCA_Einfluss}
+\end{figure}
+ 
+ \begin{figure} [hbtp]
+ 	\centering
+ 	\begin{subfigure}[t]{.45\textwidth}
+ 		\centering
+ 		\includegraphics[width=\linewidth]{images/SCA_MultipleSpheres_Points.png}
+ 		\caption{Punktewolke.}
+ 		\label{subfig:SCA_MultipleSpheres_Points}
+ 	\end{subfigure}
+ 	\hspace{.05\linewidth}
+ 	\begin{subfigure}[t]{.45\textwidth}
+ 		\centering
+ 		\includegraphics[width=\linewidth]{images/SCA_MultipleSpheres_Grown.png}
+ 		\caption{Resultierende Baumstruktur.}
+ 		\label{subfig:SCA_MultipleSpheres_Grown}
+ 	\end{subfigure}	
+ 	\caption{Verbindung von drei kugelförmigen Einflussbereichen zu einem Bereich. Die Kugeln haben jeweils den Radius $r=500$ und $N=2000$. Eigene Abbildungen.}
+ 	\label{fig:SCA_MultipleSpheres}
+ \end{figure}
+ 
+\subsection{Wachstumsparameter}
+
+Minimalradius, Einflussradius, Schrittweite, Tropismus, Maximale Zweigtiefe, Gewichtetes Wachstum und maximaler Grad,
 
 \section{Performanz}
 
