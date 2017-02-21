@@ -20,7 +20,7 @@ Der Baum wird durch eine Datenklasse repräsentiert, jedes Objekt dieser Klasse 
 	\item \textbf{Wachstums-Daten:} Die Wachstums-Daten bestehen aus einer Wachstumsrichtung, einem Einfluss-Zähler und dem \glqq Kein Wachstum\grqq-Zähler ($NG$-Counter), welche für den Ablauf des Space Colonization Algorithmus benötigt werden.	
 \end{description}
 
-Ein Objekt der Datenklasse kann als Astsegment eines biologischen Baumes angesehen werden und wird durch das Modellgenerierungssystem als solches visualisiert. Im Folgenden wird der Begriff \glqq Zweigobjekt\grqq{} verwendet, um ein Objekt der Baumrepräsentationsklasse zu bezeichnen.
+Ein Objekt der Datenklasse kann als Astsegment eines biologischen Baumes angesehen werden und wird durch das Modellgenerierungssystem als solches visualisiert. Im Folgenden wird der Begriff \glqq Astsegment\grqq{} verwendet, um ein Objekt der Baumrepräsentationsklasse zu bezeichnen.
 
 \section{L-Systeme}
 
@@ -114,22 +114,22 @@ Dem Modellgenerierungssystem werden die folgenden Parameter über die Editor-UI 
 Folgende Operationen werden vor Beginn der Modelldatengenerierung auf dem graphentheoretischen Baum durchgeführt:
 
 \begin{description}
-	\item \textbf{Kurvenreduktion:} Die Kurvenreduktion wird, beginnend mit dem Wurzel-Zweigobjekt des Baums, rekursiv ausgeführt. In jedem Schritt wird überprüft ob, entsprechend der Beschreibung in Paragraph \ref{par:Kurvenreduktion}, das aktuelle Zweigobjekt entfernt werden kann. Falls nicht, wird die Kurvenreduktion auf allen Nachfolgern des aktuellen Zweigobjekts durchgeführt. Die Rekursion bricht ab, falls ein Zweigobjekt keine Nachfolger besitzt.
+	\item \textbf{Kurvenreduktion:} Die Kurvenreduktion wird, beginnend mit dem Wurzel-Astsegment des Baums, rekursiv ausgeführt. In jedem Schritt wird überprüft ob, entsprechend der Beschreibung in Paragraph \ref{par:Kurvenreduktion}, das aktuelle Astsegment entfernt werden kann. Falls nicht, wird die Kurvenreduktion auf allen Nachfolgern des aktuellen Astsegment durchgeführt. Die Rekursion bricht ab, falls ein Astsegment keine Nachfolger besitzt.
 	
 	Der Parameter \glqq Kurvenreduktionswert\grqq{} entspricht dem Maximalwert des Skalarprodukts $max_K$.\\
 	
-	\item \textbf{Radiusberechnung:} Der Endradius jedes Zweigobjekts wird, beginnend mit dem Wurzel-Zweigobjekt des Baums, rekursiv anhand von Gleichung \ref{eq:Radiusberechnung} berechnet. Der Parameter \glqq Blattradius\grqq{} entspricht $r_0$ und der \glqq Radiuswachstumswert\grqq{} entspricht $g$. 
+	\item \textbf{Radiusberechnung:} Der Endradius jedes Astsegments wird, beginnend mit dem Wurzel-Astsegment des Baums, rekursiv anhand von Gleichung \ref{eq:Radiusberechnung} berechnet. Der Parameter \glqq Blattradius\grqq{} entspricht $r_0$ und der \glqq Radiuswachstumswert\grqq{} entspricht $g$. 
 	
-	Der Startradius jedes Zweigobjekts wird auf den Wert des Endradius seines Vorgängers gesetzt. Da das Wurzel-Zweigobjekt keinen Vorgänger besitzt, wird der Startradius aus der Multiplikation des Stammbreitenmultiplikator mit dem Endradius des Objekts bestimmt.\\
+	Der Startradius jedes Astsegments wird auf den Wert des Endradius seines Vorgängers gesetzt. Da das Wurzel-Astsegment keinen Vorgänger besitzt, wird der Startradius aus der Multiplikation des Stammbreitenmultiplikator mit dem Endradius des Objekts bestimmt.\\
 	
-	\item \textbf{Normalenberechnung:} Die Endnormale $\overrightarrow{n_{e}}$ jedes Zweigobjekts werden mithilfe der Startposition $\overrightarrow{p_{s}}$ und Endposition $\overrightarrow{p_{e}}$ sowie seiner Startnormale $\overrightarrow{n_{s}}$ wie folgt berechnet:
+	\item \textbf{Normalenberechnung:} Die Endnormale $\overrightarrow{n_{e}}$ jedes Astsegments werden mithilfe der Startposition $\overrightarrow{p_{s}}$ und Endposition $\overrightarrow{p_{e}}$ sowie seiner Startnormale $\overrightarrow{n_{s}}$ wie folgt berechnet:
 	\begin{equation}
 		\overrightarrow{n_{e}} = \dfrac{(\overrightarrow{p_{e}} - \overrightarrow{p_{s}}) + \overrightarrow{n_{s}}}{\lVert (\overrightarrow{p_{e}} - \overrightarrow{p_{s}}) + \overrightarrow{n_{s}} \rVert}
 	\end{equation}
-	Die Startnormale entspricht der Endnormale des Vorgängers, im Falle des Wurzel-Zweigobjekts entspricht die Startnormale $\overrightarrow{n_s} = \overrightarrow{p_{e}} - \overrightarrow{p_{e}}$. \\
+	Die Startnormale entspricht der Endnormale des Vorgängers, im Falle des Wurzel-Astsegments entspricht die Startnormale $\overrightarrow{n_s} = \overrightarrow{p_{e}} - \overrightarrow{p_{e}}$. \\
 	
 	
-	\item \textbf{Verringerung der Abzweigungswinkel:} Die Nachfolger jedes Zweigobjekts werden, entsprechend der Beschreibung in Paragraph \ref{par:VerringerungAbzweigungswinkel}, einander angenähert. Die Verringerung der Abzweigungswinkel wird nur bei einem durch einen Space-Colonization-Akteur generierten Baum durchgeführt.
+	\item \textbf{Verringerung der Abzweigungswinkel:} Die Nachfolger jedes Astsegments werden, entsprechend der Beschreibung in Paragraph \ref{par:VerringerungAbzweigungswinkel}, einander angenähert. Die Verringerung der Abzweigungswinkel wird nur bei einem durch einen Space-Colonization-Akteur generierten Baum durchgeführt.
 \end{description}
 
 
@@ -189,7 +189,7 @@ Mithilfe der Kreisnormalen $\overrightarrow{n_k}$, die orthogonal zur Kreisebene
 	\label{fig:Ring6Sections}
 \end{figure}
 \paragraph{Verbindung der Kreise}
-Um den Zylindermantel eines Zweigobjekts zu bilden, werden zwei Kreise mithilfe der Start- und Enddaten des Objekts generiert. Jedes Kreissegment eines Kreises wird mit dem entsprechenden Segment des anderen Kreises verbunden und bildet dadurch ein Zylindersegment. Ein Zylindersegment entspricht somit einem Rechteck. Da das Modell jedoch Dreiecksdaten benötigt, wird jedes Rechteck, wie in Abbildung \ref{subfig:Zylinder10SegmenteWireframe} dargestellt, aus zwei Dreiecken gebildet. \cite{ModelingByNumbersZylindersA:13}
+Um den Zylindermantel eines Astsegments zu bilden, werden zwei Kreise mithilfe der Start- und Enddaten des Objekts generiert. Jedes Kreissegment eines Kreises wird mit dem entsprechenden Segment des anderen Kreises verbunden und bildet dadurch ein Zylindersegment. Ein Zylindersegment entspricht somit einem Rechteck. Da das Modell jedoch Dreiecksdaten benötigt, wird jedes Rechteck, wie in Abbildung \ref{subfig:Zylinder10SegmenteWireframe} dargestellt, aus zwei Dreiecken gebildet. \cite{ModelingByNumbersZylindersA:13}
 \begin{figure} [hbtp]
 \centering
 \begin{subfigure}[t]{.4\textwidth}
@@ -209,9 +209,9 @@ Um den Zylindermantel eines Zweigobjekts zu bilden, werden zwei Kreise mithilfe 
 \label{fig:Zylinder10Segmente}
 \end{figure}
 
-Wird jedes Zweigobjekt durch die Verbindung von genau zwei Kreisen dargestellt, führt dies zu der Generierung redundanter Vertexdaten. Die Enddaten eines Zweigobjekts und die Startdaten seines Nachfolgers entsprechen einander, die daraus generierten Kreis-Vertizes liegen genau aufeinander. Anstatt nun vier Kreise für die Generierung zweier Zylinder zu verwenden, können die Vertizes des verbindenden Kreises wiederverwendet werden -- es genügen drei Kreise für die Generierung zweier Zylinder.
+Wird jedes Astsegment durch die Verbindung von genau zwei Kreisen dargestellt, führt dies zu der Generierung redundanter Vertexdaten. Die Enddaten eines Astsegments und die Startdaten seines Nachfolgers entsprechen einander, die daraus generierten Kreis-Vertizes liegen genau aufeinander. Anstatt nun vier Kreise für die Generierung zweier Zylinder zu verwenden, können die Vertizes des verbindenden Kreises wiederverwendet werden -- es genügen drei Kreise für die Generierung zweier Zylinder.
 
-Die Verbindung der Modelldaten kann für alle Zweigobjekte durchgeführt werden, deren Nachfolger dieselbe Zweigtiefe besitzen und somit eine Folge von zusammenhängenden Zylindermodellen bilden. Für einen Nachfolger mit einer sich unterscheidenden Zweigtiefe wird eine neue Folge von zusammenhängenden Zylindermodellen begonnen. \cite{ModelingByNumbersZylindersA:13}
+Die Verbindung der Modelldaten kann für alle Astsegmente durchgeführt werden, deren Nachfolger dieselbe Zweigtiefe besitzen und somit eine Folge von zusammenhängenden Zylindermodellen bilden. Für einen Nachfolger mit einer sich unterscheidenden Zweigtiefe wird eine neue Folge von zusammenhängenden Zylindermodellen begonnen. \cite{ModelingByNumbersZylindersA:13}
 
 Ein Beispiel für die Generierung zweier Zylinder mithilfe von drei Kreisen wird in Abbildung \ref{subfig:MultiZylinder10SegmenteWireframe} dargestellt.
 

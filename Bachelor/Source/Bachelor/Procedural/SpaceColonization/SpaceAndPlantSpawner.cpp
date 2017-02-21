@@ -129,11 +129,21 @@ ACylindricalColonizationSpace* ASpaceAndPlantSpawner::SpawnCylindricalColonizati
 	return spawnedColonizationSpace;
 }
 
+int spawnCounter = 0;
+
 ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector Location, AColonizationSpace* ColonizationSpace) {
 	ASpaceColonizationPlant* spawnedColonizationPlant = NULL;
 	if (World) {
 		UClass* colonizationPlantClass = ASpaceColonizationPlant::StaticClass();
-		spawnedColonizationPlant = World->SpawnActor<ASpaceColonizationPlant>(colonizationPlantClass, Location, FRotator(0.f), FActorSpawnParameters());
+		
+		FString currentName = this->GetName();
+		currentName.AppendInt(spawnCounter);
+		spawnCounter++;
+
+		FActorSpawnParameters spawnParams = FActorSpawnParameters();
+		spawnParams.Name = FName(*currentName);
+
+		spawnedColonizationPlant = World->SpawnActor<ASpaceColonizationPlant>(colonizationPlantClass, Location, FRotator(0.f), spawnParams);
 
 		spawnedColonizationPlant->GrowthSpaces.Add(ColonizationSpace);
 		spawnedColonizationPlant->TreeConstructionData = TreeConstructionData;

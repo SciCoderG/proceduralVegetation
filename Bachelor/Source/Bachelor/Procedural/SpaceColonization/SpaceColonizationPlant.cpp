@@ -48,6 +48,8 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	CurrentColonizationPointCount = 0;
 
 	InitUtilityValues();
+
+
 }
 
 ASpaceColonizationPlant::~ASpaceColonizationPlant() {
@@ -70,6 +72,7 @@ void ASpaceColonizationPlant::BeginPlay()
 	}
 
 	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData);
+	UE_LOG(LogTemp, Warning, TEXT("-----------------"));
 }
 
 // Called every frame
@@ -99,6 +102,8 @@ void ASpaceColonizationPlant::InitUtilityValues() {
 	TreeConstructionData.Mesh = Mesh;
 	TreeConstructionData.AllMeshData = AllMeshData;
 	TreeConstructionData.RootBranch = RootBranch;
+
+	Tropism = Tropism.GetSafeNormal() * 0.9f;
 }
 
 DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ ColonizeGivenSpaces"), STAT_ColonizeGivenSpaces, STATGROUP_SpaceColonization);

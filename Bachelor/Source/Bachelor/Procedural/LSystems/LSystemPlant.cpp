@@ -65,6 +65,7 @@ void ALSystemPlant::BeginPlay()
 	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData); 
 
 	turtleInterpreter->Destroy();
+	UE_LOG(LogTemp, Warning, TEXT("-----------------"));
 }
 
 // Called every frame
