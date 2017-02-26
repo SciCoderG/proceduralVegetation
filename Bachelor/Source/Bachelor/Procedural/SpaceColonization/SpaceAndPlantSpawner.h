@@ -3,6 +3,8 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "Bachelor/Procedural/Data/TreeConstructionData.h"
+
 #include "SpaceAndPlantSpawner.generated.h"
 
 class ASpaceColonizationPlant;
@@ -41,9 +43,6 @@ public:
 		int NumberOfSpacesAndPlantsToSpawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
-		int MaxNumberOfVerticesPerMeshSection;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
 		FVector ColonizationSpaceOffset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
@@ -66,9 +65,6 @@ public:
 		FVector Tropism;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
-		float TrunkRadiusMultiplier;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
 		int MaxNumberOfBranchingTwigs;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
@@ -77,20 +73,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
 		bool WeightedGrowth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
-		int MinNumberOfSectionsPerBranch;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
+		int MaxNumberOfNotDidNotGrowNums;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
-		int MaxNumberOfSectionsPerBranch;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
-		float BranchRadiusZero;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
-		float BranchRadiusGrowthParameter;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
-		bool PolyReductionByCurveReduction;
+		FTreeConstructionData TreeConstructionData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|Visual")
 		bool SmoothOutBranchingAngles;

@@ -5,6 +5,7 @@
 #include "Procedural/Data/CylinderData.h"
 #include "MeshDataConstructor.generated.h"
 
+DECLARE_STATS_GROUP(TEXT("UMeshDataConstructor"), STATGROUP_UMeshDataConstructor, STATCAT_Advanced);
 
 UCLASS()
 class BACHELOR_API UMeshDataConstructor : public UBlueprintFunctionLibrary

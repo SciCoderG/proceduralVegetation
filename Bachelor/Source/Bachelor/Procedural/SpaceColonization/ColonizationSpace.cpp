@@ -58,8 +58,8 @@ void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 }
 
 
-TSet<FVector>* AColonizationSpace::GetColonizationPoints() {
-	return &ColonizationPoints;
+TSet<FVector>& AColonizationSpace::GetColonizationPoints() {
+	return ColonizationPoints;
 }
 
 

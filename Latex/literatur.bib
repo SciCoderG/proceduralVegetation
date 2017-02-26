@@ -1,0 +1,367 @@
+% BibTeX database for AFT at i3A
+
+%% bibtexfile{
+%%  author	= " ",
+%%  version	= "1.0",
+%%  date	= "10 April 2003",
+%%  filename	= "fuzzy.bib",
+%%  adress	= "Fachhochschule Trier
+%%		   University of Applied Sciences Trier
+%%		   Postfach 1826
+%%		   D-54208 Trier
+%%		   Germany",
+%%  email	= "<i3a.fh-trier.de>" }
+
+
+% How to use this file within an german document!
+%
+% - set 'german' as global option to documentclass
+%   e.g.: '\documentclass[12pt,a4paper,oneside,german,epsfig]{ai-paper}'
+% - use package 'babel': '\usepackage{babel}'
+% - use package 'bibgerm': '\usepackage{bibgerm}'
+% - use bibstyle 'geralpha', 'gerplain', ...
+%   e.g.: '\bibliographystyle{geralpha}'
+%
+% Within this .bib-file use 'and' to specify more than one author. 
+% You have to use only the english abbreviations WITHOUT curly brackets
+% for months! e.g.: 'jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul',
+% 'aug', 'sep', 'oct', 'nov', 'dec'.
+
+
+
+% Short explanation of entry types:
+%
+% Article:          An article from a journal or magazine.
+% Book:             A Book with an explicit publisher.
+% Booklet:          A work that is printed and bound, but without a 
+%                   named publisher or sponsoring institution.
+% InBook:           A part of a book which may be a chapter (or section
+%                   or whatever) and/or a range of pages.
+% InCollection:     A part of a book having ots own title.
+% InProceedings:    An article in a conference proceedings.
+% Manual:           Technical documentation.
+% Mastersthesis:    A Master's thesis.
+% Misc:             Use this type when nothing else fits.
+% PhDthesis:        A PhD thesis.
+% Proceedings:      The proceedings of a conference. See also: inproceedings.
+% Techreport:       A report published by a school or other institution, 
+%                   usally numbered within a series.
+%
+% Further Information may be found at www.din1505.informationskompetenz.net
+
+
+
+%%%%%%%% article
+%%
+%% An article from a journal or magazine.
+%%
+%% Required fields:
+%% author, title, journal, year
+%%
+%% Optional fields:
+%% volume, number, pages, month, note
+
+
+%%%%%%%% book
+%%
+%% A Book with an explicit publisher.
+%%
+%% Required fields:
+%% author or editor, title, publisher, year
+%%
+%% Optional fields:
+%% volume or number, series, address, edition, month, isbn, note
+
+@book{ABOP:04,
+	author={Przemyslaw Prusinkiewicz and Aristid Lindenmayer},
+	title={{The Algorithmic Beauty of Plants}},
+	publisher={Springer-Verlag, New York},
+	year=1990,
+	edition={eBook},
+	note = {\url{http://algorithmicbotany.org/papers/abop/abop.pdf}}
+}
+
+@book{PCGiG:16,
+	author={Noor Shaker and Julian Togelius and Mark J. Nelson},
+	title={{Procedural Content Generation in Games}},
+	publisher={Springer International Publishing Switzerland 2016},
+	year=2016,
+	isbn={978-3-319-42716-4}
+}
+
+@book{Mandelbrot:16,
+	author={Benoit B. Mandelbrot},
+	title={{The Fractal Geometry of Nature}},
+	publisher={W. H. Freeman and Company},
+	year=1983,
+	isbn={0-7167-1186-9}
+}
+
+@book{Deussen:05,
+	author={Oliver Deussen and Bernd Lintermann},
+	title={{Digital Design of Nature - Computer Generated Plants and Organics}},
+	publisher={Springer-Verlag Berlin Heidelberg 2005},
+	year=2005,
+	isbn={3-540-40591-7}
+}
+
+@book{Softwaremanagement:98,
+	author={Helmut Balzert},
+	title={{Lehrbuch der Software-Technik : Software-Management Software-Qualitätssicherung, Unternehmensmodellierung.}},
+	publisher={Spektrum Akademischer Verlag GmbH},
+	year=1998
+}
+
+%%%%%%%% booklet
+%%
+%% A work that is printed and bound, but without a named publisher or
+%% sponsoring institution.
+%%
+%% Required fields:
+%% title
+%%
+%% Optional fields:
+%% author, howpublished, address, month, year, note
+
+
+
+%%%%%%%% inbook
+%%
+%% A part of a book which may be a chapter (or section or whatever) and/or 
+%% a range of pages.
+%%
+%% Required fields:
+%% author or editor, title, chapter and/or pages, publisher, year
+%%
+%% Optional fields:
+%% volume or number, series, type, address, edition, month, note
+
+
+
+%%%%%%%% incollection
+%%
+%% A part of a book having its own title.
+%%
+%% Required fields:
+%% author, title, booktitle, publisher, year
+%%
+%% Optional fields:
+%% editor, volume or number, series, type, chapter, pages, address, 
+%% edition, month, note
+
+
+
+
+%%%%%%%% inproceedings
+%%
+%% An article in a conference preceedings.
+%%
+%% Required fields:
+%% author, title, booktitle, year
+%%
+%% Optional fields:
+%% editor, volume or number, series, pages, address, month, organization, 
+%% publisher, note
+
+
+%%%%%%%% manual
+%%
+%% Technical documentation.
+%%
+%% Required fields:
+%% title
+%%
+%% Optional fields:
+%% author, editor, organization, address, edition, month, year, note
+
+%%%%%%%% mastersthesis
+%%
+%% A Master's thesis.
+%%
+%% Required fields:
+%% author, title, school, year
+%%
+%% Optional fields:
+%% type, address, month, note
+
+
+%%%%%%%% misc
+%%
+%% Use this type when nothing else fits.
+%%
+%% Required fields:
+%% none.
+%%
+%% Optional fields:
+%% author, title, url, month, year, note
+
+
+@misc{ThI:14,
+	author = {Prof. Dr. Heinz Schmitz},
+	title={{Theoretische Informatik - Vorlesungsskript}},
+	year = 2014
+}
+
+@misc{AlgoDat:14,
+	author = {Prof. Dr. Andreas Lux},
+	title={{Algorithmen und Datenstrukturen - Vorlesungsskript Kapitel 4}},
+	year = 2014
+}
+
+@misc{Turtle:04,
+	author = {Ron Goldman and Scott Schaefer and Tao Ju},
+	title={{Turtle Geometry in Computer Graphics and Computer Aided Design}},
+	url={http://www.cs.wustl.edu/~taoju/research/TurtlesforCADRevised.pdf},
+	note = {\url{http://www.cs.wustl.edu/~taoju/research/TurtlesforCADRevised.pdf}},
+	year = 2004
+}
+
+@misc{SpaceColonizationAlgorithm:07,
+	author = {Adam Runions and Brendan Lane and Przemyslaw Prusinkiewicz},
+	title={{Modeling Trees with a Space Colonization Algorithm}},
+	url={http://algorithmicbotany.org/papers/colonization.egwnp2007.pdf},
+	note = {\url{http://algorithmicbotany.org/papers/colonization.egwnp2007.pdf}},
+	year = 2007
+}
+
+@misc{LeafVenation:05,
+	author = {Adam Runions and Martin Fuhrer and Brendan Lane and Pavol Federl and Anne-Gaëlle Rolland-Lagan and Przemyslaw Prusinkiewicz},
+	title={{Modeling and visualization of leaf venation patterns}},
+	url={http://algorithmicbotany.org/papers/venation.sig2005.pdf},
+	note = {\url{http://algorithmicbotany.org/papers/venation.sig2005.pdf}},
+	year = 2005
+}
+
+@misc{RandomSeed:17,
+	title={{Unreal Engine 4 Documentation : Random Streams - Initial Seed}},
+	url={https://docs.unrealengine.com/latest/INT/Engine/Blueprints/UserGuide/RandomStreams/#initialseed},
+	note={\url{https://docs.unrealengine.com/latest/INT/Engine/Blueprints/UserGuide/RandomStreams/#initialseed}}
+}
+
+@misc{ProceduralMeshComponent:15,
+	title={{Procedural Mesh Component in C++:Getting Started}},
+	url={https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started},
+	note={\url{https://wiki.unrealengine.com/Procedural_Mesh_Component_in_C%2B%2B:Getting_Started}}
+}
+
+@misc{ModelingByNumbers1A:13,
+	author={Jayelinda Suridge},
+	title={{Modelling by numbers: Part One A: An introduction to procedural geometry}},
+	url={http://www.gamasutra.com/blogs/JayelindaSuridge/20130903/199457/Modelling_by_numbers_Part_One_A.php},
+	note={\url{http://www.gamasutra.com/blogs/JayelindaSuridge/20130903/199457/Modelling_by_numbers_Part_One_A.php}}
+}
+
+@misc{ModelingByNumbersZylindersA:13,
+	author={Jayelinda Suridge},
+	title={{Modelling by numbers: Part Two A: The cylinder}},
+	url={http://www.gamasutra.com/blogs/JayelindaSuridge/20130905/199626/Modelling_by_numbers_Part_Two_A.php},
+	note={\url{http://www.gamasutra.com/blogs/JayelindaSuridge/20130905/199626/Modelling_by_numbers_Part_Two_A.php}}
+}
+
+@misc{RotationBetweenVectors:16,
+	author = {Martin John Baker},
+	title={{Maths - Angle between vectors}},
+	url={http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/index.htm},
+	note={\url{http://www.euclideanspace.com/maths/algebra/vectors/angleBetween/index.htm}}
+}
+
+@misc{Forstbonatik:17,
+	author={Prof. Dr. Siegfried Fink and Jörg Grüner and Dr. Christian Rabe},
+	title={{Skript zum Kernblock \glqq Forstbotanik und Baumphysiologie II \grqq{} -- Forstbotanischer Teil}},
+	url={https://www.forstbotanik.uni-freiburg.de/Lehre/Skripten/Skript%20Forstbotanik%20II},
+	note={\url{https://www.forstbotanik.uni-freiburg.de/Lehre/Skripten/Skript%20Forstbotanik%20II}}
+}
+
+@misc{Profiling:15,
+	title={{Profiling, How To Count CPU Cycles Of Specific Blocks Of Your Game Code}},
+	url={https://wiki.unrealengine.com/Profiling,_How_To_Count_CPU_Cycles_Of_Specific_Blocks_Of_Your_Game_Code},
+	note={\url{https://wiki.unrealengine.com/Profiling,_How_To_Count_CPU_Cycles_Of_Specific_Blocks_Of_Your_Game_Code}}
+}
+
+@misc{PCG:15,
+	author={Julian Togelius and Emil Kastbjerg and David Schedl and Georgios N. Yannakakis},
+	title={{What is Procedural Content Generation? Mario on the borderline
+}},
+	url={http://julian.togelius.com/Togelius2011What.pdf},
+	note={\url{http://julian.togelius.com/Togelius2011What.pdf}}
+}
+
+@misc{WhatIsUE:17,
+	title={{Unreal Engine Features}},
+	url={https://www.unrealengine.com/unreal-engine-4},
+	note={\url{https://www.unrealengine.com/unreal-engine-4}}
+}
+
+@misc{EngineFeatures:17,
+	title={{Documentation : Engine Features}},
+	url={https://docs.unrealengine.com/latest/INT/Engine/index.html},
+	note={\url{https://docs.unrealengine.com/latest/INT/Engine/index.html}}
+}
+
+@misc{UnrealTerminology:17,
+	title={{Documentation : Unreal Engine 4 Terminology}},
+	url={https://docs.unrealengine.com/latest/INT/Engine/index.html},
+	note={\url{https://docs.unrealengine.com/latest/INT/Engine/index.html}}
+}
+
+@misc{GreenOne:16,
+	title={{Green One - A landmark render of XfrogPlants by Jan Walter Schliep.}},
+	url={http://xfrog.com/gallery/landscapes/green01_big-1600small.jpg.php},
+	note={\url{http://xfrog.com/gallery/landscapes/green01_big-1600small.jpg.php}}
+}
+
+@misc{Octree:10,
+	author={Henning Eberhardt and Vesa Klumpp and Uwe D. Hanebeck},
+	title={{Density Trees for Efficient Nonlinear State Estimation}},
+	url={http://isas.uka.de/Publikationen/Fusion10_EberhardtKlumpp.pdf},
+	note={\url{http://isas.uka.de/Publikationen/Fusion10_EberhardtKlumpp.pdf}},
+	year = 2010
+}
+
+@misc{Bark:02,
+	author={Sylvain Lefebvre and Fabrice Neyret},
+	title={{Synthesizing Bark}},
+	url={http://www-evasion.imag.fr/Publications/2002/LN02/bark.pdf},
+	note={\url{http://www-evasion.imag.fr/Publications/2002/LN02/bark.pdf}},
+	year = 2002
+}
+
+@misc{FormalParamDef:05,
+	author={Pete Becker},
+	title={{Working Draft, Standard for Programming Language C++}},
+	url={http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1905.pdf},
+	note={\url{http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1905.pdf}},
+	year = 2005
+}
+
+%%%%%%%% phdthesis
+%%
+%% A PhD thesis.
+%%
+%% Required fields:
+%% author, title, school, year
+%% 
+%% Optional fields:
+%% type, address, month, note
+
+%%%%%%%% proceedings
+%%
+%% The proceedings of a conference. See also: inproceedings.
+%%
+%% Required fields:
+%% title, year
+%%
+%% Optional fields:
+%% editor, volume or number, series, address, month, organization, publisher, note
+
+%%%%%%%% techreport
+%%
+%% A report published by a school or other institution, usally 
+%% numbered within a series.
+%%
+%% Required fields:
+%% author, title, institution, year
+%%
+%% Optional fields:
+%% type, number, address, month, note
+

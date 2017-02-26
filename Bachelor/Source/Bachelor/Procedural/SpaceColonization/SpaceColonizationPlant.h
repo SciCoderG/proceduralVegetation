@@ -3,13 +3,15 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "Bachelor/Procedural/Data/TreeConstructionData.h"
 #include "SpaceColonizationPlant.generated.h"
 
 class UProceduralMeshComponent;
 class AColonizationSpace;
 struct FBranch;
 struct FMeshData;
-struct FTreeConstructionData;
+
+DECLARE_STATS_GROUP(TEXT("SpaceColonizationPlant"), STATGROUP_SpaceColonization, STATCAT_Advanced);
 
 UCLASS()
 class BACHELOR_API ASpaceColonizationPlant : public AActor
@@ -30,32 +32,14 @@ public:
 
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procdeural|Visual")
-		UMaterialInterface* GeneratedTreeMaterial;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		UProceduralMeshComponent* Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		int MinNumberOfSectionsPerBranch;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		int MaxNumberOfSectionsPerBranch;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		int MaxNumberOfVerticesPerMeshSection;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		float BranchRadiusZero;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		float BranchRadiusGrowthParameter;
+		FTreeConstructionData TreeConstructionData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		bool SmoothOutBranchingAngles;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
-		bool PolyReductionByCurveReduction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthSpaces")
 		TArray<AColonizationSpace* > GrowthSpaces;
@@ -73,9 +57,6 @@ public:
 		FVector Tropism;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
-		float TrunkRadiusMultiplier;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		int MaxNumGrowthIterations;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
@@ -86,6 +67,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
 		bool WeightedGrowth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|GrowthParameters")
+		int MaxNumberOfNotDidNotGrowNums;
 
 private:
 	void InitUtilityValues();
@@ -100,13 +84,9 @@ private:
 
 	void GrowthIteration();
 
-	TSet<FVector>& GetAllColonizationPoints();
-
 	bool CheckAllColonizationPoints();
 
-	void CheckIfInKillZone(FVector ColonizationPoint);
-
-	bool CheckColonizationPoint(FVector ColonizationPoint);
+	bool CheckColonizationPoint(FVector* ColonizationPoint);
 
 	void RemoveFromGrowthSpaces(FVector ToRemove);
 
@@ -117,15 +97,17 @@ private:
 	void TryCreatingNewBranch(FBranch* Parent, FVector NormalizedGrowthDirection, float IndividualGrowthPerIteration);
 
 	FMeshData* AllMeshData;
-	FTreeConstructionData* TreeConstructionData;
 
 	FBranch* RootBranch;
 
 	TSet<FBranch*> GrowingBranches;
-	TSet<FVector> AllColonizationPoints;
+
+	FVector ActorLocation;
 
 	float KillDistanceSquared;
 	float RadiusOfInfluenceSquared;
+
+	int CurrentColonizationPointCount;
 
 	bool IsStillGrowing;
 };

@@ -13,6 +13,7 @@ class BACHELOR_API UBranchUtility : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
+
 	static TSet<FBranch*> RecursiveGetAllBranches(FBranch* Parent);
 
 	static TArray<FBranch*> RecursiveGetAllBranchesAsArray(FBranch* Parent);
@@ -23,11 +24,15 @@ public:
 
 	static float RecursiveCalculateAllBranchRadii(FBranch* Parent, float RadiusZero, float BranchingRadiusParameter);
 
-	static void CalcAllBranchConnectionNormals(FBranch* Current);
+	static void CalcConnectionNormals(FBranch* Current);
+
+	static void CalcTreeLikeConnectionNormals(FBranch* Current);
 
 	static int CalcNumOfBranchSections(float CurrentRadius, float MaxRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch);
 
 	static void CalcPerBranchDepthZRotAngle(FBranch* Current, float RotationAngleIncrement);
+
+	static void ReduceGrownBranchesByMaxDotProduct(FBranch* Parent, float MaxDotProduct);
 
 	static void RecursiveReduceGrownBranches(FBranch* Parent);
 	
@@ -38,4 +43,5 @@ public:
 private:
 	static void ElongateGrownBranches(FBranch* Parent);
 
+	static void MergeParentAndChild(FBranch* Parent, FBranch* Child);
 };

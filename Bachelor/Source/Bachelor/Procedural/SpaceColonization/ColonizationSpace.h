@@ -24,7 +24,7 @@ public:
 
 	virtual float GetMaxDistanceFromCenter() PURE_VIRTUAL(AColonizationSpace::GetMaxDistanceFromCenter, return 0;);
 
-	TSet<FVector>* GetColonizationPoints();
+	TSet<FVector>& GetColonizationPoints();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 		int NumberOfGenerationPoints;

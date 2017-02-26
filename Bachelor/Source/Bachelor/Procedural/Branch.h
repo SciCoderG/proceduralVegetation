@@ -14,6 +14,7 @@ public:
 
 		Start = FVector(0);
 		End = FVector(0);
+
 		StartRadius = 0.f;
 		EndRadius = 0.f;
 
@@ -26,6 +27,10 @@ public:
 
 		GrowCount = 0;
 		BranchDepth = 0;
+
+		DidNotGrowCounter = 0;
+
+		IsConstructed = false;
 	}
 
 	void ResetForNextGrowthIteration();
@@ -46,5 +51,9 @@ public:
 
 	FVector GrowDirection;
 	int GrowCount;
+
+	float DidNotGrowCounter;
+
+	bool IsConstructed;
 };
 

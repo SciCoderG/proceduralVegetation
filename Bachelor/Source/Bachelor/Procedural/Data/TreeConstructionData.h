@@ -18,24 +18,48 @@ public:
 		Mesh = NULL;
 		AllMeshData = NULL;
 		RootBranch = NULL;
+		TreeMaterial = NULL;
 
 		TrunkRadiusMultiplier = 1.41f;
-		MinNumberOfSectionsPerBranch = 2;
-		MaxNumberOfSectionsPerBranch = 6;
-		MaxNumberOfVerticesPerMeshSection = 400;
-		BranchRadiusZero = 2.0f;
+		MinNumberOfSectionsPerBranch = 3;
+		MaxNumberOfSectionsPerBranch = 4;
+		MaxNumberOfVerticesPerMeshSection = 3e5;
+		BranchRadiusZero = 3.0f;
 		BranchRadiusGrowthParameter = 2.5f;
+		DoBranchRadiusCalculations = true;
+		ZRotationAnglePerBranch = 120;
+		MakeFractalMesh = false;
+		MaxDotProductBetweenParentAndChild = .95f;
 	}
 
 	UProceduralMeshComponent* Mesh;
 	FMeshData* AllMeshData;
 	FBranch* RootBranch;
 	
-	float TrunkRadiusMultiplier;
-	int MinNumberOfSectionsPerBranch;
-	int MaxNumberOfSectionsPerBranch;
-	int MaxNumberOfVerticesPerMeshSection;
-	float BranchRadiusZero;
-	float BranchRadiusGrowthParameter;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
+		bool DoBranchRadiusCalculations;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
+		float TrunkRadiusMultiplier;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
+		float BranchRadiusZero;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Growth")
+		float BranchRadiusGrowthParameter;
+	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		UMaterialInterface* TreeMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		float ZRotationAnglePerBranch;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		int MinNumberOfSectionsPerBranch;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		int MaxNumberOfSectionsPerBranch;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		int MaxNumberOfVerticesPerMeshSection;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		float MaxDotProductBetweenParentAndChild;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		bool MakeFractalMesh;
 };
 

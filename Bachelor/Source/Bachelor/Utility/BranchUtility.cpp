@@ -29,6 +29,7 @@ TArray<FBranch*> UBranchUtility::RecursiveGetAllBranchesOnSameDepth(FBranch* Par
 	for (FBranch* childBranch : Parent->ChildBranches) {
 		if (childBranch->BranchDepth == Parent->BranchDepth) {
 			BranchesOnSameDepth.Append(RecursiveGetAllBranchesOnSameDepth(childBranch));
+			break;
 		}
 	}
 	return BranchesOnSameDepth;
@@ -70,7 +71,17 @@ float UBranchUtility::RecursiveCalculateAllBranchRadii(FBranch* Parent, float Ra
 	return calculatedEndRadius;
 }
 
-void UBranchUtility::CalcAllBranchConnectionNormals(FBranch* Current) {
+void UBranchUtility::CalcConnectionNormals(FBranch* Current) {
+	Current->StartConnectionNormal = Current->End - Current->Start;
+	Current->StartConnectionNormal = Current->StartConnectionNormal.GetUnsafeNormal();
+	Current->EndConnectionNormal = Current->StartConnectionNormal;
+
+	for (FBranch* childBranch : Current->ChildBranches) {
+		CalcConnectionNormals(childBranch);
+	}
+}
+
+void UBranchUtility::CalcTreeLikeConnectionNormals(FBranch* Current) {
 	FBranch* Parent = Current->ParentBranch;
 	if (NULL != Parent) {
 		Current->StartConnectionNormal = Parent->EndConnectionNormal;
@@ -84,7 +95,7 @@ void UBranchUtility::CalcAllBranchConnectionNormals(FBranch* Current) {
 	Current->EndConnectionNormal = Current->EndConnectionNormal.GetSafeNormal();
 
 	for (FBranch* childBranch : Current->ChildBranches) {
-		CalcAllBranchConnectionNormals(childBranch);
+		CalcTreeLikeConnectionNormals(childBranch);
 	}
 }
 
@@ -124,6 +135,38 @@ void UBranchUtility::CalcPerBranchDepthZRotAngle(FBranch* Current, float Rotatio
 	}
 }
 
+void UBranchUtility::ReduceGrownBranchesByMaxDotProduct(FBranch* Parent, float MaxDotProduct) {
+	int numChildBranches = Parent->ChildBranches.Num();
+	if (numChildBranches < 1) {
+		return;
+	}
+	while (numChildBranches == 1) {
+		FBranch* singleChild = Parent->ChildBranches[0];
+
+		FVector parentDirection = Parent->End - Parent->Start;
+		parentDirection = parentDirection.GetSafeNormal();
+
+		FVector childDirection = singleChild->End - singleChild->Start;
+		childDirection = childDirection.GetSafeNormal();
+
+		if (FVector::DotProduct(parentDirection, childDirection) > MaxDotProduct) {
+			MergeParentAndChild(Parent, singleChild);
+
+			numChildBranches = singleChild->ChildBranches.Num();
+
+			delete singleChild;
+		}
+		else {
+			ReduceGrownBranchesByMaxDotProduct(singleChild, MaxDotProduct);
+			return;
+		}
+	}
+
+	for (FBranch* childBranch : Parent->ChildBranches) {
+		ReduceGrownBranchesByMaxDotProduct(childBranch, MaxDotProduct);
+	}
+}
+
 void UBranchUtility::RecursiveReduceGrownBranches(FBranch* Parent) {
 	ElongateGrownBranches(Parent);
 
@@ -136,7 +179,6 @@ void UBranchUtility::RecursiveDeleteAllBranches(FBranch* Parent) {
 	delete Parent;
 }
 
-
 void UBranchUtility::ElongateGrownBranches(FBranch* Parent) {
 	if (Parent->ChildBranches.Num() < 1) {
 		return;
@@ -145,13 +187,9 @@ void UBranchUtility::ElongateGrownBranches(FBranch* Parent) {
 	int numChildBranches = Parent->ChildBranches.Num();
 	while (numChildBranches == 1) {
 		FBranch* singleChild = Parent->ChildBranches[0];
+		
+		MergeParentAndChild(Parent, singleChild);
 
-		Parent->ChildBranches.Reset();
-		for (FBranch* newChildBranch : singleChild->ChildBranches) {
-			Parent->ChildBranches.Add(newChildBranch);
-			newChildBranch->ParentBranch = Parent;
-		}
-		Parent->End = singleChild->End;
 		numChildBranches = singleChild->ChildBranches.Num();
 
 		delete singleChild;
@@ -180,4 +218,13 @@ void UBranchUtility::SmoothOutBranchingAngles(FBranch* Current) {
 		childBranch->Start = Current->End;
 		SmoothOutBranchingAngles(childBranch);
 	}
+}
+
+void UBranchUtility::MergeParentAndChild(FBranch* Parent, FBranch* Child) {
+	Parent->ChildBranches.Reset();
+	for (FBranch* newChildBranch : Child->ChildBranches) {
+		Parent->ChildBranches.Add(newChildBranch);
+		newChildBranch->ParentBranch = Parent;
+	}
+	Parent->End = Child->End;
 }

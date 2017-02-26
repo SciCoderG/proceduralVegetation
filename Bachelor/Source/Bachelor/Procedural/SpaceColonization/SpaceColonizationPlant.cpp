@@ -19,7 +19,7 @@
 ASpaceColonizationPlant::ASpaceColonizationPlant()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	USphereComponent* Root = CreateDefaultSubobject<USphereComponent>(TEXT("RootComponent"));
 	Root->InitSphereRadius(1.0f);
@@ -28,54 +28,55 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 	Mesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("GeneratedMesh"));
 	Mesh->SetupAttachment(RootComponent);
 
-	MinNumberOfSectionsPerBranch = 2;
-	MaxNumberOfSectionsPerBranch = 12;
 	KillDistance = 100.0f;
 	RadiusOfInfluence = 500.0f;
 	GrowthPerIteration = 10.0f;
 	Tropism = FVector(0.0f, 0.0f, 1.0f);
-	TrunkRadiusMultiplier = 1.41;
 	MaxNumGrowthIterations = 20;
 	MaxNumberOfBranchingTwigs = 4;
 	MaxGrowthDepth = 6;
 	WeightedGrowth = true;
 
-	MaxNumberOfVerticesPerMeshSection = 400;
-	BranchRadiusZero = 1.0f;
-	BranchRadiusGrowthParameter = 2.0f;
-	PolyReductionByCurveReduction = false;
 	SmoothOutBranchingAngles = true;
+
+	MaxNumberOfNotDidNotGrowNums = 2;
 
 	IsStillGrowing = true;
 
 	AllMeshData = new FMeshData();
-	TreeConstructionData = new FTreeConstructionData();
+
+	CurrentColonizationPointCount = 0;
 
 	InitUtilityValues();
+
+
 }
 
 ASpaceColonizationPlant::~ASpaceColonizationPlant() {
 	delete AllMeshData;
-	delete TreeConstructionData;
-	delete RootBranch;
 }
 
 // Called when the game starts or when spawned
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ BeginPlay"), STAT_BeginPlay, STATGROUP_SpaceColonization);
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ SmoothOutBranchingAngles"), STAT_SmoothOutBranchingAngles, STATGROUP_SpaceColonization);
 void ASpaceColonizationPlant::BeginPlay()
 {
+	SCOPE_CYCLE_COUNTER(STAT_BeginPlay);
 	Super::BeginPlay();
 
 	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
 	InitUtilityValues();
 	ColonizeGivenSpaces();
 	if (SmoothOutBranchingAngles) {
+		SCOPE_CYCLE_COUNTER(STAT_SmoothOutBranchingAngles);
 		UBranchUtility::SmoothOutBranchingAngles(RootBranch);
 	}
-	if (PolyReductionByCurveReduction) {
-		UBranchUtility::RecursiveReduceGrownBranches(RootBranch);
-	}
 
-	UMeshConstructor::GenerateTreeMesh(TreeConstructionData);
+	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData);
+	UE_LOG(LogTemp, Warning, TEXT("-----------------"));
+	if (NULL != RootBranch) {
+		UBranchUtility::RecursiveDeleteAllBranches(RootBranch);
+	}
 }
 
 // Called every frame
@@ -100,27 +101,25 @@ void ASpaceColonizationPlant::InitUtilityValues() {
 	KillDistanceSquared = KillDistance * KillDistance;
 	RadiusOfInfluenceSquared = RadiusOfInfluence * RadiusOfInfluence;
 
-	if (NULL == TreeConstructionData) {
-		TreeConstructionData = new FTreeConstructionData();
-	}
-	TreeConstructionData->Mesh = Mesh;
-	TreeConstructionData->AllMeshData = AllMeshData;
-	TreeConstructionData->RootBranch = RootBranch;
+	ActorLocation = this->GetActorLocation();
 
-	TreeConstructionData->TrunkRadiusMultiplier = TrunkRadiusMultiplier;
-	TreeConstructionData->MinNumberOfSectionsPerBranch = MinNumberOfSectionsPerBranch;
-	TreeConstructionData->MaxNumberOfSectionsPerBranch = MaxNumberOfSectionsPerBranch;
-	TreeConstructionData->MaxNumberOfVerticesPerMeshSection = MaxNumberOfVerticesPerMeshSection;
-	TreeConstructionData->BranchRadiusZero = BranchRadiusZero;
-	TreeConstructionData->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
+	TreeConstructionData.Mesh = Mesh;
+	TreeConstructionData.AllMeshData = AllMeshData;
+	TreeConstructionData.RootBranch = RootBranch;
+
+	if (Tropism.Size() > 1.0f) {
+		Tropism = Tropism.GetSafeNormal() * 0.9f;
+	}
 }
 
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ ColonizeGivenSpaces"), STAT_ColonizeGivenSpaces, STATGROUP_SpaceColonization);
 void ASpaceColonizationPlant::ColonizeGivenSpaces() {
+	SCOPE_CYCLE_COUNTER(STAT_ColonizeGivenSpaces);
 	if (RootBranch != NULL) {
 		UBranchUtility::RecursiveDeleteAllBranches(RootBranch);
 	}
 	RootBranch = new FBranch();
-	TreeConstructionData->RootBranch = RootBranch;
+	TreeConstructionData.RootBranch = RootBranch;
 	InitialRootGrowth();
 	int iterations = 0;
 	for (int i = 0; i < MaxNumGrowthIterations; ++i) {
@@ -130,25 +129,28 @@ void ASpaceColonizationPlant::ColonizeGivenSpaces() {
 			UE_LOG(LogTemp, Warning, TEXT("No Growing Branches left, interrupting Colonization"));
 			break;
 		}
-		if (AllColonizationPoints.Num() < 1) {
-			UE_LOG(LogTemp, Warning, TEXT("No Colonization Points left, interrupting Colonization"));
-			break;
-		}
 		if (!IsStillGrowing) {
 			UE_LOG(LogTemp, Warning, TEXT("No Colonization Points reachable, interrupting Colonization"));
+			break;
+		}
+		if (CurrentColonizationPointCount < 1) {
+			UE_LOG(LogTemp, Warning, TEXT("No Colonization Points left, interrupting Colonization"));
 			break;
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Finished Space Colonization after %d Iterations with %d growing Branches left"), iterations, GrowingBranches.Num());
 }
 
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ InitialRootGrowth"), STAT_InitialRootGrowth, STATGROUP_SpaceColonization);
 void ASpaceColonizationPlant::InitialRootGrowth() {
+	SCOPE_CYCLE_COUNTER(STAT_InitialRootGrowth);
+
 	AColonizationSpace* nearestCSpace = GetNearestColonizationSpace();
 
 	RootBranch->Start = FVector(0.f);
 	GrowingBranches.Add(RootBranch);
 	if (nearestCSpace) {
-		FVector plantToNearestCSpace = nearestCSpace->GetActorLocation() - this->GetActorLocation();
+		FVector plantToNearestCSpace = nearestCSpace->GetActorLocation() - ActorLocation;
 		float distPlantToNearestCSpace = plantToNearestCSpace.Size();
 
 		float maxDistanceToCSpaceCenter = nearestCSpace->GetMaxDistanceFromCenter();
@@ -185,10 +187,6 @@ void ASpaceColonizationPlant::DoRootGrowthIterations(float MaxDistanceToCSpaceCe
 			UE_LOG(LogTemp, Warning, TEXT("RootGrowth: No Growing Branches left, interrupting Colonization"));
 			break;
 		}
-		if (AllColonizationPoints.Num() < 1) {
-			UE_LOG(LogTemp, Warning, TEXT("RootGrowth: No Colonization Points left, interrupting Colonization"));
-			break;
-		}
 		if (!IsStillGrowing) {
 			UE_LOG(LogTemp, Warning, TEXT("RootGrowth: No Colonization Points reachable, interrupting Colonization"));
 			break;
@@ -200,7 +198,7 @@ void ASpaceColonizationPlant::DoRootGrowthIterations(float MaxDistanceToCSpaceCe
 		}
 		FBranch* leaf = leafBranches[0];
 
-		FVector leafEndToCSCenter = CSpaceLocation - (leaf->End + this->GetActorLocation());
+		FVector leafEndToCSCenter = CSpaceLocation - (leaf->End + ActorLocation);
 		float squaredLeafEndToCSCenter = leafEndToCSCenter.SizeSquared();
 		if (squaredLeafEndToCSCenter < squaredMaxDistanceToCSCenter) {
 			UE_LOG(LogTemp, Warning, TEXT("RootGrowth: Inside Colonization Space Radius - stopping Root Growth."));
@@ -209,6 +207,7 @@ void ASpaceColonizationPlant::DoRootGrowthIterations(float MaxDistanceToCSpaceCe
 	}
 }
 
+
 AColonizationSpace* ASpaceColonizationPlant::GetNearestColonizationSpace() {
 	AColonizationSpace* nearestColonizationSpace = NULL;
 	if (GrowthSpaces.Num() < 1) {
@@ -216,7 +215,7 @@ AColonizationSpace* ASpaceColonizationPlant::GetNearestColonizationSpace() {
 		return nearestColonizationSpace;
 	}
 
-	FVector plantPosition = this->GetActorLocation();
+	FVector plantPosition = ActorLocation;
 	nearestColonizationSpace = GrowthSpaces[0];
 
 	if ( NULL == nearestColonizationSpace) {
@@ -236,74 +235,68 @@ AColonizationSpace* ASpaceColonizationPlant::GetNearestColonizationSpace() {
 	return nearestColonizationSpace;
 }
 
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ GrowthIteration"), STAT_GrowthIteration, STATGROUP_SpaceColonization);
 void ASpaceColonizationPlant::GrowthIteration() {
-	IsStillGrowing = CheckAllColonizationPoints();
-	if (!IsStillGrowing) {
-		return;
+	SCOPE_CYCLE_COUNTER(STAT_GrowthIteration);
+	CheckAllColonizationPoints();
+	if (IsStillGrowing) {
+		GrowAllBranches();
 	}
-	GrowAllBranches();
 }
-
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ CheckAllColonizationPoints"), STAT_CheckAllColonizationPoints, STATGROUP_SpaceColonization);
 bool ASpaceColonizationPlant::CheckAllColonizationPoints() {
-	TSet<FVector> allColonizationPoints = GetAllColonizationPoints();
-	for (FVector currentPoint : allColonizationPoints) {
-		CheckIfInKillZone(currentPoint);
-	}
-	allColonizationPoints = GetAllColonizationPoints();
-	bool IsInfluencingGrowth = false;
-	for (FVector currentPoint : allColonizationPoints) {
-		IsInfluencingGrowth|= CheckColonizationPoint(currentPoint);
-	}
-	return IsInfluencingGrowth;
-}
+	SCOPE_CYCLE_COUNTER(STAT_CheckAllColonizationPoints);
 
-TSet<FVector>& ASpaceColonizationPlant::GetAllColonizationPoints() {
-	AllColonizationPoints.Empty();
+	IsStillGrowing = false;
+	CurrentColonizationPointCount = 0;
+
 	for (AColonizationSpace* currentSpace : GrowthSpaces) {
-		if (NULL != currentSpace) {
-			AllColonizationPoints.Append(*(currentSpace->GetColonizationPoints()));
+		for (FVector currentPoint : currentSpace->GetColonizationPoints()) {
+			IsStillGrowing |= CheckColonizationPoint(&currentPoint);
+			CurrentColonizationPointCount++;
 		}
 	}
-	return AllColonizationPoints;
+
+	return IsStillGrowing;
 }
 
-void ASpaceColonizationPlant::CheckIfInKillZone(FVector ColonizationPoint) {
-	for (FBranch* currentBranch : GrowingBranches) {
-		FVector branchEndToPoint = ColonizationPoint - (currentBranch->End + this->GetActorLocation());
-		float distancePointToBranchSquared = branchEndToPoint.SizeSquared();
-		if (distancePointToBranchSquared < KillDistanceSquared) {
-			RemoveFromGrowthSpaces(ColonizationPoint);
-			return;
-		}
-	}
-}
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ CheckColonizationPoint - first half"), STAT_CheckColonizationPointFirst, STATGROUP_SpaceColonization);
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ CheckColonizationPoint - second half"), STAT_CheckColonizationPointSecond, STATGROUP_SpaceColonization);
 
-bool ASpaceColonizationPlant::CheckColonizationPoint(FVector ColonizationPoint) {
+bool ASpaceColonizationPlant::CheckColonizationPoint(FVector* ColonizationPoint) {
 	// i don't want to copy this array around, so this function will be kinda big
 	TArray<FBranch*> branchesInInfluenceRadius;
-	for (FBranch* currentBranch : GrowingBranches) {
-		FVector branchEndToPoint = ColonizationPoint - (currentBranch->End + this->GetActorLocation());
-		float distancePointToBranchSquared = branchEndToPoint.SizeSquared();
+	{
+		SCOPE_CYCLE_COUNTER(STAT_CheckColonizationPointFirst);
+		for (FBranch* currentBranch : GrowingBranches) {
+			FVector branchEndToPoint = (*ColonizationPoint) - (currentBranch->End + ActorLocation);
+			float distancePointToBranchSquared = branchEndToPoint.SizeSquared();
 
-		if (distancePointToBranchSquared < RadiusOfInfluenceSquared) {
-			branchesInInfluenceRadius.Add(currentBranch);
+			if (distancePointToBranchSquared < RadiusOfInfluenceSquared) {
+				if (distancePointToBranchSquared < KillDistanceSquared) {
+					RemoveFromGrowthSpaces(*ColonizationPoint);
+					return false;
+				}
+				else {
+					branchesInInfluenceRadius.Add(currentBranch);
+				}
+			}
 		}
 	}
+	
+	SCOPE_CYCLE_COUNTER(STAT_CheckColonizationPointSecond);
 
-	bool IsInfluencingGrowth = false;
 	if (branchesInInfluenceRadius.Num() < 1) {
-		return IsInfluencingGrowth;
-	}
-	else {
-		IsInfluencingGrowth = true;
+		return false;
 	}
 
 	FBranch* nearestBranch = branchesInInfluenceRadius[0];
-	FVector minDistanceVector = ColonizationPoint - (nearestBranch->End + this->GetActorLocation());
+
+	FVector minDistanceVector = (*ColonizationPoint) - (nearestBranch->End + ActorLocation);
 	float minDistanceSquared = minDistanceVector.SizeSquared();
 
 	for (FBranch* currentBranch : branchesInInfluenceRadius) {
-		FVector currentDistanceVector = ColonizationPoint - (currentBranch->End + this->GetActorLocation());
+		FVector currentDistanceVector = (*ColonizationPoint) - (currentBranch->End + ActorLocation);
 		float currentDistanceSquared = currentDistanceVector.SizeSquared();
 		if (currentDistanceSquared < minDistanceSquared) {
 			nearestBranch = currentBranch;
@@ -315,49 +308,68 @@ bool ASpaceColonizationPlant::CheckColonizationPoint(FVector ColonizationPoint) 
 	nearestBranch->GrowCount++;
 	nearestBranch->GrowDirection += minDistanceVector.GetSafeNormal();
 
-	return IsInfluencingGrowth;
+	return true;
 }
 
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ RemoveFromGrowthSpaces"), STAT_RemoveFromGrowthSpaces, STATGROUP_SpaceColonization);
 void ASpaceColonizationPlant::RemoveFromGrowthSpaces(FVector ToRemove) {
+	SCOPE_CYCLE_COUNTER(STAT_RemoveFromGrowthSpaces);
 	for (AColonizationSpace* currentSpace : GrowthSpaces) {
-		currentSpace->GetColonizationPoints()->Remove(ToRemove);
+		currentSpace->GetColonizationPoints().Remove(ToRemove);
 	}
 }
 
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ GrowAllBranches"), STAT_GrowAllBranches, STATGROUP_SpaceColonization);
 void ASpaceColonizationPlant::GrowAllBranches() {
+	SCOPE_CYCLE_COUNTER(STAT_GrowAllBranches);
 	TSet<FBranch*> currentBranchesToGrow = GrowingBranches;
 	for (FBranch* currentBranch : GrowingBranches) {
 		GrowBranch(currentBranch);
 	}
 }
 
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ GrowBranch"), STAT_GrowBranch, STATGROUP_SpaceColonization);
 void ASpaceColonizationPlant::GrowBranch(FBranch* ToGrow) {
-	if (ToGrow->ChildBranches.Num() >= MaxNumberOfBranchingTwigs) {
+	SCOPE_CYCLE_COUNTER(STAT_GrowBranch);
+	if (ToGrow->ChildBranches.Num() >= MaxNumberOfBranchingTwigs || (ToGrow->DidNotGrowCounter > MaxNumberOfNotDidNotGrowNums)) {
 		GrowingBranches.Remove(ToGrow);
 	}
 	else {
-		FVector normalizedGrowthDirection = ToGrow->GrowDirection;
-		normalizedGrowthDirection = normalizedGrowthDirection.GetSafeNormal();
-		normalizedGrowthDirection += Tropism;
-		normalizedGrowthDirection = normalizedGrowthDirection.GetSafeNormal();
-		
-		float individualGrowthPerIteration = GrowthPerIteration;
-		if (WeightedGrowth) {
-			float depthWeight = ((MaxGrowthDepth + 1) - ToGrow->BranchDepth) / (MaxGrowthDepth + 1);
-			individualGrowthPerIteration = GrowthPerIteration + (depthWeight * GrowthPerIteration);
-		}
-	
 		if (ToGrow->GrowCount > 0) {
+			FVector normalizedGrowthDirection = ToGrow->GrowDirection;
+			normalizedGrowthDirection = normalizedGrowthDirection.GetSafeNormal();
+			normalizedGrowthDirection += Tropism;
+			normalizedGrowthDirection = normalizedGrowthDirection.GetSafeNormal();
+		
+			float individualGrowthPerIteration = GrowthPerIteration;
+			if (WeightedGrowth) {
+				float depthWeight = ((MaxGrowthDepth + 1) - ToGrow->BranchDepth) / (MaxGrowthDepth + 1);
+				individualGrowthPerIteration = GrowthPerIteration + (depthWeight * GrowthPerIteration);
+			}
+	
 			TryCreatingNewBranch(ToGrow, normalizedGrowthDirection, individualGrowthPerIteration);
+		}
+		else {
+			ToGrow->DidNotGrowCounter++;
 		}
 	}
 	ToGrow-> GrowCount = 0;
 	ToGrow->GrowDirection = FVector(0.f);
 }
 
+DECLARE_CYCLE_STAT(TEXT("SpaceColonizationPlant ~ TryCreatingNewBranch"), STAT_TryCreatingNewBranch, STATGROUP_SpaceColonization);
 void ASpaceColonizationPlant::TryCreatingNewBranch(FBranch* Parent, FVector NormalizedGrowthDirection, float IndividualGrowthPerIteration) {
+	SCOPE_CYCLE_COUNTER(STAT_TryCreatingNewBranch);
 	FBranch* newBranch = new FBranch();
 	newBranch->BranchDepth = Parent->BranchDepth;
+	
+	FVector parentNormal = (Parent->End - Parent->Start).GetSafeNormal();
+	float absParentToGrowDirectionDot = FVector::DotProduct(parentNormal, NormalizedGrowthDirection);
+	if (absParentToGrowDirectionDot < -0.99f) {
+		Parent->DidNotGrowCounter++;
+		return;
+	}
+
 	if (Parent->ChildBranches.Num() > 0) {
 		newBranch->BranchDepth += 1;
 	}
@@ -367,5 +379,10 @@ void ASpaceColonizationPlant::TryCreatingNewBranch(FBranch* Parent, FVector Norm
 		newBranch->Start = Parent->End;
 		newBranch->End = newBranch->Start + NormalizedGrowthDirection * IndividualGrowthPerIteration;
 		GrowingBranches.Add(newBranch);
+
+		Parent->DidNotGrowCounter = 0;
+	}
+	else {
+		Parent->DidNotGrowCounter++;
 	}
 }

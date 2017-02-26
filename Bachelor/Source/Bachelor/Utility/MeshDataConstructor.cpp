@@ -16,7 +16,10 @@ void UMeshDataConstructor::GenerateCylinder(FMeshData& MeshData, FVector BottomC
 		MeshData.UVs, MeshData.Normals, MeshData.Tangents);
 }
 
+DECLARE_CYCLE_STAT(TEXT("UMeshDataConstructor ~ GenerateMultiLevelCylinder"), STAT_GenerateMultiLevelCylinder, STATGROUP_UMeshDataConstructor);
 void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, FCylinderData& CylinderData) {
+	SCOPE_CYCLE_COUNTER(STAT_GenerateMultiLevelCylinder);
+
 	TArray<FVector> RingCenters = CylinderData.RingCenters;
 	TArray<FVector> ConnectionNormals = CylinderData.ConnectionNormals;
 	TArray<float> RingRadii = CylinderData.RingRadii;
@@ -35,8 +38,10 @@ void UMeshDataConstructor::GenerateMultiLevelCylinder(FMeshData& MeshData, FCyli
 	}
 }
 
+DECLARE_CYCLE_STAT(TEXT("UMeshDataConstructor ~ GenerateCircle"), STAT_GenerateCircle, STATGROUP_UMeshDataConstructor);
 void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
 	FVector Center, FVector CircleNormal, float Radius, float TexCoordV, int NumSegments, float ZRotationAngle) {
+	SCOPE_CYCLE_COUNTER(STAT_GenerateCircle);
 
 	float anglePerSection = (PI * 2.0f) / NumSegments;
 
@@ -66,8 +71,11 @@ void UMeshDataConstructor::GenerateCircle(FMeshData& MeshData,
 	}
 }
 
+DECLARE_CYCLE_STAT(TEXT("UMeshDataConstructor ~ GenerateCylinderSectionTriangles"), STAT_GenerateCylinderSectionTriangles, STATGROUP_UMeshDataConstructor);
 void UMeshDataConstructor::GenerateCylinderSectionTriangles(FMeshData& MeshData, FVector BottomCenter,
 	FVector TopCenter, int NumSegments, int TriangleIndexOffset, bool SwapTriangles) {
+	SCOPE_CYCLE_COUNTER(STAT_GenerateCylinderSectionTriangles);
+
 	int verticesPerCircle = NumSegments + 1;
 
 	FVector bottomToCenter = TopCenter - BottomCenter;

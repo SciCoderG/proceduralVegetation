@@ -16,8 +16,6 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 	// Spawning Parameters
 	NumberOfSpacesAndPlantsToSpawn = 20;
 
-	MaxNumberOfVerticesPerMeshSection = 400;
-
 	ColonizationSpaceOffset = FVector(0.f, 0.f, 350.f);
 
 	ShouldGenerateContinuousNumberOfGrowthIterations = false;
@@ -52,24 +50,15 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 
 	Tropism = FVector(0.f, 0.f, 0.8f);
 
-	TrunkRadiusMultiplier = 1.41f;
-
 	MaxNumberOfBranchingTwigs = 5;
 
 	MaxGrowthDepth = 5;
 
 	WeightedGrowth = true;
 
-	MinNumberOfSectionsPerBranch = 2;
-
-	MaxNumberOfSectionsPerBranch = 8;
-
-	BranchRadiusZero = 1.0f;
-
-	BranchRadiusGrowthParameter = 2.0f;
-
-	PolyReductionByCurveReduction = false;
 	SmoothOutBranchingAngles = true;
+
+	MaxNumberOfNotDidNotGrowNums = 2;
 }
 
 // Called when the game starts or when spawned
@@ -140,29 +129,35 @@ ACylindricalColonizationSpace* ASpaceAndPlantSpawner::SpawnCylindricalColonizati
 	return spawnedColonizationSpace;
 }
 
+int spawnCounter = 0;
+
 ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector Location, AColonizationSpace* ColonizationSpace) {
 	ASpaceColonizationPlant* spawnedColonizationPlant = NULL;
 	if (World) {
 		UClass* colonizationPlantClass = ASpaceColonizationPlant::StaticClass();
-		spawnedColonizationPlant = World->SpawnActor<ASpaceColonizationPlant>(colonizationPlantClass, Location, FRotator(0.f), FActorSpawnParameters());
+		
+		FString currentName = this->GetName();
+		currentName.AppendInt(spawnCounter);
+		spawnCounter++;
+
+		FActorSpawnParameters spawnParams = FActorSpawnParameters();
+		spawnParams.Name = FName(*currentName);
+
+		spawnedColonizationPlant = World->SpawnActor<ASpaceColonizationPlant>(colonizationPlantClass, Location, FRotator(0.f), spawnParams);
 
 		spawnedColonizationPlant->GrowthSpaces.Add(ColonizationSpace);
-		spawnedColonizationPlant->MaxNumberOfVerticesPerMeshSection = MaxNumberOfVerticesPerMeshSection;
+		spawnedColonizationPlant->TreeConstructionData = TreeConstructionData;
 		spawnedColonizationPlant->KillDistance = KillDistance;
 		spawnedColonizationPlant->RadiusOfInfluence = RadiusOfInfluence;
 		spawnedColonizationPlant->GrowthPerIteration = GrowthPerIteration;
 		spawnedColonizationPlant->MaxNumGrowthIterations = MaxNumGrowthIterations;
 		spawnedColonizationPlant->Tropism = Tropism;
-		spawnedColonizationPlant->TrunkRadiusMultiplier = TrunkRadiusMultiplier;
 		spawnedColonizationPlant->MaxNumberOfBranchingTwigs = MaxNumberOfBranchingTwigs;
 		spawnedColonizationPlant->MaxGrowthDepth = MaxGrowthDepth;
 		spawnedColonizationPlant->WeightedGrowth = WeightedGrowth;
-		spawnedColonizationPlant->MinNumberOfSectionsPerBranch = MinNumberOfSectionsPerBranch;
-		spawnedColonizationPlant->MaxNumberOfSectionsPerBranch = MaxNumberOfSectionsPerBranch;
-		spawnedColonizationPlant->BranchRadiusZero = BranchRadiusZero;
-		spawnedColonizationPlant->BranchRadiusGrowthParameter = BranchRadiusGrowthParameter;
-		spawnedColonizationPlant->PolyReductionByCurveReduction = PolyReductionByCurveReduction;
+		
 		spawnedColonizationPlant->SmoothOutBranchingAngles = SmoothOutBranchingAngles;
+		spawnedColonizationPlant->MaxNumberOfNotDidNotGrowNums = MaxNumberOfNotDidNotGrowNums;
 	}
 	return spawnedColonizationPlant;
 }

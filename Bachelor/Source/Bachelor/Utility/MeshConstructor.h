@@ -10,8 +10,7 @@ struct FMeshData;
 struct FBranch;
 struct FTreeConstructionData;
 
-
-
+DECLARE_STATS_GROUP(TEXT("UMeshConstructor"), STATGROUP_UMeshConstructor, STATCAT_Advanced);
 
 UCLASS()
 class BACHELOR_API UMeshConstructor : public UBlueprintFunctionLibrary
@@ -22,11 +21,8 @@ public:
 
 	static void GenerateTreeMesh(FTreeConstructionData* TreeConstructionData);
 
-	static void GenerateTreeMesh(UProceduralMeshComponent* Mesh, FMeshData& AllMeshData, 
-		FBranch* RootBranch, float TrunkRadiusMultiplier, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch, int MaxNumberOfVerticesPerMeshSection, 
-		float BranchRadiusZero, float BranchRadiusGrowthParameter);
-
-	static void GenerateBranchMesh(FMeshData& AllMeshData, FBranch* Origin,
+	static void GenerateBranchMesh(FMeshData* AllMeshData, FBranch* Origin,
 		TArray<FBranch*>& AllBranches, float RootRadius, int MinNumberOfSectionsPerBranch, int MaxNumberOfSectionsPerBranch);
-	
+
+	static void GenerateFractalMesh(FTreeConstructionData* TreeConstructionData, const TArray<FBranch*>& AllBranches);
 };
