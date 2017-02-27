@@ -18,8 +18,6 @@ ASpaceAndPlantSpawner::ASpaceAndPlantSpawner()
 
 	ColonizationSpaceOffset = FVector(0.f, 0.f, 350.f);
 
-	ShouldGenerateContinuousNumberOfGrowthIterations = false;
-
 	// ColonizationSpace Parameters
 	SphericalRadius = 250.0f;
 
@@ -101,6 +99,8 @@ void ASpaceAndPlantSpawner::SetGeneralCSParameters(AColonizationSpace* ToSet) {
 	ToSet->DrawDebugPoints = DrawDebugPoints;
 	ToSet->DebugPointColor = DebugPointColor;
 	ToSet->DebugPointSize = DebugPointSize;
+
+	ToSet->GenerateRandomColonizationPoints();
 }
 
 
@@ -143,7 +143,7 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		FActorSpawnParameters spawnParams = FActorSpawnParameters();
 		spawnParams.Name = FName(*currentName);
 
-		spawnedColonizationPlant = World->SpawnActor<ASpaceColonizationPlant>(colonizationPlantClass, Location, FRotator(0.f), spawnParams);
+		spawnedColonizationPlant = World->SpawnActor<ASpaceColonizationPlant>(colonizationPlantClass, Location, GetActorRotation(), spawnParams);
 
 		spawnedColonizationPlant->GrowthSpaces.Add(ColonizationSpace);
 		spawnedColonizationPlant->TreeConstructionData = TreeConstructionData;
@@ -158,6 +158,8 @@ ASpaceColonizationPlant* ASpaceAndPlantSpawner::SpawnColonizationPlant(FVector L
 		
 		spawnedColonizationPlant->SmoothOutBranchingAngles = SmoothOutBranchingAngles;
 		spawnedColonizationPlant->MaxNumberOfNotDidNotGrowNums = MaxNumberOfNotDidNotGrowNums;
+
+		spawnedColonizationPlant->GenerateTreeStructure();
 	}
 	return spawnedColonizationPlant;
 }

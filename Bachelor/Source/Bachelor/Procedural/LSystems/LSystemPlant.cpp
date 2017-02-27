@@ -82,6 +82,7 @@ void ALSystemPlant::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 }
 
+#if WITH_EDITOR  
 void ALSystemPlant::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
 	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
 	/*if ((PropertyName == GET_MEMBER_NAME_CHECKED(ALSystemPlant, MaxNumGrowthIterations))) {
@@ -90,6 +91,7 @@ void ALSystemPlant::PostEditChangeProperty(struct FPropertyChangedEvent& Propert
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
+#endif
 
 void ALSystemPlant::InitUtilityValues() {
 	TreeConstructionData.Mesh = Mesh;

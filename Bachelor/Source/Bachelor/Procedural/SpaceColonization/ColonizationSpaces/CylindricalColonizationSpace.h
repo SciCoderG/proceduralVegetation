@@ -18,9 +18,14 @@ public:
 	virtual float GetMaxDistanceFromCenter() override;
 
 	// Called on property changes
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+#if WITH_EDITOR  
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
+#endif
 
 	void InitCylinder(float Height, float Radius);
+
+	virtual void GenerateRandomColonizationPoints() override;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 		float CylinderHeight;
@@ -30,7 +35,6 @@ public:
 
 protected:
 
-	virtual void GenerateRandomColonizationPoints() override;
 
 private:
 	void InitValues();

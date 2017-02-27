@@ -19,10 +19,9 @@ ACylindricalColonizationSpace::ACylindricalColonizationSpace()
 	CylinderRadius = 50.0f;
 
 	InitValues();
-	GenerateRandomColonizationPoints();
 }
 
-
+#if WITH_EDITOR  
 void ACylindricalColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
@@ -33,6 +32,7 @@ void ACylindricalColonizationSpace::PostEditChangeProperty(struct FPropertyChang
 		GenerateRandomColonizationPoints();
 	}
 }
+#endif
 
 void ACylindricalColonizationSpace::InitCylinder(float Height, float Radius) {
 	this->CylinderHeight = Height * GetActorScale3D().Z;

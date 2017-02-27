@@ -23,8 +23,6 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
-
 	bool CheckFunctions(FString* ToInterprete, int CurrentCharIndex, int& OutNumCharsToSkip);
 
 private:

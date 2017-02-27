@@ -20,9 +20,13 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 	
 	// Called on property changes
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+#if WITH_EDITOR  
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
+#endif
 
 	virtual float GetMaxDistanceFromCenter() PURE_VIRTUAL(AColonizationSpace::GetMaxDistanceFromCenter, return 0;);
+
+	virtual void GenerateRandomColonizationPoints() PURE_VIRTUAL(AColonizationSpace::GenerateRandomColonizationPoints, );
 
 	TSet<FVector>& GetColonizationPoints();
 
@@ -41,7 +45,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Debug")
 		float DebugPointSize;
 protected:
-	virtual void GenerateRandomColonizationPoints() PURE_VIRTUAL(AColonizationSpace::GenerateRandomColonizationPoints, );
 
 	void DrawDebugColonizationPoints();
 

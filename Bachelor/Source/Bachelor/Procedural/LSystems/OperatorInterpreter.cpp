@@ -29,15 +29,6 @@ void AOperatorInterpreter::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 }
 
-void AOperatorInterpreter::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
-	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
-	/*if ((PropertyName == GET_MEMBER_NAME_CHECKED(ALSystemPlant, MaxNumGrowthIterations))) {
-		// Potential place to regenerate tree
-	}*/
-
-	Super::PostEditChangeProperty(PropertyChangedEvent);
-}
-
 void AOperatorInterpreter::ConstructFunctionMap() {
 
 	// functions with two arguments

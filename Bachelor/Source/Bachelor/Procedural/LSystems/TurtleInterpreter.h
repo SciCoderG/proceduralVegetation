@@ -28,8 +28,6 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
-
 	void StartInterpretation(FBranch** RootBranch, FLSystemData LSystemData, FString* LSystemResult);
 
 private:

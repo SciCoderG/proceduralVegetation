@@ -32,7 +32,9 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+#if WITH_EDITOR  
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
+#endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Visual")
 		UProceduralMeshComponent* Mesh;

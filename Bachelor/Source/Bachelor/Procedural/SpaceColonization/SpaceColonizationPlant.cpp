@@ -47,6 +47,8 @@ ASpaceColonizationPlant::ASpaceColonizationPlant()
 
 	CurrentColonizationPointCount = 0;
 
+	TreeStructureWasGenerated = false;
+
 	InitUtilityValues();
 
 
@@ -64,18 +66,8 @@ void ASpaceColonizationPlant::BeginPlay()
 	SCOPE_CYCLE_COUNTER(STAT_BeginPlay);
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
-	InitUtilityValues();
-	ColonizeGivenSpaces();
-	if (SmoothOutBranchingAngles) {
-		SCOPE_CYCLE_COUNTER(STAT_SmoothOutBranchingAngles);
-		UBranchUtility::SmoothOutBranchingAngles(RootBranch);
-	}
-
-	UMeshConstructor::GenerateTreeMesh(&TreeConstructionData);
-	UE_LOG(LogTemp, Warning, TEXT("-----------------"));
-	if (NULL != RootBranch) {
-		UBranchUtility::RecursiveDeleteAllBranches(RootBranch);
+	if (0 < GrowthSpaces.Num()) {
+		GenerateTreeStructure();
 	}
 }
 
@@ -85,6 +77,7 @@ void ASpaceColonizationPlant::Tick( float DeltaTime )
 	Super::Tick( DeltaTime );
 }
 
+#if WITH_EDITOR  
 void ASpaceColonizationPlant::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
 
 	InitUtilityValues();
@@ -96,6 +89,34 @@ void ASpaceColonizationPlant::PostEditChangeProperty(struct FPropertyChangedEven
 	
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
+#endif
+
+void ASpaceColonizationPlant::GenerateTreeStructure() {
+	
+	if (!TreeStructureWasGenerated) {
+		if (GrowthSpaces[0]->GetColonizationPoints().Num() < 1) {
+			for (AColonizationSpace* currentSpace : GrowthSpaces) {
+				currentSpace->GenerateRandomColonizationPoints();
+			}
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("Name: %s"), *this->GetName());
+		InitUtilityValues();
+		ColonizeGivenSpaces();
+		if (SmoothOutBranchingAngles) {
+			SCOPE_CYCLE_COUNTER(STAT_SmoothOutBranchingAngles);
+			UBranchUtility::SmoothOutBranchingAngles(RootBranch);
+		}
+
+		UMeshConstructor::GenerateTreeMesh(&TreeConstructionData);
+		UE_LOG(LogTemp, Warning, TEXT("-----------------"));
+		if (NULL != RootBranch) {
+			UBranchUtility::RecursiveDeleteAllBranches(RootBranch);
+		}
+		TreeStructureWasGenerated = true;
+	}
+}
+
 
 void ASpaceColonizationPlant::InitUtilityValues() {
 	KillDistanceSquared = KillDistance * KillDistance;
@@ -149,7 +170,7 @@ void ASpaceColonizationPlant::InitialRootGrowth() {
 
 	RootBranch->Start = FVector(0.f);
 	GrowingBranches.Add(RootBranch);
-	if (nearestCSpace) {
+	if (NULL != nearestCSpace) {
 		FVector plantToNearestCSpace = nearestCSpace->GetActorLocation() - ActorLocation;
 		float distPlantToNearestCSpace = plantToNearestCSpace.Size();
 

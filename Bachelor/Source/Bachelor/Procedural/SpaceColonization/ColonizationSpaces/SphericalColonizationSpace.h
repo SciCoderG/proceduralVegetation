@@ -18,7 +18,12 @@ public:
 	virtual float GetMaxDistanceFromCenter() override;
 
 	// Called on property changes
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+#if WITH_EDITOR  
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent);
+#endif
+
+	virtual void GenerateRandomColonizationPoints() override;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural")
 	USphereComponent* ColonizationSphere;
@@ -28,7 +33,6 @@ public:
 
 protected:
 
-	virtual void GenerateRandomColonizationPoints() override;
 
 private:
 	void InitValues();

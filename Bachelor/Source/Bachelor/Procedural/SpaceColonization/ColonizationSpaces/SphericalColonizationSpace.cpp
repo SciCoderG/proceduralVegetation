@@ -20,10 +20,9 @@ ASphericalColonizationSpace::ASphericalColonizationSpace()
 	DebugPointSize = 5.0f;
 
 	InitValues();
-	GenerateRandomColonizationPoints();
 }
 
-
+#if WITH_EDITOR  
 void ASphericalColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
@@ -36,6 +35,7 @@ void ASphericalColonizationSpace::PostEditChangeProperty(struct FPropertyChanged
 		GenerateRandomColonizationPoints();
 	}
 }
+#endif
 
 void ASphericalColonizationSpace::GenerateRandomColonizationPoints() {
 	ColonizationPoints.Reset();

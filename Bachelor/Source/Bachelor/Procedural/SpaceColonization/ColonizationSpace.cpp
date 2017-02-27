@@ -41,6 +41,7 @@ void AColonizationSpace::Tick( float DeltaTime )
 	}
 }
 
+#if WITH_EDITOR  
 void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
@@ -56,7 +57,7 @@ void AColonizationSpace::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 		GenerateRandomColonizationPoints();
 	}
 }
-
+#endif
 
 TSet<FVector>& AColonizationSpace::GetColonizationPoints() {
 	return ColonizationPoints;

@@ -45,10 +45,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
 		FVector ColonizationSpaceOffset;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|SpawningParameters")
-		bool ShouldGenerateContinuousNumberOfGrowthIterations;
-
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Procedural|Plant|GrowthParameters")
 		float KillDistance;
 
