@@ -3,9 +3,9 @@
 Es werden die benötigten Eingaben und der Ablauf des Space Colonization Algorithmus behandelt. Die Prozedur zur Generierung von Baumstrukturen wird vorgestellt und die implementierten Erweiterungen des ursprünglichen Algorithmus werden erläutert.
 
 \section{Ursprung}
-Der vorgestellte Space Colonization Algorithmus wurde ursprünglich zur Modellierung und Visualisierung von Blattvenen entwickelt und basiert auf der Wirkung des Pflanzenhormons Auxin. Dieser Hormonstoff entsteht im Blatt und wird von bereits existierenden Blattvenen angezogen, der resultierende Hormonstrom führt zur Bildung von neuen Venen im Blatt. Die Simulation dieses Vorgangs führt zu realitätsnahen Venenmustern. \cite[Abschn. 2.5]{LeafVenation:05}
+Der vorgestellte Space Colonization Algorithmus wurde ursprünglich zur Modellierung und Visualisierung von Blattvenen entwickelt und basiert auf der Wirkung des Pflanzenhormons Auxin. Dieser Hormonstoff entsteht im Blatt und wird von bereits existierenden Blattvenen angezogen, der resultierende Hormonstrom führt zur Bildung von neuen Venen im Blatt. Die Simulation dieses Vorgangs führt zu realitätsnahen Venenmustern. \cite[S.3]{LeafVenation:05}
 
-Mithilfe einer Erweiterung in den dreidimensionalen Raum und Nachbearbeitung der Resultate kann eine Vielfalt von Baum- und Strauchstrukturen generiert werden. \cite[Abschn. 1]{SpaceColonizationAlgorithm:07}
+Mithilfe einer Erweiterung in den dreidimensionalen Raum und Nachbearbeitung der Resultate kann eine Vielfalt von Baum- und Strauchstrukturen generiert werden. \cite[S.2]{SpaceColonizationAlgorithm:07}
 
 \section{Aufbau}
 
@@ -14,24 +14,24 @@ Der Algorithmus verarbeitet eine Menge von Einflusspunkten $S$ und baut darauf b
 Der Algorithmus benötigt die folgenden Eingaben:
 
 \begin{description}[labelindent]
-	\item[\boldmath$d_i$] Der Einflussradius. Einflusspunkte prägen den Aufbau des Baums nur, wenn sich Knotenpunkte innerhalb dieses Radius befinden. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07}\\
+	\item[\boldmath$d_i$] Der Einflussradius. Einflusspunkte prägen den Aufbau des Baums nur, wenn sich Knotenpunkte innerhalb dieses Radius befinden. \cite[S.3]{SpaceColonizationAlgorithm:07}\\
 	
-	\item[\boldmath$d_k$] Der Minimalradius. Befindet sich ein Knotenpunkt innerhalb des Minimalradius um einen Einflusspunkt, wird dieser aus der Menge der Einflusspunkte $S$ entfernt. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07}\\
+	\item[\boldmath$d_k$] Der Minimalradius. Befindet sich ein Knotenpunkt innerhalb des Minimalradius um einen Einflusspunkt, wird dieser aus der Menge der Einflusspunkte $S$ entfernt. \cite[S.3]{SpaceColonizationAlgorithm:07}\\
 	
-	\item[\boldmath$D$] Die Schrittweite. Jeder neu generierte Knotenpunkt wird in diesem Abstand zu seinem Vorgänger positioniert. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \\
+	\item[\boldmath$D$] Die Schrittweite. Jeder neu generierte Knotenpunkt wird in diesem Abstand zu seinem Vorgänger positioniert. \cite[S.3]{SpaceColonizationAlgorithm:07} \\
 	
-	\item[\boldmath$\overrightarrow{T}$] Der Tropismusvektor. 
+	\item[\boldmath$\overrightarrow{T}$] Der Tropismusvektor. \cite[S.3]{SpaceColonizationAlgorithm:07}
 
 \end{description}
 
 \section{Ablauf}
 \label{sec:SCA_Ablauf}
-Zu Beginn des Algorithmus werden $N$ Einflusspunkte in einem vorgegebenen Bereich generiert. Dieser Einflussbereich signalisiert die Verfügbarkeit von Raum, in dem die Baumstruktur entstehen kann.  \cite[Abschn. 2]{SpaceColonizationAlgorithm:07}
+Zu Beginn des Algorithmus werden $N$ Einflusspunkte in einem vorgegebenen Bereich generiert. Dieser Einflussbereich signalisiert die Verfügbarkeit von Raum, in dem die Baumstruktur entstehen kann.  \cite[S.3]{SpaceColonizationAlgorithm:07}
 
 Daraufhin wird der Baum iterativ aufgebaut und durchläuft in jeder Iteration die folgenden Schritte: 
 
 \begin{description}[labelindent]
-	\item[\boldmath$1.$] Für jeden Einflusspunkt in $S$ wird der am nächsten liegende Knotenpunkt $v\in V$ bestimmt. Befindet sich $v$ innerhalb des Einflussradius $d_i$ eines Einflusspunktes, wird der Knotenpunkt einer zugeordneten Menge $S(v)$ hinzugefügt. $S(v)$ beinhaltet somit alle Einflusspunkte, die einen Einfluss auf den Knotenpunkt ausüben. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \label{alg:SCA_1}\\
+	\item[\boldmath$1.$] Für jeden Einflusspunkt in $S$ wird der am nächsten liegende Knotenpunkt $v\in V$ bestimmt. Befindet sich $v$ innerhalb des Einflussradius $d_i$ eines Einflusspunktes, wird der Knotenpunkt einer zugeordneten Menge $S(v)$ hinzugefügt. $S(v)$ beinhaltet somit alle Einflusspunkte, die einen Einfluss auf den Knotenpunkt ausüben. \cite[S.3]{SpaceColonizationAlgorithm:07} \label{alg:SCA_1}\\
 	
 	\item[\boldmath$2.$] Befinden sich Elemente in $S(v)$, wird ein neuer Knotenpunkt $v_n$ den Nachfolgern von $v$ hinzugefügt und $v$ als Vorgänger von $v_n$ eingetragen.  Alle Punkte in $S(v)$ beeinflussen $v_n$ in gleichem Maße, die neue Position $\overrightarrow{p_{v_n}}$ des Knotenpunkts berechnet sich somit wie folgt:
 	
@@ -52,12 +52,12 @@ Daraufhin wird der Baum iterativ aufgebaut und durchläuft in jeder Iteration di
 	\text{ und }  \overrightarrow{n} = \sum\limits_{s \in S(v)}\dfrac{\overrightarrow{p_s} - \overrightarrow{p_v}}{\lVert \overrightarrow{p_s} - \overrightarrow{p_v} \rVert}
 	\end{array}
 	\end{equation}	
-	\cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \label{alg:SCA_2}\\
+	\cite[S.3]{SpaceColonizationAlgorithm:07} \label{alg:SCA_2}\\
 	
-	\item[\boldmath$3.$] Für jeden Einflusspunkt wird überprüft, ob sich ein Knotenpunkt innerhalb des Minimalradius $d_k$ befindet. Existiert ein solcher Knotenpunkt, wird der Einflusspunkt aus der Menge der Einflusspunkte $S$ entfernt. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \label{alg:SCA_3}
+	\item[\boldmath$3.$] Für jeden Einflusspunkt wird überprüft, ob sich ein Knotenpunkt innerhalb des Minimalradius $d_k$ befindet. Existiert ein solcher Knotenpunkt, wird der Einflusspunkt aus der Menge der Einflusspunkte $S$ entfernt. \cite[S.3]{SpaceColonizationAlgorithm:07} \label{alg:SCA_3}
 \end{description}
 
-Diese Schritte werden solange ausgeführt, bis alle Einflusspunkte entfernt wurden, sich kein Knotenpunkt im Einflussradius eines Einflusspunktes befindet oder bis eine vorgegebene Maximalanzahl von Iterationen durchgeführt wurde. Abbildung \ref{fig:SCA_Basic} zeigt eine beispielhafte Anwendung des Algorithmus.
+Diese Schritte werden solange ausgeführt, bis alle Einflusspunkte entfernt wurden, sich kein Knotenpunkt im Einflussradius eines Einflusspunktes befindet oder bis eine vorgegebene Maximalanzahl von Iterationen durchgeführt wurde. \cite[S.2]{SpaceColonizationAlgorithm:07} Abbildung \ref{fig:SCA_Basic} zeigt eine beispielhafte Anwendung des Algorithmus.
 
 \begin{figure} [hbtp]
 	\centering
@@ -78,7 +78,7 @@ Diese Schritte werden solange ausgeführt, bis alle Einflusspunkte entfernt wurd
 	\begin{subfigure}[t]{.31\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{images/SCA_Basic3.png}
-		\caption{Schritt 2: Bestimmung von $\tilde{n}$ (roter Pfeil) ohne Einbeziehung von $\overrightarrow{T}$.}
+		\caption{Schritt 2: Bestimmung von $\overrightarrow{n_T}$ (roter Pfeil) ohne Einbeziehung von $\overrightarrow{T}$.}
 		\label{subfig:SCA_Basic3}
 	\end{subfigure}
 
@@ -123,20 +123,20 @@ Diese Schritte werden solange ausgeführt, bis alle Einflusspunkte entfernt wurd
 
 \section{Generierung von Baumstrukturen}
 \label{sec:GenerierungBaumstrukturen}
-Der Space Colonization Algorithmus liefert einen Baum, der Knotenpunkte enthält, welche Positionen im dreidimensionalen Raum darstellen. Um diese Knotenpunkte in Form von baumähnlichen Strukturen zu visualisieren, wird die Prozedur erweitert. Der Aufbau der Baumstruktur läuft wie folgt ab:
+Der Space Colonization Algorithmus liefert einen Baum, der Knotenpunkte enthält, welche Positionen im dreidimensionalen Raum entsprechen. Um diese Knotenpunkte in Form von baumähnlichen Strukturen zu visualisieren, wird die Prozedur erweitert. Der Aufbau der Baumstruktur läuft wie folgt ab:
 
 \begin{description}[labelindent]
-	\item[\boldmath$1.$] Der Einflussbereich wird mit der vorgegeben Anzahl von Einflusspunkten gefüllt. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \\
+	\item[\boldmath$1.$] Der Einflussbereich wird mit der vorgegeben Anzahl von Einflusspunkten gefüllt. \cite[S.2]{SpaceColonizationAlgorithm:07} \\
 
-	\item[\boldmath$2.$] Der Baum wird, wie in Abschnitt \ref{sec:SCA_Ablauf} beschrieben, iterativ generiert. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \\
+	\item[\boldmath$2.$] Der Baum wird, wie in Abschnitt \ref{sec:SCA_Ablauf} beschrieben, iterativ generiert. \cite[S.2]{SpaceColonizationAlgorithm:07} \\
 
-	\item[\boldmath$3.$] Die Nachfolger jedes Knotenpunkts werden einander angenähert, um eine Verringerung der Abzweigungswinkel zwischen den verbindenden Kanten zu erreichen. Dies führt zu einer insgesamt realistischeren Baumstruktur. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} \\
+	\item[\boldmath$3.$] Die Nachfolger jedes Knotenpunkts werden einander angenähert, um eine Verringerung der Abzweigungswinkel zwischen den verbindenden Kanten zu erreichen. Dies führt zu einer insgesamt realistischeren Baumstruktur. \cite[S.2]{SpaceColonizationAlgorithm:07} \\
 	
-	\item[\boldmath$4.$] Die Kanten, welche die Knotenpunkte verbinden, werden mithilfe von Zylindern visualisiert, um die Aststruktur eines biologischen Baumes zu simulieren. \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} 
+	\item[\boldmath$4.$] Die Kanten, welche die Knotenpunkte verbinden, werden mithilfe von Zylindern visualisiert, um die Aststruktur eines biologischen Baumes zu simulieren. \cite[S.2]{SpaceColonizationAlgorithm:07} 
 	
 \end{description}
 
-Die von Runions u.a. \cite{SpaceColonizationAlgorithm:07} vorgeschlagene Kurven-Unterteilung \cite[Abschn. 2]{SpaceColonizationAlgorithm:07} wurde in dieser Arbeit nicht behandelt, da durch Angabe der Schrittweite $D$ eine ausreichende visuelle Qualität erzielt wurde.
+Die von Runions u.a. \cite{SpaceColonizationAlgorithm:07} vorgeschlagene Kurven-Unterteilung \cite[S.2]{SpaceColonizationAlgorithm:07} wurde in dieser Arbeit nicht behandelt, da durch Angabe der Schrittweite $D$ eine ausreichende, visuelle Qualität erzielt wurde.
 
 Abbildung \ref{fig:SCA_Extended} zeigt die Modellierung einer zweidimensionalen Baumstruktur.
 
@@ -153,10 +153,12 @@ wobei $\overrightarrow{m}$ dem arithmetischen Mittelpunkt der Nachfolger entspri
 \overrightarrow{p_{v_i}} = \overrightarrow{p_{v_i}} + \dfrac{\overrightarrow{m} -\overrightarrow{p_{v_i}}}{2}
 \end{equation}
 
+\cite[S.2]{SpaceColonizationAlgorithm:07}
+
 
 \paragraph{Berechnung der Zylinderbreiten}
 
-Die Berechnung der Zylinderbreiten erfolgt anhand von Murrays Regel, die besagt, dass der Radius $r$ eines Astes auf Grundlage der Radien $r_{n_1}...r_{n_m}$ der nachfolgenden, von ihm abzweigenden Äste wie folgt berechnet werden kann: 
+Die Berechnung der Zylinderbreiten erfolgt anhand von Murrays Regel, welche besagt, dass der Radius $r$ eines Astes auf Grundlage der Radien $r_{n_1}...r_{n_m}$ der nachfolgenden, von ihm abzweigenden Äste wie folgt berechnet werden kann: 
 
 \begin{equation}
 \begin{array}{ll}
@@ -165,9 +167,9 @@ r^g & = r_{n_1}^g + r_{n_2}^g + ... + r_{n_m}^g
 \label{eq:Radiusberechnung}
 \end{equation} 
 
-Diese Berechnung kann rekursiv auf dem Baum ausgeführt werden, indem für jeden Knotenpunkt der Radius aus den Radien seiner Nachfolger berechnet wird. Besitzt ein Knotenpunkt keine Nachfolger, wird ein festgelegter Radius $r_0$ zurückgegeben. \cite[Abschn. 3.5]{LeafVenation:05} Der Wert $g$ kann frei gewählt werden.
+Diese Berechnung kann rekursiv auf dem Baum ausgeführt werden, indem für jeden Knotenpunkt der Radius aus den Radien seiner Nachfolger berechnet wird. Besitzt ein Knotenpunkt keine Nachfolger, wird ein festgelegter Radius $r_0$ zurückgegeben. Der Wert $g$ kann frei gewählt werden. \cite[S.5]{LeafVenation:05}
 
-\begin{figure} [hbtp]
+\begin{figure} [htbp]
 	\centering
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
@@ -215,7 +217,7 @@ Z(v') & \text{falls v' genau einen Nachfolger besitzt}\\
 \end{equation}
 wobei $v'$ den Vorgänger des Knotens $v$ darstellt. Die Zweigtiefe wird direkt nach der Erstellung des Knotens berechnet und daraufhin nicht verändert. Ein Beispiel für die Bestimmung der Zweigtiefe wird in Abbildung \ref{fig:SCA_Zweigtiefe} gezeigt.
 
-Der von Prusinkiewicz u.a. \cite{ABOP:04} beschriebene Begriff von axialen Bäumen \cite[S.21]{ABOP:04} und die zugehörige Bestimmung der Achsentiefe unterscheidet sich von der Berechnung der Zweigtiefe. Knoten können dieselbe Zweigtiefe besitzen, selbst wenn ihre Positionen keine gerade Linie bilden.
+Der von Prusinkiewicz u.a. \cite{ABOP:04} beschriebene Begriff von axialen Bäumen \cite[S.21]{ABOP:04} und die zugehörige Bestimmung der Achsentiefe unterscheidet sich von der Berechnung der Zweigtiefe. Knoten können dieselbe Zweigtiefe besitzen, selbst wenn die Verbindung ihrer Positionen keine gerade Linie bildet.
 
 \begin{figure} [hbtp]
 	\centering
@@ -253,12 +255,12 @@ Um die vom Space Colonization Algorithmus generierte Baumstruktur besser kontrol
 	
 	\item[\boldmath$max_{NG}$] Die maximale Anzahl von Iterationen, in welchen einem Knotenpunkt kein neuer Nachfolger hinzugefügt wurde.\footnote{$NG$ steht für \glqq No Grow\grqq{} oder \glqq Did not grow\grqq, englisch für \glqq kein Wachstum\grqq.} Hat ein Knoten diesen Wert erreicht, wird er in Schritt 1 des Algorithmus \ref{alg:SCA_1} nicht weiter darauf untersucht, ob er sich innerhalb des Einflussradius eines Einflusspunktes befindet. Der Wert von $max_{NG}$ eines Knotenpunkts wird auf $0$ zurückgesetzt, falls diesem ein neuer Nachfolger hinzugefügt wurde.
 	
-	Durch die vorsichtige Wahl von $max_{NG}$ können Positionsvergleiche vermieden werden ohne den resultierenden Baum zu verändern.
+	Durch die vorsichtige Wahl von $max_{NG}$ können Positionsvergleiche vermieden werden ohne den resultierenden Baum visuell erkennbar zu verändern.
 \end{description}
 
 \paragraph{Gewichtetes Wachstum}
 
-Gewichtetes Wachstum ist eine Option die Schrittweite $D$ in Abhängigkeit von der Zweigtiefe zu erhöhen. Befindet sich ein Knotenpunkt auf der Zweigtiefe $0$, werden neu hinzugefügte Nachfolger im Abstand von $2 * D$ positioniert, befindet er sich auf der maximalen Zweigtiefe, werden neu hinzugefügte Nachfolger im Abstand von $D$ positioniert. Zwischen diesen beiden Zweigtiefen wird die Schrittweite linear interpoliert.
+Gewichtetes Wachstum ist eine Möglichkeit die Schrittweite $D$ in Abhängigkeit von der Zweigtiefe zu erhöhen. Befindet sich ein Knotenpunkt auf der Zweigtiefe $0$, werden neu hinzugefügte Nachfolger im Abstand von $2 * D$ positioniert, befindet er sich auf der maximalen Zweigtiefe, werden neu hinzugefügte Nachfolger im Abstand von $D$ positioniert. Zwischen diesen beiden Zweigtiefen wird die Schrittweite linear interpoliert.
 
 \paragraph{Kurvenreduktion} \label{par:Kurvenreduktion}
  

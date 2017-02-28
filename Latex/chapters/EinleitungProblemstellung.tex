@@ -11,7 +11,7 @@ Die Prozedurale Generierung von Modellen ist ein Ansatz für eine schnellere Erf
 \begin{figure} [htbp]
 	\centering
 	\includegraphics[width=.7\textwidth]{images/greenXfrog_JanWalterSchliep.jpg}
-	\caption{\glqq Green\grqq{} von Jan Walter Schliep, modelliert mithilfe der prozeduralen 3D-Modellierungssoftware für Vegetation \glqq Xfrog\grqq. \cite{GreenOne:16}}
+	\caption{\glqq Green\grqq{} von Jan Walter Schliep, modelliert mithilfe der prozeduralen 3D-Modellierungssoftware für Vegetation, \glqq Xfrog\grqq. \cite{GreenOne:16}}
 	\label{fig:greenXfrog_JanWalterSchliep}
 \end{figure}
 
@@ -46,22 +46,24 @@ Die Verfahren enthalten keine festen Vorgaben in Hinsicht auf die grafische Dars
 
 \section{Unreal Engine 4}
 
-Die Unreal Engine 4 ist eine Sammlung von Softwarewerkzeugen für die Entwicklung von digitalen Spielen, Echtzeit-3D-Filmen und Simulationen.\cite{WhatIsUE:17}  Sie bietet Bibliotheken für die Darstellung von 3D-Modellen und erfüllt unter anderem die grundlegenden Aufgaben der Speicherverwaltung, Serialisierung von Objekten, und Verwaltung von Benutzereingaben. \cite{EngineFeatures:17}
+Die Unreal Engine 4 ist eine Sammlung von Softwarewerkzeugen für die Entwicklung von digitalen Spielen, Echtzeit-3D-Filmen und Simulationen. \cite{WhatIsUE:17} Sie bietet Bibliotheken für die Darstellung von 3D-Modellen und erfüllt unter anderem die grundlegenden Aufgaben der Speicherverwaltung, Serialisierung von Objekten, und Verwaltung von Benutzereingaben. \cite{EngineFeatures:17}
 
 Die Engine ist in $C++$ programmiert und der Quellcode ist frei zugänglich. Eine Erstellung von Inhalten ist durch die Programmierung von $C++$ Code oder durch die Verwendung der visuellen Skriptsprache \glqq Blueprint\grqq{} möglich. \cite{WhatIsUE:17}
 
 Die Implementierungen der gewählten Ansätze wurden in $C++$ realisiert. Während die Kapitel \ref{ch:LSysteme} und \ref{ch:SCA}, welche die theoretischen Konzepte der Ansätze behandeln, unabhängig von dem Framework verfasst wurden, verwenden die darauf folgenden Kapitel Unreal Engine 4 spezifische Konzepte. Beispielsweise wurden beide Verfahren auf Grundlage der Actor-Basisklasse implementiert.
 
-Ein Actor (engl. für Akteur) in der Unreal Engine 4 ist ein Objekt, das in einem Level platziert werden kann und eine bestimmte Position, Rotation und Skalierung in der Welt besitzt. Die generierte Baumstruktur wird einem Akteur als Komponente hinzugefügt und kann daraufhin vom Grafiksystem der Engine dargestellt werden. Die Generierung der Modelldaten findet in dem lokalen Koordinatensystem des Akteurs statt -- wird die Position, Rotation oder Skalierung des Akteurs verändert, überträgt sich diese Transformation ebenfalls auf die generierten Modelldaten. Dies ermöglicht eine einfache Positionierung von Baumstrukturen in einem Level, ohne neue Modelldaten generieren zu müssen. \cite{UnrealTerminology:17}
+Ein Actor (engl. für Akteur) in der Unreal Engine 4 ist ein Objekt, das in einem Level platziert werden kann und eine bestimmte Position, Rotation und Skalierung in der Welt besitzt. Die generierte Baumstruktur wird einem Actor als Komponente hinzugefügt und kann daraufhin vom Grafiksystem der Engine dargestellt werden. Die Generierung der Modelldaten findet in dem lokalen Koordinatensystem des Actors statt -- wird die Position, Rotation oder Skalierung des Actors verändert, überträgt sich diese Transformation ebenfalls auf die generierten Modelldaten. Dies ermöglicht eine einfache Positionierung von Baumstrukturen in einem Level, ohne neue Modelldaten generieren zu müssen. \cite{UnrealTerminology:17}
 
-Das Akteur-Framework lässt Transformationen sowie die Eingabe von Parametern über den visuellen Leveleditor der Engine zu und erlaubt somit eine schnelle Änderung von Parameterwerten und Anpassung der Positionen von generierten Baumstrukturen. \cite{UnrealTerminology:17}
+Das Actor-Framework lässt Transformationen sowie die Eingabe von Parametern über den visuellen Leveleditor der Engine zu und erlaubt somit eine schnelle Änderung von Parameterwerten und Anpassung der Positionen von generierten Baumstrukturen. \cite{UnrealTerminology:17}
 
 \begin{figure} [ht]
 	\centering
 	\includegraphics[width=\textwidth]{images/ScreenshotUE4Editor.png}
-	\caption{Screenshot des visuellen Leveleditors der Unreal Engine 4. Der aktuell ausgewählte Akteur und seine Komponenten sind gelb hervorgehoben. Die in der Bildmitte dargestellten Pfeile sowie die Eingabefelder im unteren rechten Bildbereich erlauben die Transformation des Akteurs. Ebenfalls im unteren rechten Bildbereich aufgelistet sind weitere Felder um die schnelle Änderung von Parameterwerten zu erlauben, die im $C++$ Quellcode entsprechend definiert sind. }
+	\caption{Screenshot des visuellen Leveleditors der Unreal Engine 4. Der aktuell ausgewählte Actor und seine Komponenten sind gelb hervorgehoben. Die in der Bildmitte dargestellten Pfeile sowie die Eingabefelder im unteren rechten Bildbereich erlauben die Transformation des Actors. Ebenfalls im unteren rechten Bildbereich aufgelistet sind weitere Felder um die schnelle Änderung von Parameterwerten zu erlauben, die im $C++$ Quellcode entsprechend definiert sind. }
 	\label{fig:ScreenshotUE4Editor}
 \end{figure}
 
 
-Die in den folgenden Kapiteln verwendete Längeneinheit entspricht der in Unreal Engine 4 verwendeten Einheit \grqq$cm$\grqq, das Winkelmaß entspricht der Einheit \glqq Grad\grqq. Alle Abbildungen von Baumstrukturen wurden mithilfe von Screenshots des, im Rahmen dieser Arbeit entwickelten, Projektes erstellt.
+Die in den folgenden Kapiteln verwendete Längeneinheit entspricht der in Unreal Engine 4 verwendeten Einheit \grqq$cm$\grqq, das Winkelmaß entspricht der Einheit \glqq Grad\grqq. Alle Abbildungen von Baumstrukturen wurden mithilfe von Screenshots des, im Rahmen dieser Arbeit entwickelten, Projekts erstellt.
+
+Der Aufbau des Projekts und der Zugriff auf die entwickelten Inhalte wird in Appendix \ref{ch:Projektaufbau} erläutert.

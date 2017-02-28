@@ -51,7 +51,7 @@ Ein D0L-System kann wie folgt definiert werden:
 	\end{description}
 \cite[S.4]{ABOP:04} 
 \end{defD0LSystem}
-Die Menge $V^+$ ist die Menge aller nichtleeren Wörter über $V$.  
+Die Menge $V^+$ ist die Menge aller nichtleeren Wörter über $V$. \cite[S.70]{ThI:14}
 
 Die Ableitung eines Wortes entspricht der Ersetzung aller Buchstaben anhand der Produktionsregeln. Ein Wort kann mehrmals abgeleitet werden. 
 
@@ -73,7 +73,7 @@ p_4 &  : b_l &\rightarrow& a_l
 \label{eq:ProdAnabaena}
 \end{equation} 
 
-Die Entwicklung einer Anfangszelle $a_r$ (Axiom $\omega : a_r$) läuft daraufhin wie in Abbildung \ref{fig:AnabaenaAbleitung} dargestellt ab.
+Die Entwicklung einer Anfangszelle $a_r$ (Axiom $\omega : a_r$) läuft daraufhin wie in Abbildung \ref{fig:AnabaenaAbleitung} dargestellt ab. \cite[S.4]{ABOP:04}
 \begin{figure} [hbtp]
 	\centering
 	\includegraphics[height=0.25\textheight]{images/AnabaenaAbleitung.png}
@@ -85,7 +85,9 @@ Die Entwicklung einer Anfangszelle $a_r$ (Axiom $\omega : a_r$) läuft daraufhin
 
 Parametrische L-Systeme stellen eine Erweiterung der D0L-Systeme dar. Die Buchstaben eines verwendeten Alphabets $V$ werden um zugeordnete Parameter aus der Menge der reellen Zahlen ergänzt. Ein solches parametrisches Wort $V \times \mathbb{R}^*$ besteht aus einem Zeichen $A \in V$ und Parametern $a_1,...,a_n \in \mathbb{R}$ und wird als $A(a_1,...,a_n)$ dargestellt. Ein parametrisches Wort ohne Parameter mit dem Zeichen $A \in V$  wird schlicht als $A$ dargestellt. \cite[S.41]{ABOP:04}
 
-Die obige Definition von parametrischen Worten geschieht mithilfe von numerischen Konstanten, während bei der Angabe eines L-Systems formale Parameter verwendet werden. Im informatischen Kontext entspricht der Begriff eines formalen Parameters einem Funktionsparameter oder Funktionsvariablen. \cite[S.16f]{FormalParamDef:05} Ist $\Sigma$ eine Menge von formalen Parametern, dann ist $E(\Sigma)$ ein arithmetischer Ausdruck, in dem Parameter, Konstanten und arithmetische Operatoren auf eine zulässige Weise kombiniert werden. \cite[S.41]{ABOP:04}
+Die obige Definition von parametrischen Worten geschieht mithilfe von numerischen Konstanten, während bei der Angabe eines L-Systems formale Parameter verwendet werden. Im informatischen Kontext entspricht der Begriff eines formalen Parameters einem Funktionsparameter oder einer Funktionsvariablen. \cite[S.16f]{FormalParamDef:05} 
+
+Ist $\Sigma$ eine Menge von formalen Parametern, dann ist $E(\Sigma)$ ein arithmetischer Ausdruck, in dem Parameter, Konstanten und arithmetische Operatoren auf eine zulässige Weise kombiniert werden. \cite[S.41]{ABOP:04}
 
 \newtheorem{defParametrischeLSysteme}{Parametrisches L-System:}[section]
 \begin{defParametrischeLSysteme}
@@ -95,7 +97,7 @@ Die obige Definition von parametrischen Worten geschieht mithilfe von numerische
 		
 		\item[\boldmath$\Sigma$] Einer Menge von formalen Parametern.\\
 		
-		\item[\boldmath$P$] Einer endlichen Menge von Produktionsregeln $P : (V\times \Sigma^*) \rightarrow (V\times E(\Sigma))^*$\\
+		\item[\boldmath$P$] Einer endlichen Menge von Produktionsregeln $P : (V\times \Sigma^*) \rightarrow (V\times E(\Sigma)*)^*$\\
 		
 		\item[\boldmath$\omega \in M^+$] mit $M =(V \times \mathbb{R}^*)$ -- einem Axiom in Form eines nichtleeren, parametrischen Wortes.
 	\end{description}
@@ -138,7 +140,7 @@ Es können drei Aktionen durchführt werden, welche durch die folgenden Symbole 
 	\item[\boldmath$F(l)$] Die Turtle bewegt sich um $l>0$ in die Richtung der aktuellen Blickrichtung. Die neue Position ist  $\overrightarrow{p_{neu}}$ mit:
 	\begin{equation}
 	\begin{array}{ll}
-	\overrightarrow{p_{neu}} & = \overrightarrow{p} + \overrightarrow{H} * l
+	\overrightarrow{p_{neu}} & = \overrightarrow{p} + l * \overrightarrow{H}
 	\end{array}
 	\end{equation} 
 	Zwischen der alten Position $\overrightarrow{p}$ und der neuen Position $\overrightarrow{p_{neu}}$ wird eine Linie gezeichnet.\\
@@ -225,7 +227,7 @@ Für eine bessere Übersicht wurde die Angabe der Parameter weggelassen. Die Tur
 
 \subsection{Verzweigte L-Systeme} \label{subsec:BranchingLSystems}
 
-Die bisherigen Definitionen von L-Systemen und die korrespondierende Turtle-Interpretation lässt lediglich die Bildung von Grafiken zu, die einen einzelnen, zusammenhängenden Polygonzug erlauben. Um L-Systeme zu bilden, deren Visualisierungen Baumstrukturen ähneln, muss die bisherige Turtle-Interpretation um die Möglichkeit erweitert werden Verzweigungen zu verarbeiten. \cite[S.24]{ABOP:04} 
+Die bisherigen Definitionen von L-Systemen und die korrespondierende Turtle-Interpretation erlaubt lediglich die Bildung von Grafiken mit einem einzelnen, zusammenhängenden Polygonzug. Um L-Systeme zu bilden, deren Visualisierungen Baumstrukturen ähneln, muss die bisherige Turtle-Interpretation um die Möglichkeit erweitert werden Verzweigungen zu verarbeiten. \cite[S.24]{ABOP:04} 
 
 Folgende Operationen werden eingeführt:
 
@@ -235,7 +237,7 @@ Folgende Operationen werden eingeführt:
 	\item[\textbf{]}] Der oberste Zustand der Turtle wird vom Stack genommen. Die aktuelle Position und Rotation der Turtle wird auf die im Zustand gespeicherte Position und Rotation gesetzt. Es wird keine Linie zwischen der alten und neuen Position gezeichnet. \cite[S.24]{ABOP:04} 
 \end{description}
 
-Diese Erweiterung erlaubt es mehrere Linien zu zeichnen, die von einem einzigen Punkt ausgehen -- die Visualisierung von Abzweigungen ist somit möglich. Die Operatoren \textbf{[} und \textbf{]} markieren den Anfang und das Ende eines Zweiges. \cite[S.24]{ABOP:04} 
+Diese Erweiterung erlaubt es mehrere Linien zu zeichnen, die von einem einzigen Punkt ausgehen und ermöglicht somit die Visualisierung von Abzweigungen. Die Operatoren \textbf{[} und \textbf{]} markieren den Anfang und das Ende eines Zweiges. \cite[S.24]{ABOP:04} 
 
 Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich die in Abbildung \ref{fig:BranchingLSystems} gezeigten Strukturen bilden. Die Turtle-Interpretation folgt der in \ref{desc:TurtleWithoutParams} beschriebenen Interpretation mit fester Strichlänge $l$ und festem Drehwinkel $d$.
 
@@ -276,10 +278,10 @@ Beispiel: Mithilfe von verzweigten L-System-Beschreibungen lassen sich die in Ab
 
 Die bisherige Definition eines Turtle-Zustands mithilfe einer zweidimensionalen Position und einer Blickrichtung genügt nicht, um Visualisierungen von L-Systemen in Form von dreidimensionalen Baumstrukturen zu ermöglichen. Sowohl die Zustands-Definition als auch die interpretierten Operationen müssen angepasst und erweitert werden.
 
-Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{p}$ sowie eine $3\times3$ Rotationsmatrix $\boldsymbol{R}$, welche die Orientierung der Turtle im Raum beschreibt. Der Zustand wird als Tupel $(\overrightarrow{p}, \boldsymbol{R})$ angegeben. $\boldsymbol{R}$ entspricht zu Anfang einer Identitätsmatrix. Die Einheitsvektoren $H$, $L$ und $U$  sind orthogonal zueinander und bilden das lokale Koordinatensystem der Turtle. 
+Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrightarrow{p}$ sowie eine $3\times3$ Rotationsmatrix $\boldsymbol{R}$, welche die Orientierung der Turtle im Raum beschreibt. Der Zustand wird als Tupel $(\overrightarrow{p}, \boldsymbol{R})$ angegeben. $\boldsymbol{R}$ entspricht zu Anfang einer Identitätsmatrix. Die Einheitsvektoren $\overrightarrow{H}$, $\overrightarrow{L}$ und $\overrightarrow{U}$  sind orthogonal zueinander und bilden das lokale Koordinatensystem der Turtle. 
 
 \begin{description}[labelindent]
-		\item[\boldmath$\overrightarrow{H}$]Die Blickrichtung (Heading-Vektor) der Turtle. Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{H}}$:\\
+		\item[\boldmath$\overrightarrow{H}$]Die Blickrichtung (Heading-Vektor) der Turtle. Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{H}}(d)$:\\
 		\begin{equation}
 		R_{\overrightarrow{H}}(d) = 
 		\setlength\arraycolsep{10pt}
@@ -291,7 +293,7 @@ Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrig
 		\label{eq:rotH}
 		\end{equation} 
 		
-		\item[\boldmath$\overrightarrow{L}$] Der Vektor, der im lokalen Koordinatensystem der Turtle nach links zeigt (Left-Vektor). Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{L}}$:\\
+		\item[\boldmath$\overrightarrow{L}$] Der Vektor, der im lokalen Koordinatensystem der Turtle nach links zeigt (Left-Vektor). Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{L}}(d)$:\\
 		\begin{equation}
 		R_{\overrightarrow{L}}(d) = 
 		\setlength\arraycolsep{10pt}
@@ -303,7 +305,7 @@ Der Zustand der Turtle im dreidimensionalen Raum besitzt eine Position $\overrig
 		\label{eq:rotL}
 		\end{equation} 
 		
-		\item[\boldmath$\overrightarrow{U}$]Der Vektor, der im lokalen Koordinatensystem der Turtle nach oben zeigt (Up-Vektor). Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{U}}$:\\
+		\item[\boldmath$\overrightarrow{U}$]Der Vektor, der im lokalen Koordinatensystem der Turtle nach oben zeigt (Up-Vektor). Eine Rotation um diesen Vektor um den Winkel $d$ entspricht der Rotationsmatrix $R_{\overrightarrow{U}}(d)$:\\
 		\begin{equation}
 		R_{\overrightarrow{U}}(d) = 
 		\setlength\arraycolsep{10pt}
@@ -325,7 +327,7 @@ Die erweiterte Turtle-Interpretation verarbeitet folgende Symbole:
 	\item[\boldmath$F(l)$]  Die Turtle bewegt sich um $l>0$ in Blickrichtung $\overrightarrow{H}$. Die neue Position ist $\overrightarrow{p_{neu}}$ mit:
 	\begin{equation}
 	\begin{array}{ll}
-	\overrightarrow{p_{neu}} & = \overrightarrow{p} + \boldsymbol{R} * \overrightarrow{H} * l
+	\overrightarrow{p_{neu}} & = \overrightarrow{p} + l * (\boldsymbol{R} * \overrightarrow{H})
 	\end{array}
 	\label{eq:Turtle3D_F}
 	\end{equation} 
@@ -375,7 +377,7 @@ Die erweiterte Turtle-Interpretation verarbeitet folgende Symbole:
 \end{description}
 \cite[S.19]{ABOP:04} \cite[S.69]{Deussen:05}
 
-Mithilfe der Turtle-Interpretation im dreidimensionalen Raum können nun L-Systeme visualisiert werden, die Baumstrukturen ähneln. Ein Beispiel dafür ist das L-System aus Gleichung \ref{eq:3DTreeP61B_Prod}, dargestellt in Abbildung \ref{fig:BranchingLSystems3D}.
+Mithilfe der Turtle-Interpretation im dreidimensionalen Raum können nun L-Systeme visualisiert werden, die realen Baumstrukturen ähneln. Ein Beispiel dafür ist das L-System aus Gleichung \ref{eq:3DTreeP61B_Prod}, dargestellt in Abbildung \ref{fig:BranchingLSystems3D}.
 
 \begin{equation}
 	\begin{array}{llll}
@@ -427,7 +429,7 @@ Ein Baum, in der Graphentheorie, ist ein kreisfreier Graph $G = \langle V,E\rang
 
 Ein Baum ist grundsätzlich ein rein topologisches Objekt, mithilfe der Zuordnung von Punkten zu Knoten kann jedoch eine geometrische Vorstellung des Aufbaus bewirkt werden. \cite[S.23]{ABOP:04}
 
- Um den Aufbau eines Baumes $G = \langle V,E \rangle$ mithilfe der Turtle-Interpretation zu ermöglichen, muss der Turtle-Zustand um einen Knotenpunkt $v \in V$ ergänzt werden. Der Zustand wird als Tupel $\overrightarrow{p}, v, \boldsymbol{R}$ angegeben. 
+ Um den Aufbau eines Baumes $G = \langle V,E \rangle$ mithilfe der Turtle-Interpretation zu ermöglichen, muss der Turtle-Zustand um einen Knotenpunkt $v \in V$ ergänzt werden. Der Zustand wird als Tupel $(\overrightarrow{p}, v, \boldsymbol{R})$ angegeben. 
  
  Die Turtle-Interpretation beginnt mit der Erstellung der Wurzel am Ursprung des lokalen Bezugssystems. Die Verarbeitung folgender Symbole muss erweitert werden:
 
@@ -439,11 +441,11 @@ Ein Baum ist grundsätzlich ein rein topologisches Objekt, mithilfe der Zuordnun
 	\item[\boldmath$\textbf{]}$] Der oberste Zustand der Turtle wird vom Stack genommen. Zusätzlich zur Position und Rotation wird auch der Zustandsknoten der Turtle auf den gespeicherten Knoten gesetzt.\\
 \end{description}
 
-Die Kanten zwischen Knoten wurden durch die Turtle-Interpretation bisher als Linien visualisiert und können als Astsegmente von echten Baumstrukturen verstanden werden. \cite[S.23]{ABOP:04} Die Repräsentation von Turtle-Aktionen als graphentheoretischer Baum ermöglicht jedoch die in Abschnitt \ref{sec:Modellgenerierung} beschriebene Generierung und Nachbearbeitung von Modelldaten.
+Die Kanten zwischen Knoten wurden durch die Turtle-Interpretation bisher als Linien visualisiert und können als Astsegmente von echten Baumstrukturen verstanden werden. \cite[S.23]{ABOP:04} Die Repräsentation von Turtle-Aktionen als graphentheoretischer Baum ermöglicht die in Abschnitt \ref{sec:Modellgenerierung} beschriebene Generierung und Nachbearbeitung von Modelldaten.
 
 \subsection{Tropismus}
 
-Tropismus ist die Tendenz einer Pflanze in eine bestimmte Richtung zu wachsen, beispielsweise aufgrund einer Lichtquelle oder der Beugung durch Gravitation.\cite[Abschn. 3]{SpaceColonizationAlgorithm:07} Der Einfluss von Tropismus wird als ein dreidimensionaler Vektor $\overrightarrow{T}$ angegeben. Die Bewegung $F(l)$ der Turtle wird wie folgt erweitert:
+Tropismus ist die Tendenz einer Pflanze in eine bestimmte Richtung zu wachsen, beispielsweise aufgrund einer Lichtquelle oder der Beugung durch Gravitation. \cite[Abschn. 3]{SpaceColonizationAlgorithm:07} Der Einfluss von Tropismus wird als ein dreidimensionaler Vektor $\overrightarrow{T}$ angegeben. Die Bewegung $F(l)$ der Turtle wird wie folgt erweitert:
 
 \begin{description}[labelindent]
 	\item[\boldmath$F(l)$]  Die Turtle bewegt sich um $l>0$ in Blickrichtung $\overrightarrow{H}$. Die neue Position ist $\overrightarrow{p_{neu}}$ mit:
