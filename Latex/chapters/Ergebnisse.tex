@@ -293,14 +293,14 @@ Weiterhin passt sich die generierte Baumstruktur dem Bereich an, in welchem die 
  	\centering
  	\begin{subfigure}[t]{.45\textwidth}
  		\centering
- 		\includegraphics[height=.21\textheight]{images/SCA_MultipleSpheres_Points.png}
+ 		\includegraphics[height=.19\textheight]{images/SCA_MultipleSpheres_Points.png}
  		\caption{Punktewolke.}
  		\label{subfig:SCA_MultipleSpheres_Points}
  	\end{subfigure}
  	\hspace{.05\linewidth}
  	\begin{subfigure}[t]{.45\textwidth}
  		\centering
- 		\includegraphics[height=.21\textheight]{images/SCA_MultipleSpheres_Grown.png}
+ 		\includegraphics[height=.19\textheight]{images/SCA_MultipleSpheres_Grown.png}
  		\caption{Resultierende Baumstruktur.}
  		\label{subfig:SCA_MultipleSpheres_Grown}
  	\end{subfigure}	
@@ -394,13 +394,13 @@ In Abbildung \ref{fig:SCA_Sonst} werden Beispiele für die Wirkung der beschrieb
 		\centering
 		\includegraphics[height=.21\textheight]{images/SCA_Sonst_Grad.png}
 		\caption{$max_{grad} = 1$}
-		\label{subfig:SCA_Sonst_Grad}
+		\label{subfig:SCA_Sonst_Grad1}
 	\end{subfigure}
 	\begin{subfigure}[t]{.45\textwidth}
 		\centering
 		\includegraphics[height=.21\textheight]{images/SCA_Sonst_Grad2.png}
 		\caption{$max_{grad} = 2$}
-		\label{subfig:SCA_Sonst_Grad}
+		\label{subfig:SCA_Sonst_Grad2}
 	\end{subfigure}
 	\caption{Wirkung von Tropismus $\protect\overrightarrow{T}$, maximaler Zweigtiefe $max_Z$ und maximalem Knotengrad $max_{grad}$ auf die generierte Baumstruktur. Falls nicht weiter angegeben, wurden die in Abbildung \ref{subfig:SCA_Sonst_Ursprung} angegebenen Parameterwerte verwendet. Eigene Abbildungen.}
 	\label{fig:SCA_Sonst}
@@ -429,25 +429,25 @@ Abbildung \ref{fig:SCA_SI} zeigt die Auswirkungen verschiedener Werte für die S
 		\caption{$D = 5$}
 		\label{subfig:SCA_SI_SchrittweiteLow}
 	\end{subfigure}	
-	\begin{subfigure}[t]{.2\textwidth}
+	\begin{subfigure}[t]{.19\textwidth}
 		\centering
 		\includegraphics[height=.11\textheight]{images/SCA_SI_Iterationen10.png}
 		\caption{$D = 20$, $N_I = 10$}
 		\label{subfig:SCA_SI_Iterationen10}
 	\end{subfigure}
-	\begin{subfigure}[t]{.2\textwidth}
+	\begin{subfigure}[t]{.19\textwidth}
 		\centering
 		\includegraphics[height=.11\textheight]{images/SCA_SI_Iterationen20.png}
 		\caption{$N_I = 20$}
 		\label{subfig:SCA_SI_Iterationen20}
 	\end{subfigure}
-	\begin{subfigure}[t]{.2\textwidth}
+	\begin{subfigure}[t]{.19\textwidth}
 		\centering
 		\includegraphics[height=.21\textheight]{images/SCA_SI_Iterationen40.png}
 		\caption{$N_I = 40$}
 		\label{subfig:SCA_SI_Iterationen40}
 	\end{subfigure}
-	\begin{subfigure}[t]{.35\textwidth}
+	\begin{subfigure}[t]{.4\textwidth}
 		\centering
 		\includegraphics[height=.21\textheight]{images/SCA_SI_Iterationen80.png}
 		\caption{$N_I = 80$}
@@ -504,7 +504,7 @@ Die Generierungszeit der Space-Colonization Implementierung wird durch eine Viel
 
 Die eingeführte Bedingung $max_{NG}$ -- die maximale Anzahl von Iterationen, in welchen einem Astsegment kein neuer Nachfolger hinzugefügt wurde -- begrenzt die Anzahl der aktuell wachsenden Astsegmente und konnte somit erfolgreich zur Verringerung der Generierungszeit eingesetzt werden, ohne die resultierende Baumstruktur visuell erkennbar zu verändern. 
 
-Abbildung \ref{fig:SCA_maxNG} zeigt zwei mit denselben Parametern generierte Space-Colo\-ni\-za\-tion Baumstrukturen, lediglich $max_{NG}$ wurde angepasst. Die Generierungszeit der Baumstruktur aus Abbildung \ref{subfig:SCA_maxNG_1000} beträgt ungefähr das fünffache der Generierungszeit des Modells aus Abbildung \ref{subfig:SCA_maxNG_2}. Die Messung der Generierungszeit fand unter gleichbleibenden Bedingungen auf einem Rechner mit $3.3GHz$ Prozessor statt. 
+Abbildung \ref{fig:SCA_maxNG} zeigt zwei mit denselben Parametern generierte Space-Colo\-ni\-za\-tion Baumstrukturen, lediglich $max_{NG}$ wurde angepasst. Die Generierungszeit der Baumstruktur aus Abbildung \ref{subfig:SCA_maxNG1000} beträgt ungefähr das fünffache der Generierungszeit des Modells aus Abbildung \ref{subfig:SCA_maxNG2}. Die Messung der Generierungszeit fand unter gleichbleibenden Bedingungen auf einem Rechner mit $3.3GHz$ Prozessor statt. 
 
 \begin{figure} [hbtp]
 	\centering
@@ -512,14 +512,14 @@ Abbildung \ref{fig:SCA_maxNG} zeigt zwei mit denselben Parametern generierte Spa
 		\centering
 		\includegraphics[height=.2\textheight]{images/SCA_maxNG_2.png}
 		\caption{$N = 5000$, $r = 1000$, $N_I = 1000$, $d_k = 100$, $d_i = 250$, $D = 20$, $\protect\overrightarrow{T} = (0,0,0.2)$. \\ $max_{NG} = 2$, $Generierungszeit = 1.12 s$.}
-		\label{subfig:SCA_maxNG_2}
+		\label{subfig:SCA_maxNG2}
 	\end{subfigure}
 	\hspace{.05\linewidth}
 	\begin{subfigure}[t]{.45\textwidth}
 		\centering
 		\includegraphics[height=.2\textheight]{images/SCA_maxNG_1000.png}
 		\caption{$max_{NG} = 1000$, $Generierungszeit = 6.08 s$.}
-		\label{subfig:SCA_maxNG_1000}
+		\label{subfig:SCA_maxNG1000}
 	\end{subfigure}	
 	\caption{Einfluss von $max_{NG}$ auf die Generierungszeit. Die Messungen der Generierungszeit fanden unter gleichbleibenden Bedingungen statt. Eigene Abbildungen.}
 	\label{fig:SCA_maxNG}
