@@ -1,0 +1,88 @@
+\chapter{Projektaufbau und Beispielanwendung} \label{ch:Projektaufbau}
+
+Für die Visualisierung der Ergebnisse dieser Arbeit in einer 3D-Echtzeitanwendung wurde eine auf Windows ausführbare Beispielanwendung erstellt, welche auf dem in der Unreal Engine 4 erstellten Projekt basiert. \cite{UnrealTerminology:17} Das in der Engine-Version $4.14.3$ entwickelte Projekt enthält alle Inhalte und Quellcodedateien, welche im Rahmen dieser Arbeit erstellt wurden. Das Projekt trägt den Arbeitstitel \glqq Bachelor\grqq. 
+
+Ein Git-Repository ermöglicht den Zugriff auf die Projektdateien und ist über den folgenden Link erreichbar: \\
+
+\url{https://goo.gl/QTKihm} \\
+
+Die Beispielanwendung ist über folgenden Link verfügbar: \\
+
+\url{https://drive.google.com/open?id=0Bw88ARHio-5sTkhERkc4ZjB6N0U} \\
+
+Um die Umgebung der Anwendung zu gestalten und Informationstafeln zu erstellen wurden frei verfügbare Beispielinhalte aus den Content Examples verwendet. \cite{UnrealContentExamples:17}
+
+\section{Projektaufbau}
+
+Die Inhalte und der Quellcode können nach dem Öffnen des Projekts im sogenannten Contentbrowser (engl. für Inhaltsnavigation) eingesehen werden. Die enthaltene Ordnerstruktur ist wie folgt aufgebaut:
+
+\subsection{Content}
+
+Der Content-Ordner enthält alle Inhalte, die im Projekt verwendet werden. Dieser ist in weitere Unterordner unterteilt:
+
+\begin{description}
+	\item \textbf{DebugUtils: } Enthält steuerbare Hilfs-Actors für die Entwicklung und das Testen des Projekts. \\
+	
+	\item \textbf{ExampleContent: } Enthält die aus den Content Examples \cite{UnrealContentExamples:17} verwendeten Inhalte, wie 3D-Modelle, Texturen und Blueprint-Klassen für die einfache Erstellung des Beispielraumes. \\
+	
+	\item \textbf{Levels: } Enthält die im Projekt verwendeten Levels. \\
+	
+	\item \textbf{Material: } Enthält die selbstständig erstellten Materials. \\
+	
+	\item \textbf{ProceduralPlants: } Enthält Blueprint-Klassen, welche von den im Quellcode erstellten Actors ableiten, um eine einfache Positionierung zu ermöglichen.\\
+	
+	\item \textbf{UI: } Enthält alle selbstständig erstellten Menü-Blueprint-Klassen sowie die verwendete Hintergrundtextur. \\
+\end{description}
+
+\subsection{C++ Classes}
+
+Der C++ Classes Ordner enthält alle von der Actor-Basisklasse ableitenden C++ Klassen, was eine Beschränkung auf die im Level platzierbaren Klassen darstellt. Der Ordner enthält somit nicht alle im Rahmen dieser Arbeit entwickelten C++ Codedateien. Um eine vollständige Liste der Dateien einzusehen, muss das mit dem Unreal-Projekt verbundene Visual-Studio-Projekt geöffnet werden. Die C++ Codedateien sind wie folgt aufgebaut:
+
+\begin{description}
+	\item \textbf{Procedural: } Enthält die in Abschnitt \ref{sec:ImplementierungBaumrep} beschriebene Datenklasse für die Baumrepräsentation sowie alle für die Implementierungen der beiden Generierungsverfahren verwendeten Klassen. Beinhaltet weiterhin die für das Modellgenerierungssystem zusätzlich benötigten Datenklassen.\\
+	
+	\item \textbf{Utility: } Enthält die statischen Funktionsklassen, welche das in Abschnitt \ref{sec:Modellgenerierung} beschriebene Modellgenerierungssystem bilden. \\
+\end{description}
+
+\section{Beispielanwendung}
+
+Die Beispielanwendung wurde für eine Demonstration der generierten Baumstrukturen erstellt und kann auf Windows 32-Bit und 64-Bit Systemen ausgeführt werden.
+
+\subsection{Aufbau}
+
+Die Beispielanwendung besteht aus Hauptmenü, Ladebildschirm und dem Beispiellevel. Im Hauptmenü kann zwischen dem Start des Levels und dem Verlassen der Anwendung gewählt werden. Nach dem Start des Levels geht das Programm zur Generierung der Baumstrukturen über -- dieser Vorgang kann, je nach Prozessorkapazität, einige Zeit in Anspruch nehmen.
+
+Nach Abschluss der Generierung wird das aus zwei Haupträumen bestehende Beispiellevel dargestellt. Die Räume enthalten jeweils durch L-System-Actors und Space-Colonization-Actors generierte Baumstrukturen.
+
+\subsection{Steuerung}
+
+Das Programm besitzt folgende Tastenbelegung: \\
+
+\begin{longtabu} to \textwidth {|X[4,l] | X[2,c]|}
+	\everyrow {\tabucline [1pt]{-}} 
+	\tabucline [1pt]{-}
+	\textbf{Funktion} & \textbf{Taste}  \\
+	Vorwärts bewegen & W\\
+	
+	Rückwärts bewegen & S\\
+	
+	Nach links bewegen & A\\
+	
+	Nach rechts bewegen & D\\
+	
+	Nach oben bewegen & E \\
+	
+	Nach unten bewegen & Q \\
+	
+	Bewegung verschnellern & L-Shift gedrückt \\
+	
+	Nicht verwendete Einflusspunkte anzeigen & V \\
+	
+	Programm pausieren & Esc \\
+	
+	Vollbildmodus / Fenstermodus umschalten & F11 \\
+	
+	\caption{Tastenbelegung}   	  
+\end{longtabu}
+
+
