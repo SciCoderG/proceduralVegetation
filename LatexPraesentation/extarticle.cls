@@ -161,7 +161,7 @@
 
 \let\footnotesize=\small
 \def\ps@myheadings{%
-    \definecolor{fhblau}{cmyk}{0.97, 0.82, 0.1, 0}
+    \definecolor{hauptcampusPetrol}{cmyk}{0.86, 0.20, 0.32, 0.51}
   \def\@evenfoot{%
   \vbox to\headheight{%
   \vspace{20pt}
@@ -187,49 +187,49 @@
       \def\@oddhead
       {\vbox to\headheight
       {%\normalfont\small    
-    \hbox to\textwidth{\@slidetitle {\hspace {\fill} {\includegraphics[width=0.3\textwidth]{fhlogo_new}}}
-    %\includegraphics[width=0.3\textwidth]{fhlogo_new.pdf}
+    \hbox to\textwidth{\@slidetitle \strut {\hspace {\fill} {\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik}}}
+    %\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik.eps}
     }%
      %\vss      
      \vspace{10pt}
      
      
-     	\color{fhblau} \hrule width1\textwidth height0.4pt depth3pt } 
+     	\color{hauptcampusPetrol} \hrule width1\textwidth height0.4pt depth3pt } 
       }      
       
       
       
       \def\@evenhead{\vbox to\headheight{%\normalfont\small    
-    \hbox to\textwidth{\@slidetitle {\hspace {\fill} {\includegraphics[width=0.3\textwidth]{fhlogo_new}}}
-    %\includegraphics[width=0.3\textwidth]{fhlogo_new.pdf}
+    \hbox to\textwidth{\@slidetitle \strut {\hspace {\fill} {\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik}}}
+    %\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik.eps}
     }%
      %\vss
      \vspace{10pt}
-     	\color{fhblau} \hrule width1\textwidth height0.4pt depth3pt}
+     	\color{hauptcampusPetrol} \hrule width1\textwidth height0.4pt depth3pt}
       }
       
       }
 
 
 \def\ps@mytitleheadings{%
-    \definecolor{fhblau}{cmyk}{0.97, 0.82, 0.1, 0}
+    \definecolor{hauptcampusPetrol}{cmyk}{0.86, 0.20, 0.32, 0.51}
   \let\@oddfoot\@empty\let\@evenfoot\@empty 
       \def\@oddhead{\vbox to\headheight{%\normalfont\small    
-    \hbox to\textwidth{{\hspace {\fill} {\includegraphics[width=0.3\textwidth]{fhlogo_new}}}
-    %\includegraphics[width=0.3\textwidth]{fhlogo_new.pdf}
+    \hbox to\textwidth{ \strut {\hspace {\fill} {\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik}}}
+    %\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik.eps}
     }%
      %\vss      
      \vspace{10pt}
-     	\color{fhblau} \hrule width1\textwidth height0.4pt depth3pt}
+     	\color{hauptcampusPetrol} \hrule width1\textwidth height0.4pt depth3pt}
       }      
       
       \def\@evenhead{\vbox to\headheight{%\normalfont\small    
-    \hbox to\textwidth{{\hspace {\fill} {\includegraphics[width=0.3\textwidth]{fhlogo_new}}}
-    %\includegraphics[width=0.3\textwidth]{fhlogo_new.pdf}
+    \hbox to\textwidth{ \strut {\hspace {\fill} {\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik}}}
+    %\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik.eps}
     }%
      %\vss      
      \vspace{10pt}
-     	\color{fhblau} \hrule width1\textwidth height0.4pt depth3pt}
+     	\color{hauptcampusPetrol} \hrule width1\textwidth height0.4pt depth3pt}
       }
       
       }
@@ -238,13 +238,13 @@
 \def\mytitlepage
 {
   % \begin{titlepage} 
-   % \definecolor{fhblau}{cmyk}{0.97, 0.82, 0.1, 0}
+   % \definecolor{hauptcampusPetrol}{cmyk}{0.86, 0.20, 0.32, 0.51}
  %\marginsize{3.5cm}{4.5cm}{-1cm}{0cm}
  %\vbox to\headheight{%\normalfont\small    
-  %  \hbox to\textwidth{\includegraphics[width=0.3\textwidth]{fhlogo_new.pdf}}%
+  %  \hbox to\textwidth{\includegraphics[width=0.3\textwidth]{Logo_Hauptcampus_Informatik.eps}}%
      %\vss      
    %  \vspace{3pt}
-    % 	\color{fhblau} \hrule width1\textwidth height0.4pt depth3pt}
+    % 	\color{hauptcampusPetrol} \hrule width1\textwidth height0.4pt depth3pt}
       
   %\let\footnotesize\small
   %\let\footnoterule\relax
