@@ -101,24 +101,23 @@
 	
 	\item Verwendung von parametrischen Wörtern anstatt einfacher Symbole:
 	\begin{description}
-			\item[\boldmath$A(a_1, ..., a_n):$] Parametrisches Wort mit $A\in V$ und $a_1, ..., a_n \in \Sigma$
+			\item[\boldmath$A(a_1, ..., a_n):$] Parametrisches Wort mit $A\in V$ und $a_1, ..., a_n \in \Sigma$\\
 		
-			\item[\boldmath$\Sigma:$] Menge formaler Parameter
-		
+			\item[\boldmath$\Sigma:$] Menge formaler Parameter\\
 	\end{description}
 	
-	\item Im Nachfolger können arithmetische Ausdrücke anstelle formaler Parameter verwendet werden:
-	\begin{description}
+	\item Verwendung arithmetischer Ausdrücke im Nachfolger möglich
+	%\begin{description}
 		
-		\item[\boldmath$E(\Sigma):$] Arithmetischer Ausdruck
-	\end{description}
+	%	\item[\boldmath$E(\Sigma):$] Arithmetischer Ausdruck
+	%\end{description}
 
 \end{itemize}
 
 
 
 
-
+\iffalse
 \newpage
 \paragraph{}
 \newtheorem{defParametrischeLSysteme}{Parametrisches L-System:}[subsection]
@@ -134,7 +133,7 @@
 		\item[\boldmath$\omega \in M^+$] mit $M =(V \times \mathbb{R}^*)$ -- das Axiom in Form eines nichtleeren, parametrischen Wortes
 	\end{description}
 \end{defParametrischeLSysteme}
-
+\fi
 
 
 
@@ -146,20 +145,20 @@
 \begin{array}{llll}
 \omega & : A(1,1) \\
 p_1 & : A(x,y) &\rightarrow& A(x+1, y*2)\text{ }B(y) \\
-p_2 &  : B(x) &\rightarrow& B(x+1)\text{ }C 
+p_2 &  : B(z) &\rightarrow& B(z+1)\text{ }C 
 \end{array}
 \label{eq:ProdParamLSystem}
 \end{equation} 
 
 
 \begin{description}
-	\item[\boldmath$V$ ] besteht aus den Symbolen $\{A,B,C\}$\\
+	\item[\boldmath$V$ ]  $= \{A,B,C\}$\\
 	
-	\item[\boldmath$\Sigma$ ] besteht aus den formalen Parametern $\{x,y\}$\\
+	\item[\boldmath$\Sigma$ ] $= \{x,y,z\}$\\
 	
-	\item[\boldmath$P$ ] besteht aus Produktionsregeln $\{p_1, p_2\}$\\
+	\item[\boldmath$P$ ] $= \{p_1, p_2\}$\\
 	
-	\item[\boldmath$\omega$ ] entspricht $A(x,y)$ mit $x=1$ und $y=1$
+	\item[\boldmath$\omega$ ]  $= A(x,y)$ mit $x=1$ und $y=1$
 \end{description}
 
 
@@ -244,7 +243,7 @@ p_2 &  : B(x) &\rightarrow& B(x+1)\text{ }C
 \newpage
 \slidetitle{2. L-Systeme -- Anpassungen: 3D Turtle-Interpretation}
 
-\subsection{Anpassungen für Baumstrukturen \\}
+\subsection{Anpassungen an Baumstrukturen \\}
 
 \paragraph{Erweiterung der Turtle-Interpretation in den dreidimensionalen Raum}
 
@@ -355,16 +354,30 @@ p_2 :& F(l) &\rightarrow & F(l*l_r)
 \paragraph{Repräsentation der Turtle-Aktionen als graphentheoretischer Baum\\}
 
 \begin{itemize}
-	\item Turtle-Interpretation baut einen graphentheoretischen Baum $G=\langle V,E\rangle$ auf
+	\item Turtle-Interpretation baut einen graphentheoretischen Baum $G=\langle V,E\rangle$ auf\\
 	
-	\item Jeder Knotenpunkt $v\in V$ entspricht einem Punkt $\overrightarrow{p}_v \in \mathbb{R}^3$
+	\item Jeder Knotenpunkt $v\in V$ entspricht einem Punkt $\overrightarrow{p}_v \in \mathbb{R}^3$\\
 	
+	\item Jeder Knotenpunkt besitzt maximal einen Vorgänger und eine endliche Menge von Nachfolgern \\
+		
 	\item Zustand der Turtle ist ein Tupel $(\overrightarrow{p}, v, \boldsymbol{R})$ mit $v\in V$ \\
 	
+\end{itemize}
+
+
+
+
+\newpage
+\begin{itemize}
 	\item Erweiterung der Turtle-Bewegung \boldmath$F(l)$ ausgehend von Zustand $(\overrightarrow{p}, v, \boldsymbol{R})$:
 	\begin{itemize}
-		\item Bewegung zu Position $\overrightarrow{p_{neu}}$
-		\item Erstellung eines Knotens $v_{neu}$ und einer Kante $(v, v_{neu})$
-		\item Neuer Turtle-Zustand: $(\overrightarrow{p_{neu}}, v_{neu}, \boldsymbol{R})$
-	\end{itemize}	
+		\item Bewegung zu Position $\overrightarrow{p_{neu}}$\\
+		
+		\item Erstellung eines Knotens $v_{neu}$ und einer Kante $(v, v_{neu})$\\
+		
+		\item Neuer Turtle-Zustand: $(\overrightarrow{p_{neu}}, v_{neu}, \boldsymbol{R})$\\
+	\end{itemize}
 \end{itemize}
+
+
+
