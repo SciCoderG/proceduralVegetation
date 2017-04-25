@@ -1,0 +1,122 @@
+\documentclass[20pt,landscape]{extarticle}
+%-----------------------------------------------------
+%\newif\ifpdf
+%\ifx\pdfoutput\undefined
+%\pdffalse
+%\else
+%\pdfoutput=1
+%\pdftrue
+%\fi
+
+%\ifpdf
+\usepackage[pdftex]{graphicx}
+\usepackage[pdftex, colorlinks=true, linkcolor=black]{hyperref}
+%\else
+%\usepackage{graphicx}
+%\usepackage{hyperref}
+%\fi
+
+%-----------------------------------------------------
+\usepackage{color}	% Farbverwaltung
+\usepackage[english, ngerman]{babel} % Neue deutsche Rechtsschreibung
+\usepackage[utf8]{inputenc}
+%\usepackage[latin1]{inputenc} % Ermöglicht Umlaute-Darstellung
+\usepackage{listings} % Code-Darstellung
+\usepackage{ gensymb }
+\lstset
+{% general command to set parameter(s)
+	basicstyle= \scriptsize, % print whole listing small
+	keywordstyle=\bfseries,
+	% underlined bold black keywords
+	identifierstyle=, % nothing happens
+	%commentstyle=\color{red}, % white comments
+	stringstyle=\ttfamily, % typewriter type for strings
+	showstringspaces=false, % no special string spaces
+	framexleftmargin=7mm, 
+	tabsize=3,
+	showtabs=false,
+	frame=single, 
+	%rulesepcolor=\color{blue},
+	numbers=left,
+captionpos=b,
+	linewidth=0.99\textwidth,%146mm,
+	xleftmargin=8mm
+}
+\usepackage{amssymb,amsfonts,amstext,amsmath} % Mathematische Symbole
+\usepackage[a4paper]{geometry}
+\usepackage[german, ruled, vlined]{algorithm2e}
+\usepackage{bibgerm}
+\usepackage{makeidx}         % Erlaubt die Erzeugung eines Index-Verzeichnisses
+\usepackage{multicol}        % Zweispaltiger Index-Verzeichnis
+\usepackage[export]{adjustbox}
+\usepackage{float}
+
+
+\renewcommand*\familydefault{\sfdefault} 
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{algorithmus}{Algorithmus}[section]
+\newtheorem{beispiel}{Beispiel}[section]
+\newtheorem{satz}{Satz}[section]
+\newtheorem{folgerung}{Folgerung}[section]
+\newtheorem{theorem}{Satz}[section]
+
+\pagestyle{myheadings} % Erzeugt selbstdefinierte Kopfzeile
+
+
+\setlength{\headsep}{70pt}
+\setlength{\textheight}{14cm}
+\setlength{\textwidth}{1.2\textwidth}
+\setlength{\oddsidemargin}{-0.01\textwidth}
+\setlength{\evensidemargin}{-0.01\textwidth}
+
+\title{Prozedurale Generierung von Baumstrukturen innerhalb der Unreal Engine 4}
+%---- Die Art der Dokumentation kann hier ausgewählt werden---------------
+%\project{Master Abschlussarbeit}
+%\project{Master Projektstudium}
+\project{Trier Tech Talk Conference}
+%\project{Projektarbeit}
+%\project{Seminar zur Vorlesung ...}
+%\project{Präsentation zur Bachelor}
+%--------------------------------------------------------------------------
+\author{David Liebemann}
+\date{29.04.17}
+
+
+
+
+
+\begin{document}
+
+% Titelseite
+\mytitlepage
+
+% neue Folie
+\newpage
+\noindent
+{\Large \textbf{Überblick}} 
+\slidetitle{}
+\begin{enumerate}
+	\item Einleitung 
+	\item Lindenmayer-Systeme
+	\item Space Colonization Algorithmus
+%	\item Implementierung
+	\item Ergebnisse
+	\item Zusammenfassung und Ausblick
+\end{enumerate}
+\include{chapters/Einleitung}
+
+\include{chapters/LSysteme}
+\include{chapters/SpaceColonizationAlgorithmus}
+
+%\include{chapters/Implementierung}
+\include{chapters/Ergebnisse}
+\include{chapters/Zusammenfassung}
+
+
+
+\bibliographystyle{geralpha}			% Literaturverzeichnis
+\bibliography{literatur}     			% BibTeX-File literatur.bib
+
+\include{chapters/NotfallErgebnisse}
+\end{document}
